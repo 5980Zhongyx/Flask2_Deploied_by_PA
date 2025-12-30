@@ -526,3 +526,29 @@ Traceback (most recent call last):
   File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/werkzeug/routing/map.py", line 924, in build
     raise BuildError(endpoint, values, method, self)
 werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'film.list_films'. Did you mean 'interaction.like_film' instead?
+2025-12-30 18:30:08,066 - app - INFO - Logging system initialized
+2025-12-30 18:30:08,070 - app - INFO - Logging system initialized
+2025-12-30 18:30:08,072 - app - INFO - Logging system initialized
+2025-12-30 18:30:26,579 - app - INFO - Logging system initialized
+2025-12-30 18:30:56,318 - app - INFO - Logging system initialized
+2025-12-30 18:30:56,338 - app - INFO - Logging system initialized
+2025-12-30 18:32:24,712 - app - INFO - Logging system initialized
+2025-12-30 18:32:24,723 - app - INFO - Logging system initialized
+2025-12-30 18:32:42,259 - app - INFO - Logging system initialized
+2025-12-30 18:32:42,744 - app - INFO - Logging system initialized
+2025-12-30 18:33:27,545 - app - INFO - Logging system initialized
+2025-12-30 18:33:27,548 - app - INFO - Logging system initialized
+2025-12-30 18:34:31,121 - app - INFO - Logging system initialized
+2025-12-30 18:34:55,070 - app - INFO - Logging system initialized
+2025-12-30 18:36:15,922 - app - INFO - Logging system initialized
+2025-12-30 18:38:18,920 - app - INFO - Logging system initialized
+2025-12-30 18:38:18,922 - app - INFO - Logging system initialized
+2025-12-30 18:38:44,345 - app - INFO - Logging system initialized
+2025-12-30 18:39:21,838 - app - INFO - Logging system initialized
+2025-12-30 18:39:21,844 - app - INFO - Logging system initialized
+2025-12-30 18:40:08,209 - app - INFO - Logging system initialized
+2025-12-30 18:40:23,707 - app - INFO - Logging system initialized
+2025-12-30 18:41:16,935 - app - INFO - Logging system initialized
+2025-12-30 18:41:38,495 - app - INFO - Logging system initialized
+2025-12-30 18:42:10,777 - app - INFO - Logging system initialized
+2025-12-30 18:42:31,992 - app - INFO - Logging system initialized

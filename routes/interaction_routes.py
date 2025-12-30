@@ -2,7 +2,8 @@ import logging
 from flask import Blueprint, request, jsonify, flash, redirect, url_for
 from flask_login import login_required, current_user
 from app import db
-from models import UserFilmInteraction, Film
+from models.interaction import UserFilmInteraction
+from models.film import Film
 
 interaction_bp = Blueprint("interaction", __name__)
 

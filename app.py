@@ -23,7 +23,7 @@ def create_app(config_name=None):
     # 配置用户加载函数
     @login_manager.user_loader
     def load_user(user_id):
-        from models import User
+        from models.user import User
         return User.query.get(int(user_id))
 
     # 请求前后的钩子，用于日志记录
@@ -120,7 +120,7 @@ def setup_logging(app, config_obj=None):
 
 # 根据环境变量创建应用
 config_name = os.environ.get('FLASK_ENV') or 'development'
-app = create_app(config_name)
 
 if __name__ == "__main__":
+    app = create_app(config_name)
     app.run(debug=app.config['DEBUG'])

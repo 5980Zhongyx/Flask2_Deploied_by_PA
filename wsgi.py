@@ -10,7 +10,8 @@ sys.path.insert(0, project_dir)
 os.environ.setdefault('FLASK_ENV', 'production')
 
 # 导入应用
-from app import app as application
+from app import create_app
+application = create_app('production')
 
 if __name__ == "__main__":
     application.run()

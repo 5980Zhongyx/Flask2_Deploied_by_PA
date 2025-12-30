@@ -34,7 +34,7 @@
                     <select id="year" name="year">
                         <option value="">全部年份</option>
                         {% for y in years %}
-                            <option value="{{ y }}" {% if year == str(y) %}selected{% endif %}>{{ y }}</option>
+                            <option value="{{ y }}" {% if year|string == y|string %}selected{% endif %}>{{ y }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -96,7 +96,9 @@
                 <a href="{{ url_for('film.list_films', page=page-1, search=search, genre=genre, year=year, sort=sort_by) }}" class="page-link">上一页</a>
             {% endif %}
 
-            {% for page_num in range(max(1, page-2), min(total_pages+1, page+3)) %}
+            {% set start_page = page-2 if page-2 > 0 else 1 %}
+            {% set end_page = page+3 if page+3 < total_pages+1 else total_pages+1 %}
+            {% for page_num in range(start_page, end_page) %}
                 {% if page_num == page %}
                     <span class="page-link current">{{ page_num }}</span>
                 {% else %}

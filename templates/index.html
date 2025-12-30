@@ -4,6 +4,8 @@
 <h1>欢迎来到 Film Discovery</h1>
 <p>项目已成功部署。</p>
 
+<a href="{{ url_for('film.list_films') }}" class="btn btn-primary">浏览电影</a>
+
 {% if films %}
 <ul>
     {% for film in films %}
