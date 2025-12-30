@@ -24,7 +24,7 @@ def load_movie_data():
             "year": 1994,
             "director": "弗兰克·达拉邦特",
             "description": "银行家安迪被诬陷杀人，被判无期徒刑。在肖申克监狱中，他结识了瑞德，两人成为挚友。安迪凭借智慧和勇气，在狱中建立了图书室，并最终通过自己的方式获得了自由。",
-            "poster_url": "https://example.com/posters/shawshank.jpg"
+            "poster_url": "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg"
         },
         {
             "title": "霸王别姬",
@@ -32,7 +32,7 @@ def load_movie_data():
             "year": 1993,
             "director": "陈凯歌",
             "description": "讲述了两位京剧艺人半世纪的悲欢离合。从民国初年到文化大革命，两人从相识、相知到相离，谱写了一段刻骨铭心的爱情故事。",
-            "poster_url": "https://example.com/posters/farewell.jpg"
+            "poster_url": "https://image.tmdb.org/t/p/w500/3J8XKUfz9ZQj5Q0OqrqfL8GFJ.jpg"
         },
         {
             "title": "阿甘正传",
@@ -40,7 +40,7 @@ def load_movie_data():
             "year": 1994,
             "director": "罗伯特·泽米吉斯",
             "description": "阿甘是一个智商只有75的低能儿，但他凭借着坚持不懈的毅力和单纯善良的心，经历了美国历史上许多重大事件，见证了时代的变迁。",
-            "poster_url": "https://example.com/posters/forrest.jpg"
+            "poster_url": "https://image.tmdb.org/t/p/w500/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg"
         },
         {
             "title": "泰坦尼克号",
@@ -48,7 +48,7 @@ def load_movie_data():
             "year": 1997,
             "director": "詹姆斯·卡梅隆",
             "description": "1912年，泰坦尼克号邮轮在 maiden voyage 中撞上冰山沉没。船上的一对青年男女坠入爱河，在生死考验中谱写了一段凄美的爱情故事。",
-            "poster_url": "https://example.com/posters/titanic.jpg"
+            "poster_url": "https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg"
         },
         {
             "title": "千与千寻",
@@ -56,7 +56,7 @@ def load_movie_data():
             "year": 2001,
             "director": "宫崎骏",
             "description": "少女千寻意外来到神灵世界的汤屋工作。为了拯救父母，她必须通过重重考验。在这个奇幻的世界中，她学会了勇敢和善良。",
-            "poster_url": "https://example.com/posters/spirited.jpg"
+            "poster_url": "https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuNKq.jpg"
         },
         {
             "title": "这个杀手不太冷",
@@ -64,7 +64,7 @@ def load_movie_data():
             "year": 1994,
             "director": "吕克·贝松",
             "description": "杀手莱昂收留了邻居孤儿玛蒂尔达。在相处中，两人建立了深厚的感情。莱昂教会玛蒂尔达生存的技巧，而玛蒂尔达带给莱昂温暖和欢乐。",
-            "poster_url": "https://example.com/posters/leon.jpg"
+            "poster_url": "https://image.tmdb.org/t/p/w500/yI6X2cCM5YPJtxMhWdENlY1aV0.jpg"
         },
         {
             "title": "辛德勒的名单",
@@ -72,7 +72,7 @@ def load_movie_data():
             "year": 1993,
             "director": "史蒂文·斯皮尔伯格",
             "description": "二战期间，德国商人奥斯卡·辛德勒目睹了犹太人的遭遇。他利用自己的工厂拯救了上千犹太人的生命，成为人道主义的典范。",
-            "poster_url": "https://example.com/posters/schindler.jpg"
+            "poster_url": "https://image.tmdb.org/t/p/w500/c8Ass7acuOe4za6DhSattE359gr.jpg"
         },
         {
             "title": "盗梦空间",
@@ -80,7 +80,7 @@ def load_movie_data():
             "year": 2010,
             "director": "克里斯托弗·诺兰",
             "description": "盗梦师 Cobb 带领团队进入他人梦境窃取机密。但一次任务失败让他失去了妻子，他必须完成最后一次任务来拯救自己。",
-            "poster_url": "https://example.com/posters/inception.jpg"
+            "poster_url": "https://image.tmdb.org/t/p/w500/7WcNkYY0nYV8veGNITwM9nDzd2U.jpg"
         },
         {
             "title": "星际穿越",
@@ -88,7 +88,7 @@ def load_movie_data():
             "year": 2014,
             "director": "克里斯托弗·诺兰",
             "description": "地球面临灭绝危机，前NASA宇航员库珀带领团队穿越虫洞寻找新家园。在旅途中，他们面临时空相对论带来的各种挑战。",
-            "poster_url": "https://example.com/posters/interstellar.jpg"
+            "poster_url": "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg"
         },
         {
             "title": "寄生上流",
@@ -96,7 +96,7 @@ def load_movie_data():
             "year": 2019,
             "director": "奉俊昊",
             "description": "贫民窟家庭通过精心策划，成功渗透到富豪家庭中工作。他们原本的计划因为意外事件而逐渐失控，最终引发一系列悲剧。",
-            "poster_url": "https://example.com/posters/parasite.jpg"
+            "poster_url": "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg"
         },
         {
             "title": "放牛班的春天",
@@ -104,7 +104,7 @@ def load_movie_data():
             "year": 2004,
             "director": "克里斯托夫·巴拉蒂",
             "description": "音乐老师克莱门特来到纪律严苛的寄宿学校，用音乐唤醒了学生们沉睡的心灵。他独特的教学方式改变了学校，也改变了学生的人生。",
-            "poster_url": "https://example.com/posters/chorus.jpg"
+            "poster_url": "https://image.tmdb.org/t/p/w500/5Jv1XwH9aUH0R3O0qCxN4J1QXw.jpg"
         },
         {
             "title": "海上钢琴师",

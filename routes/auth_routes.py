@@ -117,3 +117,40 @@ def logout():
     logout_user()
     flash("已成功登出", "info")
     return redirect(url_for("film.index"))
+
+@auth_bp.route("/profile")
+@login_required
+def profile():
+    from models.interaction import UserFilmInteraction
+
+    # 获取用户统计数据
+    total_likes = UserFilmInteraction.query.filter_by(
+        user_id=current_user.id, liked=True
+    ).count()
+
+    total_reviews = UserFilmInteraction.query.filter(
+        UserFilmInteraction.user_id == current_user.id,
+        UserFilmInteraction.review_text.isnot(None),
+        UserFilmInteraction.review_text != ''
+    ).count()
+
+    # 计算平均评分
+    rating_interactions = UserFilmInteraction.query.filter(
+        UserFilmInteraction.user_id == current_user.id,
+        UserFilmInteraction.rating.isnot(None)
+    ).all()
+
+    avg_rating_given = None
+    if rating_interactions:
+        avg_rating_given = sum(i.rating for i in rating_interactions) / len(rating_interactions)
+
+    # 获取用户的互动记录
+    interactions = UserFilmInteraction.query.filter_by(
+        user_id=current_user.id
+    ).order_by(UserFilmInteraction.created_at.desc()).all()
+
+    return render_template("profile.html",
+                         total_likes=total_likes,
+                         total_reviews=total_reviews,
+                         avg_rating_given=avg_rating_given,
+                         interactions=interactions)

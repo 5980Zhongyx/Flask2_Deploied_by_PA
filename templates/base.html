@@ -1,26 +1,104 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <title>Film Discovery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Film Discovery - 发现好电影{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- 顶部导航 -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <a href="{{ url_for('film.index') }}">
+                        <i class="fas fa-film"></i>
+                        <span>Film Discovery</span>
+                    </a>
+                </div>
 
-<nav>
-    <a href="{{ url_for('film.index') }}">首页</a>
-    <a href="{{ url_for('film.list_films') }}">电影列表</a>
-    {% if current_user.is_authenticated %}
-        <span>{{ current_user.username }}</span>
-    {% else %}
-        <a href="{{ url_for('auth.login') }}">登录</a>
-        <a href="{{ url_for('auth.register') }}">注册</a>
-    {% endif %}
-</nav>
+                <div class="nav-menu">
+                    <ul class="nav-links">
+                        <li><a href="{{ url_for('film.index') }}"><i class="fas fa-home"></i> 首页</a></li>
+                        <li><a href="{{ url_for('film.list_films') }}"><i class="fas fa-list"></i> 电影</a></li>
+                        {% if current_user.is_authenticated %}
+                        <li><a href="{{ url_for('film.recommendations') }}"><i class="fas fa-star"></i> 推荐</a></li>
+                        <li><a href="{{ url_for('auth.profile') }}"><i class="fas fa-user"></i> 我的</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
 
-<hr>
+                <div class="nav-actions">
+                    <!-- 主题切换 -->
+                    <button id="theme-toggle" class="theme-toggle" aria-label="切换主题">
+                        <i class="fas fa-moon"></i>
+                    </button>
 
-{% block content %}{% endblock %}
+                    <!-- 用户操作 -->
+                    {% if current_user.is_authenticated %}
+                        <div class="user-menu">
+                            <button class="user-menu-trigger">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ current_user.username }}" alt="头像" class="user-avatar">
+                                <span>{{ current_user.username }}</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="user-menu-dropdown">
+                                <a href="{{ url_for('auth.profile') }}"><i class="fas fa-user"></i> 个人资料</a>
+                                <a href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> 退出登录</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="auth-buttons">
+                            <a href="{{ url_for('auth.login') }}" class="btn btn-outline">登录</a>
+                            <a href="{{ url_for('auth.register') }}" class="btn btn-primary">注册</a>
+                        </div>
+                    {% endif %}
 
+                    <!-- 移动端菜单按钮 -->
+                    <button class="mobile-menu-toggle" aria-label="菜单">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-film"></i>
+                    <span>Film Discovery</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">关于我们</a>
+                    <a href="#">帮助中心</a>
+                    <a href="#">联系我们</a>
+                    <a href="#">隐私政策</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#" aria-label="微信"><i class="fab fa-weixin"></i></a>
+                    <a href="#" aria-label="微博"><i class="fab fa-weibo"></i></a>
+                    <a href="#" aria-label="B站"><i class="fab fa-bilibili"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Film Discovery. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/interactions.js') }}"></script>
 </body>
 </html>

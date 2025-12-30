@@ -76,7 +76,7 @@
             <p>你需要先对一些电影进行评价（点赞、评分或评论），系统才能为你生成个性化推荐。</p>
             <div class="action-buttons">
                 <a href="{{ url_for('film.list_films') }}" class="btn btn-primary">浏览并评价电影</a>
-                <a href="{{ url_for('film.my_profile') }}" class="btn btn-secondary">查看我的评价</a>
+                <a href="{{ url_for('auth.profile') }}" class="btn btn-secondary">查看我的评价</a>
             </div>
         </div>
         {% endif %}

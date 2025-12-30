@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request
+from flask_login import login_required, current_user
 from app import db
 
 # 延迟导入以避免循环导入
@@ -75,11 +76,35 @@ def list_films():
 
 @film_bp.route("/films/<int:film_id>")
 def film_detail(film_id):
+    from models.interaction import UserFilmInteraction
+
     film = Film.query.get_or_404(film_id)
-    return render_template("film_detail.html", film=film)
+
+    # 获取用户交互信息
+    user_interaction = None
+    if current_user.is_authenticated:
+        user_interaction = UserFilmInteraction.query.filter_by(
+            user_id=current_user.id, film_id=film_id
+        ).first()
+
+    # 获取其他用户的评论（有评论文本的）
+    reviews = UserFilmInteraction.query.filter(
+        UserFilmInteraction.film_id == film_id,
+        UserFilmInteraction.review_text.isnot(None),
+        UserFilmInteraction.review_text != ''
+    ).order_by(UserFilmInteraction.created_at.desc()).all()
+
+    return render_template("film_detail.html",
+                         film=film,
+                         user_interaction=user_interaction,
+                         reviews=reviews)
 
 @film_bp.route("/recommendations")
+@login_required
 def recommendations():
-    # 简单的推荐逻辑：返回评分最高的电影
-    films = Film.query.order_by(Film.average_rating.desc()).limit(10).all()
-    return render_template("recommendations.html", films=films)
+    from models.recommendation import recommendation_engine
+
+    # 获取用户的个性化推荐
+    recommendation_data = recommendation_engine.get_user_recommendations(current_user.id, top_n=10)
+
+    return render_template("recommendations.html", recommendation_data=recommendation_data)
