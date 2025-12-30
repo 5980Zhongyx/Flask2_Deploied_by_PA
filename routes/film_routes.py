@@ -47,22 +47,20 @@ def list_films():
         except ValueError:
             pass
 
-    films_all = query.all()
-
-    # 支持按 likes / rating 的排序（这些通常是 property，不能用于 SQL order_by，因此在 Python 中排序）
-    if sort_by == 'year':
-        films_all.sort(key=lambda f: f.year or 0, reverse=True)
+    # 如果排序依据是 likes/rating/year/title，则在 SQL 层做排序（使用持久化字段）
+    if sort_by == 'likes':
+        query = query.order_by(Film.like_count.desc(), Film.title)
     elif sort_by == 'rating':
-        films_all.sort(key=lambda f: getattr(f, 'average_rating', 0) or 0, reverse=True)
-    elif sort_by == 'likes':
-        films_all.sort(key=lambda f: getattr(f, 'like_count', 0) or 0, reverse=True)
+        # 计算持久化平均：rating_sum / rating_count（防止除以0）
+        avg_expr = func.coalesce((Film.rating_sum * 1.0) / func.nullif(Film.rating_count, 0), 0)
+        query = query.order_by(avg_expr.desc(), Film.like_count.desc(), Film.title)
+    elif sort_by == 'year':
+        query = query.order_by(Film.year.desc(), Film.title)
     else:
-        films_all.sort(key=lambda f: (f.title or '').lower())
+        query = query.order_by(Film.title)
 
-    total = len(films_all)
-    start = (page - 1) * per_page
-    end = start + per_page
-    films = films_all[start:end]
+    total = query.count()
+    films = query.offset((page - 1) * per_page).limit(per_page).all()
 
     # 获取筛选选项
     genres_q = db.session.query(Film.genre).distinct().all()

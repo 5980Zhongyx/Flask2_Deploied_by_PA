@@ -9,6 +9,10 @@ class Film(db.Model):
     director = db.Column(db.String(100))
     description = db.Column(db.Text)
     poster_url = db.Column(db.String(500))
+    # persisted statistics for performance
+    like_count = db.Column(db.Integer, default=0)
+    rating_count = db.Column(db.Integer, default=0)
+    rating_sum = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # 关系定义
@@ -19,9 +23,10 @@ class Film(db.Model):
 
     @property
     def average_rating(self):
-        """计算平均评分"""
-        ratings = [interaction.rating for interaction in self.interactions if interaction.rating]
-        return sum(ratings) / len(ratings) if ratings else 0
+        """返回持久化的平均评分（若无评分返回0）"""
+        if self.rating_count and self.rating_count > 0:
+            return float(self.rating_sum) / float(self.rating_count)
+        return 0.0
 
     @property
     def like_count(self):
