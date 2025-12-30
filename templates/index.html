@@ -110,6 +110,14 @@
                         <span>{{ "%.1f"|format(film.average_rating) }}</span>
                     </div>
                     {% endif %}
+                    <!-- 喜欢按钮与计数 -->
+                    <div class="card-actions" style="position:absolute; left:12px; bottom:12px; z-index:5;">
+                        {% set liked = (current_user.is_authenticated and film.id in liked_ids) %}
+                        <button class="btn btn-outline btn-like {% if liked %}liked{% endif %}" data-film-id="{{ film.id }}" aria-pressed="{{ 'true' if liked else 'false' }}">
+                            <i class="fas fa-heart"></i> <span class="sr-only">点赞</span>
+                        </button>
+                        <span data-like-count="{{ film.id }}" class="like-count" style="margin-left:8px;color:white;font-weight:600">{{ film.like_count }}</span>
+                    </div>
                 </div>
 
                 <div class="film-info">

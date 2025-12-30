@@ -1,0 +1,16 @@
+{
+  "n_users": 0,
+  "k": 5,
+  "user_based": {
+    "hit_rate": 0.0,
+    "precision_at_k": 0.0
+  },
+  "item_based": {
+    "hit_rate": 0.0,
+    "precision_at_k": 0.0
+  },
+  "matrix_factorization": {
+    "hit_rate": 0.0,
+    "precision_at_k": 0.0
+  }
+}

@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeHoverEffects();
     initializeSmoothScrolling();
     initializeCardClicks();
+    initializeRippleEffects();
     initializeBackButton();
 });
 

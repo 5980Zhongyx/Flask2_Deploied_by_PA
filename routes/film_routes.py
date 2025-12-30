@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, request
+import os
+import json
 from flask_login import login_required, current_user
 from app import db
 
@@ -10,7 +12,12 @@ film_bp = Blueprint("film", __name__)
 @film_bp.route("/")
 def index():
     films = Film.query.limit(12).all()
-    return render_template("index.html", films=films)
+    liked_ids = set()
+    if current_user.is_authenticated:
+        from models.interaction import UserFilmInteraction
+        liked = UserFilmInteraction.query.filter_by(user_id=current_user.id, liked=True).all()
+        liked_ids = set(i.film_id for i in liked)
+    return render_template("index.html", films=films, liked_ids=liked_ids)
 
 @film_bp.route("/films")
 def list_films():
@@ -62,8 +69,15 @@ def list_films():
     years = db.session.query(Film.year).distinct().filter(Film.year.isnot(None)).all()
     years = sorted([y[0] for y in years if y[0]], reverse=True)
 
+    liked_ids = set()
+    if current_user.is_authenticated:
+        from models.interaction import UserFilmInteraction
+        liked = UserFilmInteraction.query.filter_by(user_id=current_user.id, liked=True).all()
+        liked_ids = set(i.film_id for i in liked)
+
     return render_template("film_list.html",
                          films=films,
+                         liked_ids=liked_ids,
                          search=search,
                          genre=genre,
                          year=year,
@@ -103,8 +117,29 @@ def film_detail(film_id):
 @login_required
 def recommendations():
     from models.recommendation import recommendation_engine
-
-    # 获取用户的个性化推荐
+    # 获取用户的个性化推荐（现有用户基于用户的协同过滤）
     recommendation_data = recommendation_engine.get_user_recommendations(current_user.id, top_n=10)
 
-    return render_template("recommendations.html", recommendation_data=recommendation_data)
+    # 获取高级推荐（item-based 与 matrix factorization）
+    try:
+        from models.recommendation_advanced import item_recommender, mf_recommender
+        item_recs = item_recommender.recommend(current_user.id, top_n=10)
+        mf_recs = mf_recommender.recommend(current_user.id, top_n=10)
+    except Exception:
+        item_recs = []
+        mf_recs = []
+
+    # 读取评估结果（若存在）
+    eval_metrics = None
+    eval_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scripts', 'recommendation_eval.json')
+    if os.path.exists(eval_path):
+        try:
+            with open(eval_path, 'r', encoding='utf-8') as f:
+                eval_metrics = json.load(f)
+        except Exception:
+            eval_metrics = None
+    return render_template("recommendations.html",
+                           recommendation_data=recommendation_data,
+                           item_recs=item_recs,
+                           mf_recs=mf_recs,
+                           eval_metrics=eval_metrics)

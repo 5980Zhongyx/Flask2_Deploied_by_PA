@@ -10,45 +10,92 @@
 
         {% if recommendation_data.recommendations %}
         <div class="recommendations-section">
-            <h2>为你推荐的电影</h2>
+            <h2>为你推荐的电影（算法对比）</h2>
             <p class="recommendation-info">
-                基于 {{ recommendation_data.total_users }} 位用户的偏好分析，为你找到了 {{ recommendation_data.recommendations|length }} 部可能喜欢的电影
+                我们同时展示三种推荐算法的结果：基于用户的协同过滤、基于物品（Item-based）和矩阵分解（Matrix Factorization）。
             </p>
 
-            <div class="films-grid">
-                {% for film, score in recommendation_data.recommendations %}
-                <div class="film-card recommended">
-                    <div class="film-poster">
-                        {% if film.poster_url %}
-                            <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报">
-                        {% else %}
-                            <div class="no-poster">暂无海报</div>
-                        {% endif %}
+            <div class="recommendation-columns" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem;">
+                {% if eval_metrics %}
+                <div style="grid-column: 1 / -1; margin-bottom: 12px; background: var(--bg-primary); padding:12px; border-radius:8px; box-shadow:var(--shadow-sm);">
+                    <strong>评估摘要（sample users: {{ eval_metrics.n_users if eval_metrics.n_users is defined else eval_metrics['n_users'] if eval_metrics else 0 }}，k={{ eval_metrics.k if eval_metrics.k is defined else eval_metrics['k'] if eval_metrics else 5 }}）</strong>
+                    <div style="display:flex; gap:16px; margin-top:8px;">
+                        <div>User-based: hit_rate={{ (eval_metrics.user_based.hit_rate if eval_metrics.user_based is defined else eval_metrics['user_based']['hit_rate'])|default(0)|round(3) }}, precision@k={{ (eval_metrics.user_based.precision_at_k if eval_metrics.user_based is defined else eval_metrics['user_based']['precision_at_k'])|default(0)|round(3) }}</div>
+                        <div>Item-based: hit_rate={{ (eval_metrics.item_based.hit_rate if eval_metrics.item_based is defined else eval_metrics['item_based']['hit_rate'])|default(0)|round(3) }}, precision@k={{ (eval_metrics.item_based.precision_at_k if eval_metrics.item_based is defined else eval_metrics['item_based']['precision_at_k'])|default(0)|round(3) }}</div>
+                        <div>MF: hit_rate={{ (eval_metrics.matrix_factorization.hit_rate if eval_metrics.matrix_factorization is defined else eval_metrics['matrix_factorization']['hit_rate'])|default(0)|round(3) }}, precision@k={{ (eval_metrics.matrix_factorization.precision_at_k if eval_metrics.matrix_factorization is defined else eval_metrics['matrix_factorization']['precision_at_k'])|default(0)|round(3) }}</div>
                     </div>
-                    <div class="film-info">
-                        <h3><a href="{{ url_for('film.film_detail', film_id=film.id) }}">{{ film.title }}</a></h3>
-                        <p class="film-meta">
-                            {% if film.year %}{{ film.year }} · {% endif %}
-                            {% if film.director %}{{ film.director }} · {% endif %}
-                            {% if film.genre %}{{ film.genre }}{% endif %}
-                        </p>
-                        {% if film.average_rating > 0 %}
-                            <div class="rating">
-                                <span class="stars">★</span>
-                                <span class="rating-value">{{ "%.1f"|format(film.average_rating) }}</span>
+                </div>
+                {% endif %}
+                <div class="recommendation-column">
+                    <h3 style="text-align:center;">User-based CF</h3>
+                    <div class="films-grid">
+                        {% for film, score in recommendation_data.recommendations %}
+                        <div class="film-card recommended">
+                            <div class="film-poster">
+                                {% if film.poster_url %}
+                                    <img src="{{ film.poster_url }}" alt="{{ film.title }} poster">
+                                {% else %}
+                                    <div class="no-poster">No poster</div>
+                                {% endif %}
                             </div>
-                        {% endif %}
-                        <p class="likes">{{ film.like_count }} 人喜欢</p>
-                        <div class="recommendation-score">
-                            <span class="score-label">匹配度：</span>
-                            <span class="score-value">{{ "%.1%"|format(score) }}</span>
+                            <div class="film-info">
+                                <h4><a href="{{ url_for('film.film_detail', film_id=film.id) }}">{{ film.title }}</a></h4>
+                                <div class="recommendation-score"><strong>{{ '%.3f'|format(score) }}</strong></div>
+                            </div>
                         </div>
-                        {% if film.description %}
-                            <p class="description">{{ film.description[:80] }}{% if film.description|length > 80 %}...{% endif %}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="recommendation-column">
+                    <h3 style="text-align:center;">Item-based CF</h3>
+                    <div class="films-grid">
+                        {% if item_recs %}
+                            {% for film, score in item_recs %}
+                            <div class="film-card recommended">
+                                <div class="film-poster">
+                                    {% if film.poster_url %}
+                                        <img src="{{ film.poster_url }}" alt="{{ film.title }} poster">
+                                    {% else %}
+                                        <div class="no-poster">No poster</div>
+                                    {% endif %}
+                                </div>
+                                <div class="film-info">
+                                    <h4><a href="{{ url_for('film.film_detail', film_id=film.id) }}">{{ film.title }}</a></h4>
+                                    <div class="recommendation-score"><strong>{{ '%.3f'|format(score) }}</strong></div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p style="padding:1rem;">暂无 Item-based 推荐（数据不足或计算中）</p>
                         {% endif %}
                     </div>
                 </div>
-                {% endfor %}
+
+                <div class="recommendation-column">
+                    <h3 style="text-align:center;">Matrix Factorization</h3>
+                    <div class="films-grid">
+                        {% if mf_recs %}
+                            {% for film, score in mf_recs %}
+                            <div class="film-card recommended">
+                                <div class="film-poster">
+                                    {% if film.poster_url %}
+                                        <img src="{{ film.poster_url }}" alt="{{ film.title }} poster">
+                                    {% else %}
+                                        <div class="no-poster">No poster</div>
+                                    {% endif %}
+                                </div>
+                                <div class="film-info">
+                                    <h4><a href="{{ url_for('film.film_detail', film_id=film.id) }}">{{ film.title }}</a></h4>
+                                    <div class="recommendation-score"><strong>{{ '%.3f'|format(score) }}</strong></div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p style="padding:1rem;">暂无 Matrix Factorization 推荐（可能缺少 numpy 或训练中）</p>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
 

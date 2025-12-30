@@ -95,6 +95,40 @@ def handle_interaction(film_id):
         interaction_logger.error(f"Interaction save failed: User {current_user.username} - Film {film.title} - Error: {str(e)}")
         return jsonify({"success": False, "message": "保存失败，请重试"}), 500
 
+
+@interaction_bp.route("/api/reviews/<int:film_id>", methods=["GET"])
+def get_reviews(film_id):
+    """分页返回指定电影的评论（仅包含有文本的评论），用于前端无刷新加载"""
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 5))
+
+    reviews_query = UserFilmInteraction.query.filter(
+        UserFilmInteraction.film_id == film_id,
+        UserFilmInteraction.review_text.isnot(None),
+        UserFilmInteraction.review_text != ''
+    ).order_by(UserFilmInteraction.created_at.desc())
+
+    total = reviews_query.count()
+    reviews = reviews_query.offset((page - 1) * per_page).limit(per_page).all()
+
+    results = []
+    for r in reviews:
+        results.append({
+            "id": r.id,
+            "user": {"id": r.user.id, "username": r.user.username},
+            "rating": r.rating,
+            "review_text": r.review_text,
+            "created_at": r.created_at.isoformat() if r.created_at else None
+        })
+
+    return jsonify({
+        "success": True,
+        "data": results,
+        "page": page,
+        "per_page": per_page,
+        "total": total
+    })
+
 @interaction_bp.route("/api/like/<int:film_id>", methods=["POST"])
 @login_required
 def toggle_like(film_id):

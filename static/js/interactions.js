@@ -114,10 +114,15 @@ async function handleInteractionSubmit(event) {
                 updateFilmStats(result.data.film_stats);
             }
 
-            // 重新加载页面以显示更新
+            // 局部无刷新更新评论列表和统计（优先刷新评论）
+            if (result.data) {
+                updateInteractionDisplay(result.data);
+                updateFilmStats(result.data.film_stats);
+            }
+            // 重新加载第一页评论
             setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+                loadReviews(filmId, 1);
+            }, 300);
         } else {
             showMessage(result.message || '保存失败', 'error');
         }
@@ -128,6 +133,69 @@ async function handleInteractionSubmit(event) {
         submitButton.disabled = false;
         submitButton.textContent = '保存评价';
     }
+}
+
+// 加载指定页的评论并渲染到页面
+async function loadReviews(filmId, page = 1, per_page = 5) {
+    try {
+        const resp = await fetch(`/api/reviews/${filmId}?page=${page}&per_page=${per_page}`);
+        const json = await resp.json();
+        if (!json.success) return;
+
+        const container = document.getElementById('reviews-container');
+        if (!container) return;
+
+        // 渲染评论
+        container.innerHTML = '';
+        json.data.forEach(review => {
+            const div = document.createElement('div');
+            div.className = 'review-item';
+            div.innerHTML = `
+                <div class="review-header">
+                    <strong>${escapeHtml(review.user.username)}</strong>
+                    ${review.rating ? `<span class="review-rating">${review.rating}/5 ★</span>` : ''}
+                    <span class="review-date">${new Date(review.created_at).toLocaleString()}</span>
+                </div>
+                <div class="review-content"><p>${escapeHtml(review.review_text)}</p></div>
+            `;
+            container.appendChild(div);
+        });
+
+        // 分页控件
+        const pageInfo = document.getElementById('reviews-pagination');
+        if (pageInfo) {
+            const total = json.total;
+            const totalPages = Math.max(1, Math.ceil(total / per_page));
+            pageInfo.innerHTML = renderReviewsPagination(page, totalPages);
+            // 绑定分页按钮
+            pageInfo.querySelectorAll('.review-page-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const p = parseInt(e.currentTarget.dataset.page);
+                    loadReviews(filmId, p, per_page);
+                });
+            });
+        }
+    } catch (e) {
+        console.error('Load reviews failed', e);
+    }
+}
+
+function renderReviewsPagination(current, totalPages) {
+    let html = '';
+    if (totalPages <= 1) return html;
+    if (current > 1) {
+        html += `<button class="review-page-btn" data-page="${current-1}">上一页</button>`;
+    }
+    html += `<span> 第${current} / ${totalPages}页 </span>`;
+    if (current < totalPages) {
+        html += `<button class="review-page-btn" data-page="${current+1}">下一页</button>`;
+    }
+    return html;
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    return text.replace(/[&<>"']/g, function(m) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'})[m]; });
 }
 
 async function handleDeleteInteraction(event) {
