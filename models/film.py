@@ -27,8 +27,4 @@ class Film(db.Model):
         if self.rating_count and self.rating_count > 0:
             return float(self.rating_sum) / float(self.rating_count)
         return 0.0
-
-    @property
-    def like_count(self):
-        """计算点赞数量"""
-        return sum(1 for interaction in self.interactions if interaction.liked)
+    # note: like_count is persisted as a column for performance; do not override with a property
