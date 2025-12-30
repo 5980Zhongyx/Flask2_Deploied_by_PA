@@ -48,11 +48,11 @@
                     </button>
 
                     <!-- 用户操作 -->
-                    {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated %}
                         <div class="user-menu">
                             <button class="user-menu-trigger">
                                 <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ current_user.username }}" alt="头像" class="user-avatar">
-                                <span>{{ current_user.username }}</span>
+        <span>{{ current_user.username }}</span>
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                             <div class="user-menu-dropdown">
@@ -60,12 +60,12 @@
                                 <a href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> 退出登录</a>
                             </div>
                         </div>
-                    {% else %}
+    {% else %}
                         <div class="auth-buttons">
                             <a href="{{ url_for('auth.login') }}" class="btn btn-outline">登录</a>
                             <a href="{{ url_for('auth.register') }}" class="btn btn-primary">注册</a>
                         </div>
-                    {% endif %}
+    {% endif %}
 
                     <!-- 移动端菜单按钮 -->
                     <button class="mobile-menu-toggle" aria-label="菜单">
@@ -73,12 +73,12 @@
                     </button>
                 </div>
             </div>
-        </nav>
+</nav>
     </header>
 
     <!-- 主内容区域 -->
     <main id="main-content" class="main-content">
-        {% block content %}{% endblock %}
+{% block content %}{% endblock %}
     </main>
 
     <!-- 页脚 -->
