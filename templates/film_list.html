@@ -10,49 +10,7 @@
             {% endif %}
         </div>
 
-        <!-- 筛选和排序 -->
-        <div class="filters-section">
-            <form method="GET" class="filters-form">
-                <div class="filter-group">
-                    <label for="search">搜索：</label>
-                    <input type="text" id="search" name="search" value="{{ search }}"
-                           placeholder="电影名、导演或描述">
-                </div>
-
-                <div class="filter-group">
-                    <label for="genre">类型：</label>
-                    <select id="genre" name="genre">
-                        <option value="">全部类型</option>
-                        {% for g in genres %}
-                            <option value="{{ g }}" {% if genre == g %}selected{% endif %}>{{ g }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="year">年份：</label>
-                    <select id="year" name="year">
-                        <option value="">全部年份</option>
-                        {% for y in years %}
-                            <option value="{{ y }}" {% if year|string == y|string %}selected{% endif %}>{{ y }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="sort">排序：</label>
-                    <select id="sort" name="sort">
-                        <option value="title" {% if sort_by == 'title' %}selected{% endif %}>标题</option>
-                        <option value="year" {% if sort_by == 'year' %}selected{% endif %}>年份</option>
-                        <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>评分</option>
-                        <option value="likes" {% if sort_by == 'likes' %}selected{% endif %}>点赞数</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn btn-primary">筛选</button>
-                <a href="{{ url_for('film.list_films') }}" class="btn btn-secondary clear-filters">清除筛选</a>
-            </form>
-        </div>
+        <!-- 仅按热度排序，已移除筛选/搜索 -->
 
         <!-- 电影网格 -->
         {% if films %}
@@ -64,7 +22,7 @@
                         {% if film.poster_url.startswith('http') or film.poster_url.startswith('//') %}
                             <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报">
                         {% else %}
-                            <img src="{{ url_for('static', filename='images/posters/' ~ film.poster_url) }}" alt="{{ film.title }}的海报">
+                            <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }}的海报">
                         {% endif %}
                     {% else %}
                         <div class="no-poster">暂无海报</div>
@@ -104,7 +62,7 @@
         <div class="pagination">
             {% set total_pages = (total + per_page - 1) // per_page %}
             {% if page > 1 %}
-                <a href="{{ url_for('film.list_films', page=page-1, search=search, genre=genre, year=year, sort=sort_by) }}" class="page-link">上一页</a>
+                <a href="{{ url_for('film.list_films', page=page-1) }}" class="page-link">上一页</a>
             {% endif %}
 
             {% set start_page = page-2 if page-2 > 0 else 1 %}
@@ -113,12 +71,12 @@
                 {% if page_num == page %}
                     <span class="page-link current">{{ page_num }}</span>
                 {% else %}
-                    <a href="{{ url_for('film.list_films', page=page_num, search=search, genre=genre, year=year, sort=sort_by) }}" class="page-link">{{ page_num }}</a>
+                    <a href="{{ url_for('film.list_films', page=page_num) }}" class="page-link">{{ page_num }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if page < total_pages %}
-                <a href="{{ url_for('film.list_films', page=page+1, search=search, genre=genre, year=year, sort=sort_by) }}" class="page-link">下一页</a>
+                <a href="{{ url_for('film.list_films', page=page+1) }}" class="page-link">下一页</a>
             {% endif %}
         </div>
         {% endif %}

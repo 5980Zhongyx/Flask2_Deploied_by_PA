@@ -87,7 +87,7 @@
                         {% if film.poster_url.startswith('http') or film.poster_url.startswith('//') %}
                             <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报" loading="lazy">
                         {% else %}
-                            <img src="{{ url_for('static', filename='images/posters/' ~ film.poster_url) }}" alt="{{ film.title }}的海报" loading="lazy">
+                            <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }}的海报" loading="lazy">
                         {% endif %}
                         <div class="film-overlay">
                             <div class="overlay-content">

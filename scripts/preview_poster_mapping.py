@@ -32,7 +32,7 @@ def main():
     app = create_app('development')
     with app.app_context():
         from models.film import Film
-        posters_dir = os.path.join(app.root_path, 'static', 'images', 'posters')
+        posters_dir = os.path.join(app.root_path, 'static', 'posters')
         files = []
         if os.path.isdir(posters_dir):
             for fn in os.listdir(posters_dir):

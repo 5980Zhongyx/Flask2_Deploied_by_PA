@@ -272,7 +272,7 @@ function initializeFilterClear() {
 }
 
 // 在 DOMContentLoaded 后也初始化清除筛选
-document.addEventListener('DOMContentLoaded', initializeFilterClear);
+// 清除筛选功能已移除（筛选 UI 取消），保留函数未使用
 // 用户菜单下拉功能
 document.addEventListener('DOMContentLoaded', function() {
     const userMenuTrigger = document.querySelector('.user-menu-trigger');

@@ -21,53 +21,13 @@ def index():
 
 @film_bp.route("/films")
 def list_films():
-    # 获取查询参数
-    search = request.args.get('search', '')
-    genre = request.args.get('genre', '')
-    year = request.args.get('year', '')
-    sort_by = request.args.get('sort', 'title')
+    # 现在简化为按热度（点赞数）排序并分页；不再提供搜索/筛选功能
     page = int(request.args.get('page', 1))
     per_page = 12
 
-    # 构建查询
-    query = Film.query
-
-    # 搜索过滤
-    if search:
-        query = query.filter(
-            (Film.title.contains(search)) |
-            (Film.director.contains(search)) |
-            (Film.description.contains(search))
-        )
-
-    # 类型过滤
-    if genre:
-        query = query.filter(Film.genre.contains(genre))
-
-    # 年份过滤
-    if year:
-        query = query.filter(Film.year == int(year))
-
-    # 排序
-    if sort_by == 'year':
-        query = query.order_by(Film.year.desc())
-    elif sort_by == 'rating':
-        query = query.order_by(Film.average_rating.desc())
-    elif sort_by == 'likes':
-        query = query.order_by(Film.like_count.desc())
-    else:  # 默认按标题排序
-        query = query.order_by(Film.title)
-
-    # 分页
+    query = Film.query.order_by(Film.like_count.desc(), Film.average_rating.desc(), Film.title)
     total = query.count()
     films = query.offset((page - 1) * per_page).limit(per_page).all()
-
-    # 获取筛选选项
-    genres = db.session.query(Film.genre).distinct().all()
-    genres = [g[0] for g in genres if g[0]]
-
-    years = db.session.query(Film.year).distinct().filter(Film.year.isnot(None)).all()
-    years = sorted([y[0] for y in years if y[0]], reverse=True)
 
     liked_ids = set()
     if current_user.is_authenticated:
@@ -78,15 +38,9 @@ def list_films():
     return render_template("film_list.html",
                          films=films,
                          liked_ids=liked_ids,
-                         search=search,
-                         genre=genre,
-                         year=year,
-                         sort_by=sort_by,
                          page=page,
                          per_page=per_page,
-                         total=total,
-                         genres=genres,
-                         years=years)
+                         total=total)
 
 @film_bp.route("/films/<int:film_id>")
 def film_detail(film_id):
