@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeSmoothScrolling();
     initializeCardClicks();
     initializeRippleEffects();
+    initializeFilterClear();
     initializeBackButton();
 });
 
@@ -271,8 +272,7 @@ function initializeFilterClear() {
     });
 }
 
-// 在 DOMContentLoaded 后也初始化清除筛选
-// 清除筛选功能已移除（筛选 UI 取消），保留函数未使用
+// 在 DOMContentLoaded 后也初始化清除筛选（如果页面存在筛选表单）
 // 用户菜单下拉功能
 document.addEventListener('DOMContentLoaded', function() {
     const userMenuTrigger = document.querySelector('.user-menu-trigger');

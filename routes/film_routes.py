@@ -22,13 +22,53 @@ def index():
 
 @film_bp.route("/films")
 def list_films():
-    # 现在简化为按热度（点赞数）排序并分页；不再提供搜索/筛选功能
+    # 恢复搜索/筛选/排序功能（为了兼容 model 中的 property，likes/rating 排序在内存中完成）
     page = int(request.args.get('page', 1))
     per_page = 12
-    # 简单救援：先按标题排序（避免在 SQL 中调用 model property 导致 AttributeError）
-    query = Film.query.order_by(Film.title.asc())
-    total = query.count()
-    films = query.offset((page - 1) * per_page).limit(per_page).all()
+    search = request.args.get('search', '').strip()
+    genre = request.args.get('genre', '').strip()
+    year = request.args.get('year', '').strip()
+    sort_by = request.args.get('sort', 'title')
+
+    # 构建基础查询（只做过滤，不在这里做基于 property 的排序）
+    query = Film.query
+    if search:
+        query = query.filter(
+            (Film.title.contains(search)) |
+            (Film.director.contains(search)) |
+            (Film.description.contains(search))
+        )
+    if genre:
+        query = query.filter(Film.genre.contains(genre))
+    if year:
+        try:
+            y = int(year)
+            query = query.filter(Film.year == y)
+        except ValueError:
+            pass
+
+    films_all = query.all()
+
+    # 支持按 likes / rating 的排序（这些通常是 property，不能用于 SQL order_by，因此在 Python 中排序）
+    if sort_by == 'year':
+        films_all.sort(key=lambda f: f.year or 0, reverse=True)
+    elif sort_by == 'rating':
+        films_all.sort(key=lambda f: getattr(f, 'average_rating', 0) or 0, reverse=True)
+    elif sort_by == 'likes':
+        films_all.sort(key=lambda f: getattr(f, 'like_count', 0) or 0, reverse=True)
+    else:
+        films_all.sort(key=lambda f: (f.title or '').lower())
+
+    total = len(films_all)
+    start = (page - 1) * per_page
+    end = start + per_page
+    films = films_all[start:end]
+
+    # 获取筛选选项
+    genres_q = db.session.query(Film.genre).distinct().all()
+    genres = [g[0] for g in genres_q if g[0]]
+    years_q = db.session.query(Film.year).distinct().filter(Film.year.isnot(None)).all()
+    years = sorted([y[0] for y in years_q if y[0]], reverse=True)
 
     liked_ids = set()
     if current_user.is_authenticated:

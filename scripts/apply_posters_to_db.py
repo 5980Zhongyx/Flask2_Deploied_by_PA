@@ -28,7 +28,9 @@ def main():
         print('Mapping CSV not found:', CSV)
         return
 
-    app = create_app('development')
+    # Respect FLASK_ENV if set so we can target production/dev appropriately
+    env = os.environ.get('FLASK_ENV') or 'development'
+    app = create_app(env)
     bak = backup_db()
     if bak:
         print('Database backed up to', bak)
