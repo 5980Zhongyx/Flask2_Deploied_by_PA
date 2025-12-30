@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="film-list-page">
+    <div class="container">
+        <div class="page-header">
+            <h1>电影列表</h1>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('film.recommendations') }}" class="btn btn-primary">查看我的推荐</a>
+            {% endif %}
+        </div>
+
+        <!-- 筛选和排序 -->
+        <div class="filters-section">
+            <form method="GET" class="filters-form">
+                <div class="filter-group">
+                    <label for="search">搜索：</label>
+                    <input type="text" id="search" name="search" value="{{ search }}"
+                           placeholder="电影名、导演或描述">
+                </div>
+
+                <div class="filter-group">
+                    <label for="genre">类型：</label>
+                    <select id="genre" name="genre">
+                        <option value="">全部类型</option>
+                        {% for g in genres %}
+                            <option value="{{ g }}" {% if genre == g %}selected{% endif %}>{{ g }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="year">年份：</label>
+                    <select id="year" name="year">
+                        <option value="">全部年份</option>
+                        {% for y in years %}
+                            <option value="{{ y }}" {% if year == str(y) %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="sort">排序：</label>
+                    <select id="sort" name="sort">
+                        <option value="title" {% if sort_by == 'title' %}selected{% endif %}>标题</option>
+                        <option value="year" {% if sort_by == 'year' %}selected{% endif %}>年份</option>
+                        <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>评分</option>
+                        <option value="likes" {% if sort_by == 'likes' %}selected{% endif %}>点赞数</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">筛选</button>
+                <a href="{{ url_for('film.list_films') }}" class="btn btn-secondary">清除筛选</a>
+            </form>
+        </div>
+
+        <!-- 电影网格 -->
+        {% if films %}
+        <div class="films-grid">
+            {% for film in films %}
+            <div class="film-card">
+                <div class="film-poster">
+                    {% if film.poster_url %}
+                        <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报">
+                    {% else %}
+                        <div class="no-poster">暂无海报</div>
+                    {% endif %}
+                </div>
+                <div class="film-info">
+                    <h3><a href="{{ url_for('film.film_detail', film_id=film.id) }}">{{ film.title }}</a></h3>
+                    <p class="film-meta">
+                        {% if film.year %}{{ film.year }} · {% endif %}
+                        {% if film.director %}{{ film.director }} · {% endif %}
+                        {% if film.genre %}{{ film.genre }}{% endif %}
+                    </p>
+                    {% if film.average_rating > 0 %}
+                        <div class="rating">
+                            <span class="stars">★</span>
+                            <span class="rating-value">{{ "%.1f"|format(film.average_rating) }}</span>
+                        </div>
+                    {% endif %}
+                    <p class="likes">{{ film.like_count }} 人喜欢</p>
+                    {% if film.description %}
+                        <p class="description">{{ film.description[:100] }}{% if film.description|length > 100 %}...{% endif %}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- 分页 -->
+        {% if total > per_page %}
+        <div class="pagination">
+            {% set total_pages = (total + per_page - 1) // per_page %}
+            {% if page > 1 %}
+                <a href="{{ url_for('film.list_films', page=page-1, search=search, genre=genre, year=year, sort=sort_by) }}" class="page-link">上一页</a>
+            {% endif %}
+
+            {% for page_num in range(max(1, page-2), min(total_pages+1, page+3)) %}
+                {% if page_num == page %}
+                    <span class="page-link current">{{ page_num }}</span>
+                {% else %}
+                    <a href="{{ url_for('film.list_films', page=page_num, search=search, genre=genre, year=year, sort=sort_by) }}" class="page-link">{{ page_num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page < total_pages %}
+                <a href="{{ url_for('film.list_films', page=page+1, search=search, genre=genre, year=year, sort=sort_by) }}" class="page-link">下一页</a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="no-results">
+            <h3>没有找到符合条件的电影</h3>
+            <p>请尝试调整筛选条件</p>
+            <a href="{{ url_for('film.list_films') }}" class="btn btn-primary">清除筛选</a>
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

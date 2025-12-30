@@ -1,0 +1,510 @@
+2025-12-30 08:08:07,660 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 17, in index
+    popular_films = Film.query.order_by(desc(Film.like_count)).limit(6).all()
+                                        ~~~~^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/_elements_constructors.py", line 1097, in desc
+    return UnaryExpression._create_desc(column)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/elements.py", line 3683, in _create_desc
+    coercions.expect(roles.ByOfRole, column),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 396, in expect
+    resolved = impl._literal_coercion(
+        element, argname=argname, **kw
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 635, in _literal_coercion
+    self._raise_for_expected(element, argname)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 519, in _raise_for_expected
+    raise exc.ArgumentError(msg, code=code) from err
+sqlalchemy.exc.ArgumentError: GROUP BY / OF / etc. expression expected, got <property object at 0x79a3f1fabb00>.
+2025-12-30 08:09:01,542 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 17, in index
+    popular_films = Film.query.order_by(desc(Film.like_count)).limit(6).all()
+                                        ~~~~^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/_elements_constructors.py", line 1097, in desc
+    return UnaryExpression._create_desc(column)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/elements.py", line 3683, in _create_desc
+    coercions.expect(roles.ByOfRole, column),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 396, in expect
+    resolved = impl._literal_coercion(
+        element, argname=argname, **kw
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 635, in _literal_coercion
+    self._raise_for_expected(element, argname)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 519, in _raise_for_expected
+    raise exc.ArgumentError(msg, code=code) from err
+sqlalchemy.exc.ArgumentError: GROUP BY / OF / etc. expression expected, got <property object at 0x79a3f1fabb00>.
+2025-12-30 08:20:53,768 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 17, in index
+    popular_films = Film.query.order_by(desc(Film.like_count)).limit(6).all()
+                                        ~~~~^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/_elements_constructors.py", line 1097, in desc
+    return UnaryExpression._create_desc(column)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/elements.py", line 3683, in _create_desc
+    coercions.expect(roles.ByOfRole, column),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 396, in expect
+    resolved = impl._literal_coercion(
+        element, argname=argname, **kw
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 635, in _literal_coercion
+    self._raise_for_expected(element, argname)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 519, in _raise_for_expected
+    raise exc.ArgumentError(msg, code=code) from err
+sqlalchemy.exc.ArgumentError: GROUP BY / OF / etc. expression expected, got <property object at 0x74bc2bfbfbf0>.
+2025-12-30 08:20:56,290 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 17, in index
+    popular_films = Film.query.order_by(desc(Film.like_count)).limit(6).all()
+                                        ~~~~^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/_elements_constructors.py", line 1097, in desc
+    return UnaryExpression._create_desc(column)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/elements.py", line 3683, in _create_desc
+    coercions.expect(roles.ByOfRole, column),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 396, in expect
+    resolved = impl._literal_coercion(
+        element, argname=argname, **kw
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 635, in _literal_coercion
+    self._raise_for_expected(element, argname)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 519, in _raise_for_expected
+    raise exc.ArgumentError(msg, code=code) from err
+sqlalchemy.exc.ArgumentError: GROUP BY / OF / etc. expression expected, got <property object at 0x74bc2bfbfbf0>.
+2025-12-30 08:28:13,647 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 17, in index
+    popular_films = Film.query.order_by(desc(Film.like_count)).limit(6).all()
+                                        ~~~~^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/_elements_constructors.py", line 1097, in desc
+    return UnaryExpression._create_desc(column)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/elements.py", line 3683, in _create_desc
+    coercions.expect(roles.ByOfRole, column),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 396, in expect
+    resolved = impl._literal_coercion(
+        element, argname=argname, **kw
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 635, in _literal_coercion
+    self._raise_for_expected(element, argname)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 519, in _raise_for_expected
+    raise exc.ArgumentError(msg, code=code) from err
+sqlalchemy.exc.ArgumentError: GROUP BY / OF / etc. expression expected, got <property object at 0x7e732fb9f970>.
+2025-12-30 08:28:16,337 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 17, in index
+    popular_films = Film.query.order_by(desc(Film.like_count)).limit(6).all()
+                                        ~~~~^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/_elements_constructors.py", line 1097, in desc
+    return UnaryExpression._create_desc(column)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/elements.py", line 3683, in _create_desc
+    coercions.expect(roles.ByOfRole, column),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 396, in expect
+    resolved = impl._literal_coercion(
+        element, argname=argname, **kw
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 635, in _literal_coercion
+    self._raise_for_expected(element, argname)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 519, in _raise_for_expected
+    raise exc.ArgumentError(msg, code=code) from err
+sqlalchemy.exc.ArgumentError: GROUP BY / OF / etc. expression expected, got <property object at 0x7e732fb9f970>.
+2025-12-30 09:05:25,638 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 17, in index
+    popular_films = Film.query.order_by(desc(Film.like_count)).limit(6).all()
+                                        ~~~~^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/_elements_constructors.py", line 1097, in desc
+    return UnaryExpression._create_desc(column)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/elements.py", line 3683, in _create_desc
+    coercions.expect(roles.ByOfRole, column),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 396, in expect
+    resolved = impl._literal_coercion(
+        element, argname=argname, **kw
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 635, in _literal_coercion
+    self._raise_for_expected(element, argname)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 519, in _raise_for_expected
+    raise exc.ArgumentError(msg, code=code) from err
+sqlalchemy.exc.ArgumentError: GROUP BY / OF / etc. expression expected, got <property object at 0x7e7268cd3b00>.
+2025-12-30 09:05:27,974 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 17, in index
+    popular_films = Film.query.order_by(desc(Film.like_count)).limit(6).all()
+                                        ~~~~^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/_elements_constructors.py", line 1097, in desc
+    return UnaryExpression._create_desc(column)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/elements.py", line 3683, in _create_desc
+    coercions.expect(roles.ByOfRole, column),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 396, in expect
+    resolved = impl._literal_coercion(
+        element, argname=argname, **kw
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 635, in _literal_coercion
+    self._raise_for_expected(element, argname)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 519, in _raise_for_expected
+    raise exc.ArgumentError(msg, code=code) from err
+sqlalchemy.exc.ArgumentError: GROUP BY / OF / etc. expression expected, got <property object at 0x7e7268cd3b00>.
+2025-12-30 09:06:09,483 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 17, in index
+    popular_films = Film.query.order_by(desc(Film.like_count)).limit(6).all()
+                                        ~~~~^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/_elements_constructors.py", line 1097, in desc
+    return UnaryExpression._create_desc(column)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/elements.py", line 3683, in _create_desc
+    coercions.expect(roles.ByOfRole, column),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 396, in expect
+    resolved = impl._literal_coercion(
+        element, argname=argname, **kw
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 635, in _literal_coercion
+    self._raise_for_expected(element, argname)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/sqlalchemy/sql/coercions.py", line 519, in _raise_for_expected
+    raise exc.ArgumentError(msg, code=code) from err
+sqlalchemy.exc.ArgumentError: GROUP BY / OF / etc. expression expected, got <property object at 0x7c7da73379c0>.
+2025-12-30 09:12:39,627 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 9, in index
+    return render_template("index.html", films=films)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/5980Zhongyx/film_recommendation/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/5980Zhongyx/film_recommendation/templates/base.html", line 18, in top-level template code
+    <li><a href="{{ url_for('film.list_films') }}">电影列表</a></li>
+    ^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'film.list_films'. Did you mean 'interaction.like_film' instead?
+2025-12-30 09:12:47,026 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 9, in index
+    return render_template("index.html", films=films)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/5980Zhongyx/film_recommendation/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/5980Zhongyx/film_recommendation/templates/base.html", line 18, in top-level template code
+    <li><a href="{{ url_for('film.list_films') }}">电影列表</a></li>
+    ^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'film.list_films'. Did you mean 'interaction.like_film' instead?
+2025-12-30 09:13:57,248 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 9, in index
+    return render_template("index.html", films=films)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/5980Zhongyx/film_recommendation/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/5980Zhongyx/film_recommendation/templates/base.html", line 18, in top-level template code
+    <li><a href="{{ url_for('film.list_films') }}">电影列表</a></li>
+    ^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'film.list_films'. Did you mean 'interaction.like_film' instead?
+2025-12-30 09:14:10,083 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 9, in index
+    return render_template("index.html", films=films)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/5980Zhongyx/film_recommendation/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/5980Zhongyx/film_recommendation/templates/base.html", line 18, in top-level template code
+    <li><a href="{{ url_for('film.list_films') }}">电影列表</a></li>
+    ^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'film.list_films'. Did you mean 'interaction.like_film' instead?
+2025-12-30 09:18:38,296 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 9, in index
+    return render_template("index.html", films=films)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/5980Zhongyx/film_recommendation/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/5980Zhongyx/film_recommendation/templates/base.html", line 34, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/templates/index.html", line 10, in block 'content'
+    <a href="{{ url_for('film.list_films') }}" class="btn btn-primary">浏览电影</a>
+    ^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'film.list_films'. Did you mean 'interaction.like_film' instead?
+2025-12-30 09:18:43,118 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/routes/film_routes.py", line 9, in index
+    return render_template("index.html", films=films)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/5980Zhongyx/film_recommendation/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/5980Zhongyx/film_recommendation/templates/base.html", line 34, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/templates/index.html", line 10, in block 'content'
+    <a href="{{ url_for('film.list_films') }}" class="btn btn-primary">浏览电影</a>
+    ^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "/home/5980Zhongyx/film_recommendation/venv/lib/python3.13/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'film.list_films'. Did you mean 'interaction.like_film' instead?

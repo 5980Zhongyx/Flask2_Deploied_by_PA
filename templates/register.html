@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="auth-container">
+    <div class="auth-form">
+        <h1>注册账户</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="form" novalidate>
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" required
+                       aria-describedby="username-help"
+                       value="{{ request.form.username if request.form.username else '' }}">
+                <small id="username-help">用户名必须唯一，用于登录</small>
+            </div>
+
+            <div class="form-group">
+                <label for="email">邮箱</label>
+                <input type="email" id="email" name="email" required
+                       aria-describedby="email-help"
+                       value="{{ request.form.email if request.form.email else '' }}">
+                <small id="email-help">用于账户恢复，请使用有效邮箱</small>
+            </div>
+
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" required
+                       aria-describedby="password-help" minlength="6">
+                <small id="password-help">至少6个字符</small>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">确认密码</label>
+                <input type="password" id="confirm_password" name="confirm_password" required
+                       aria-describedby="confirm-help">
+                <small id="confirm-help">再次输入密码进行确认</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">注册</button>
+        </form>
+
+        <p class="auth-links">
+            已有账户？<a href="{{ url_for('auth.login') }}">立即登录</a>
+        </p>
+    </div>
+</main>
+{% endblock %}

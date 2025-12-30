@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>欢迎来到 Film Discovery</h1>
+<p>项目已成功部署。</p>
+
+{% if films %}
+<ul>
+    {% for film in films %}
+        <li>{{ film.title }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>暂无电影数据</p>
+{% endif %}
+
+{% endblock %}

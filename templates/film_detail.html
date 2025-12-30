@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="film-detail-page">
+    <div class="container">
+        <div class="film-header">
+            <div class="film-poster-large">
+                {% if film.poster_url %}
+                    <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报">
+                {% else %}
+                    <div class="no-poster-large">暂无海报</div>
+                {% endif %}
+            </div>
+
+            <div class="film-info-detailed">
+                <h1>{{ film.title }}</h1>
+
+                <div class="film-meta">
+                    {% if film.year %}<span class="meta-item">年份：{{ film.year }}</span>{% endif %}
+                    {% if film.director %}<span class="meta-item">导演：{{ film.director }}</span>{% endif %}
+                    {% if film.genre %}<span class="meta-item">类型：{{ film.genre }}</span>{% endif %}
+                </div>
+
+                <div class="film-stats">
+                    {% if film.average_rating > 0 %}
+                        <div class="rating-large">
+                            <span class="stars">★</span>
+                            <span class="rating-value">{{ "%.1f"|format(film.average_rating) }}</span>
+                            <span class="rating-count">({{ film.interactions|selectattr('rating')|list|length }}人评分)</span>
+                        </div>
+                    {% endif %}
+                    <div class="likes-large">
+                        <span class="heart">♥</span>
+                        <span>{{ film.like_count }}人喜欢</span>
+                    </div>
+                </div>
+
+                {% if film.description %}
+                    <div class="film-description">
+                        <h3>剧情简介</h3>
+                        <p>{{ film.description }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 用户交互区域 -->
+        {% if current_user.is_authenticated %}
+        <div class="interaction-section">
+            <h3>我的评价</h3>
+
+            {% if user_interaction %}
+                <div class="current-interaction">
+                    <p>你已经对这部电影进行了评价：</p>
+                    {% if user_interaction.rating %}
+                        <div class="rating-display">你的评分：{{ user_interaction.rating }}/5 ★</div>
+                    {% endif %}
+                    {% if user_interaction.liked %}
+                        <div class="like-status">已点赞</div>
+                    {% endif %}
+                    {% if user_interaction.has_review %}
+                        <div class="review-display">
+                            <h4>你的评论：</h4>
+                            <p>{{ user_interaction.review_text }}</p>
+                            <small>评论时间：{{ user_interaction.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <div class="interaction-form">
+                <form id="interaction-form" data-film-id="{{ film.id }}" method="POST">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="rating">评分（1-5分）：</label>
+                            <select id="rating" name="rating">
+                                <option value="">不评分</option>
+                                {% for i in range(1, 6) %}
+                                    <option value="{{ i }}" {% if user_interaction and user_interaction.rating == i %}selected{% endif %}>{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="liked" name="liked" {% if user_interaction and user_interaction.liked %}checked{% endif %}>
+                                点赞这部电影
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="review">评论（可选）：</label>
+                        <textarea id="review" name="review" rows="4" placeholder="分享你对这部电影的看法...">{{ user_interaction.review_text if user_interaction and user_interaction.has_review else '' }}</textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">保存评价</button>
+                    {% if user_interaction %}
+                        <button type="button" id="delete-interaction" class="btn btn-danger">删除评价</button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="login-prompt">
+            <p>想要对这部电影进行评价吗？</p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary">登录</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-secondary">注册</a>
+        </div>
+        {% endif %}
+
+        <!-- 其他用户评论 -->
+        {% if reviews %}
+        <div class="reviews-section">
+            <h3>用户评论</h3>
+            <div class="reviews-list">
+                {% for review in reviews %}
+                <div class="review-item">
+                    <div class="review-header">
+                        <strong>{{ review.user.username }}</strong>
+                        {% if review.rating %}
+                            <span class="review-rating">{{ review.rating }}/5 ★</span>
+                        {% endif %}
+                        <span class="review-date">{{ review.created_at.strftime('%Y-%m-%d') }}</span>
+                    </div>
+                    <div class="review-content">
+                        <p>{{ review.review_text }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

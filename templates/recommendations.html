@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="recommendations-page">
+    <div class="container">
+        <div class="page-header">
+            <h1>我的电影推荐</h1>
+            <p>基于你的喜好为你推荐的电影</p>
+        </div>
+
+        {% if recommendation_data.recommendations %}
+        <div class="recommendations-section">
+            <h2>为你推荐的电影</h2>
+            <p class="recommendation-info">
+                基于 {{ recommendation_data.total_users }} 位用户的偏好分析，为你找到了 {{ recommendation_data.recommendations|length }} 部可能喜欢的电影
+            </p>
+
+            <div class="films-grid">
+                {% for film, score in recommendation_data.recommendations %}
+                <div class="film-card recommended">
+                    <div class="film-poster">
+                        {% if film.poster_url %}
+                            <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报">
+                        {% else %}
+                            <div class="no-poster">暂无海报</div>
+                        {% endif %}
+                    </div>
+                    <div class="film-info">
+                        <h3><a href="{{ url_for('film.film_detail', film_id=film.id) }}">{{ film.title }}</a></h3>
+                        <p class="film-meta">
+                            {% if film.year %}{{ film.year }} · {% endif %}
+                            {% if film.director %}{{ film.director }} · {% endif %}
+                            {% if film.genre %}{{ film.genre }}{% endif %}
+                        </p>
+                        {% if film.average_rating > 0 %}
+                            <div class="rating">
+                                <span class="stars">★</span>
+                                <span class="rating-value">{{ "%.1f"|format(film.average_rating) }}</span>
+                            </div>
+                        {% endif %}
+                        <p class="likes">{{ film.like_count }} 人喜欢</p>
+                        <div class="recommendation-score">
+                            <span class="score-label">匹配度：</span>
+                            <span class="score-value">{{ "%.1%"|format(score) }}</span>
+                        </div>
+                        {% if film.description %}
+                            <p class="description">{{ film.description[:80] }}{% if film.description|length > 80 %}...{% endif %}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if recommendation_data.similar_users %}
+        <div class="similar-users-section">
+            <h2>相似用户分析</h2>
+            <p>你的推荐基于以下与你偏好相似的用户：</p>
+            <div class="similar-users-list">
+                {% for user_data in recommendation_data.similar_users %}
+                <div class="similar-user-card">
+                    <div class="user-info">
+                        <h4>{{ user_data.user.username }}</h4>
+                        <p>相似度：{{ "%.1%"|format(user_data.similarity) }}</p>
+                        <p>共同评价电影：{{ user_data.common_interactions }} 部</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="no-recommendations">
+            <h3>暂无个性化推荐</h3>
+            <p>你需要先对一些电影进行评价（点赞、评分或评论），系统才能为你生成个性化推荐。</p>
+            <div class="action-buttons">
+                <a href="{{ url_for('film.list_films') }}" class="btn btn-primary">浏览并评价电影</a>
+                <a href="{{ url_for('film.my_profile') }}" class="btn btn-secondary">查看我的评价</a>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="recommendation-stats">
+            <div class="stat-card">
+                <h3>{{ recommendation_data.user_interactions_count }}</h3>
+                <p>你的评价数</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ recommendation_data.total_users }}</h3>
+                <p>总用户数</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ recommendation_data.recommendations|length }}</h3>
+                <p>推荐电影数</p>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
