@@ -49,7 +49,7 @@ def register():
         db.session.commit()
 
         # 记录应用层日志
-        from models import AppLog
+        from models.log import AppLog
         AppLog.log_action(
             action="USER_REGISTER",
             resource_type="user",
@@ -80,7 +80,7 @@ def login():
             login_user(user)
 
             # 记录登录成功日志
-            from models import AppLog
+            from models.log import AppLog
             AppLog.log_action(
                 action="USER_LOGIN_SUCCESS",
                 resource_type="user",
@@ -95,7 +95,7 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for("film.index"))
         else:
             # 记录登录失败日志
-            from models import AppLog
+            from models.log import AppLog
             AppLog.log_action(
                 action="USER_LOGIN_FAILED",
                 resource_type="user",
