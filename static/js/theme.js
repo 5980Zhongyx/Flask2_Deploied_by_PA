@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializePageLoadAnimations();
     initializeHoverEffects();
     initializeSmoothScrolling();
+    initializeCardClicks();
+    initializeBackButton();
 });
 
 function initializeTheme() {
@@ -39,6 +41,26 @@ function updateThemeIcon(theme) {
         icon.className = 'fas fa-sun';
     } else {
         icon.className = 'fas fa-moon';
+    }
+}
+
+// 返回上一页的通用函数，若没有历史则跳转到默认页面
+function goBack() {
+    const backButton = document.getElementById('back-button');
+    const defaultUrl = backButton ? backButton.dataset.defaultUrl : '/';
+
+    // 尝试使用 history.back()
+    if (window.history.length > 1) {
+        const prevPath = window.location.pathname;
+        window.history.back();
+        // 如果在短时间内没有变化，则跳转到默认页面
+        setTimeout(() => {
+            if (window.location.pathname === prevPath) {
+                window.location.href = defaultUrl;
+            }
+        }, 300);
+    } else {
+        window.location.href = defaultUrl;
     }
 }
 
@@ -133,6 +155,123 @@ function initializeSmoothScrolling() {
     });
 }
 
+// 使电影卡和特性卡整体可点击（支持键盘与无障碍）
+function initializeCardClicks() {
+    function makeClickable(selector, attrName = 'data-href') {
+        document.querySelectorAll(selector + '[' + attrName + ']').forEach(card => {
+            const href = card.getAttribute(attrName);
+            if (!href) return;
+            card.style.cursor = 'pointer';
+
+            // 可聚焦与语义化
+            if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
+            if (!card.hasAttribute('role')) card.setAttribute('role', 'link');
+
+            // 鼠标点击：若不是点击到内部交互元素则导航
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('a') || e.target.closest('button') || e.target.closest('input')) return;
+                window.location.href = href;
+            });
+
+            // 键盘激活
+            card.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    window.location.href = href;
+                }
+            });
+        });
+    }
+
+    makeClickable('.film-card', 'data-href');
+    makeClickable('.feature-card', 'data-href');
+}
+
+// 点击波纹效果与按压反馈
+function initializeRippleEffects() {
+    function createRipple(e, element) {
+        const rect = element.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        const size = Math.max(rect.width, rect.height) * 0.5;
+        ripple.style.width = ripple.style.height = size + 'px';
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        element.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 700);
+    }
+
+    function attach(selector) {
+        document.querySelectorAll(selector).forEach(el => {
+            el.addEventListener('pointerdown', function(e) {
+                // ignore if clicking inner controls
+                if (e.target.closest('a') || e.target.closest('button') || e.target.closest('input')) return;
+                el.classList.add('pressed');
+                createRipple(e, el);
+            });
+            el.addEventListener('pointerup', function() {
+                el.classList.remove('pressed');
+            });
+            el.addEventListener('pointerleave', function() {
+                el.classList.remove('pressed');
+            });
+        });
+    }
+
+    attach('.film-card');
+    attach('.feature-card');
+    attach('.btn');
+}
+
+// 返回按钮初始化与回退逻辑
+function initializeBackButton() {
+    const backBtn = document.getElementById('back-button');
+    if (!backBtn) return;
+
+    // 判断是否能回退：优先使用 history.length，其次使用 document.referrer 判断是否来自本站
+    const canHistoryBack = window.history && window.history.length > 1;
+    const referrer = document.referrer || '';
+    const sameSiteReferrer = referrer.includes(window.location.hostname);
+
+    if (canHistoryBack || sameSiteReferrer) {
+        backBtn.style.display = 'inline-flex';
+    } else {
+        backBtn.style.display = 'none';
+    }
+
+    backBtn.addEventListener('click', function() {
+        // 尝试后退历史
+        if (window.history && window.history.length > 1) {
+            window.history.back();
+            // 如果后退无效，在短延时后跳转到首页作为兜底
+            setTimeout(() => {
+                if (document.hidden || document.readyState === 'complete') {
+                    window.location.href = window.SITE_HOME || '/';
+                }
+            }, 300);
+            return;
+        }
+
+        // fallback：直接跳转到站点首页
+        window.location.href = window.SITE_HOME || '/';
+    });
+}
+
+// 清除筛选按钮行为（若存在）
+function initializeFilterClear() {
+    const clearBtn = document.querySelector('.clear-filters');
+    if (!clearBtn) return;
+    clearBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        // 重定向到电影列表（无查询参数）
+        window.location.href = window.SITE_HOME ? window.SITE_HOME.replace('/', '/films') : '/films';
+    });
+}
+
+// 在 DOMContentLoaded 后也初始化清除筛选
+document.addEventListener('DOMContentLoaded', initializeFilterClear);
 // 用户菜单下拉功能
 document.addEventListener('DOMContentLoaded', function() {
     const userMenuTrigger = document.querySelector('.user-menu-trigger');

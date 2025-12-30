@@ -96,6 +96,43 @@ body {
     padding: 0 var(--spacing-lg);
 }
 
+/* 返回按钮样式 */
+.back-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.12);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+    cursor: pointer;
+    transition: transform var(--transition-fast), background var(--transition-fast), opacity var(--transition-fast);
+}
+
+.back-btn i {
+    font-size: 1rem;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,0.16);
+}
+
+@media (max-width: 768px) {
+    .back-btn {
+        top: 8px;
+        left: 8px;
+        width: 40px;
+        height: 40px;
+    }
+}
+
 /* ===== SECTIONS ===== */
 .features-grid {
     display: grid;
@@ -515,6 +552,61 @@ body {
     font-size: 1.8rem;
 }
 
+/* 返回按钮样式 */
+.back-button {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 1200;
+    cursor: pointer;
+    transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.back-button:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,0.14);
+}
+
+/* 特性卡片可点击链接样式（移除默认链接样式） */
+.feature-link {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    height: 100%;
+}
+
+/* 移动端返回按钮微调 */
+@media (max-width: 768px) {
+    .back-button {
+        left: 10px;
+        top: 74px; /* 在导航栏下方，避免覆盖导航操作按钮 */
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: rgba(0,0,0,0.45);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+}
+
+@media (max-width: 480px) {
+    .back-button {
+        top: 66px;
+        left: 8px;
+        width: 36px;
+        height: 36px;
+    }
+}
+
 /* 导航菜单 */
 .nav-menu {
     display: flex;
@@ -764,6 +856,20 @@ body {
 .film-card:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+}
+
+/* 可点击卡片的样式提示与可聚焦态 */
+.film-card[data-href],
+.feature-card[data-href] {
+    cursor: pointer;
+    outline: none;
+}
+
+.film-card[data-href]:focus,
+.feature-card[data-href]:focus {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12), 0 0 0 4px rgba(255,107,53,0.12);
+    transform: translateY(-10px);
     border-color: var(--primary-color);
 }
 

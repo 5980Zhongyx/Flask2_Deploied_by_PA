@@ -81,10 +81,14 @@
         {% if films %}
             <div class="films-grid featured-grid modern-grid">
             {% for film in films[:6] %}
-            <div class="film-card featured-card advanced-hover" data-film-id="{{ film.id }}">
+            <div class="film-card featured-card advanced-hover" data-film-id="{{ film.id }}" data-href="{{ url_for('film.film_detail', film_id=film.id) }}">
                 <div class="film-poster">
                     {% if film.poster_url %}
-                        <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报" loading="lazy">
+                        {% if film.poster_url.startswith('http') or film.poster_url.startswith('//') %}
+                            <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报" loading="lazy">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/posters/' ~ film.poster_url) }}" alt="{{ film.title }}的海报" loading="lazy">
+                        {% endif %}
                         <div class="film-overlay">
                             <div class="overlay-content">
                                 <a href="{{ url_for('film.film_detail', film_id=film.id) }}" class="btn btn-primary btn-sm">
@@ -99,7 +103,6 @@
                             <span>暂无海报</span>
                         </div>
                     {% endif %}
-
                     <!-- 评分徽章 -->
                     {% if film.average_rating > 0 %}
                     <div class="rating-badge">
@@ -164,36 +167,40 @@
         </div>
 
         <div class="features-grid">
-            <div class="feature-card modern-card">
+            <div class="feature-card modern-card" data-href="{{ url_for('film.recommendations') }}">
                 <div class="feature-icon">
                     <i class="fas fa-brain"></i>
                 </div>
                 <h3>智能推荐</h3>
                 <p>基于你的观影偏好，智能推荐最适合你的电影</p>
+                <a href="{{ url_for('film.recommendations') }}" class="btn btn-outline" style="margin-top:12px;">查看我的推荐</a>
             </div>
 
-            <div class="feature-card modern-card">
+            <div class="feature-card modern-card" data-href="{{ url_for('film.list_films') }}">
                 <div class="feature-icon">
                     <i class="fas fa-users"></i>
                 </div>
                 <h3>社区互动</h3>
                 <p>与其他影迷分享观影心得，交流电影观点</p>
+                <a href="{{ url_for('film.list_films') }}" class="btn btn-outline" style="margin-top:12px;">浏览电影</a>
             </div>
 
-            <div class="feature-card modern-card">
+            <div class="feature-card modern-card" data-href="{{ url_for('film.list_films') }}">
                 <div class="feature-icon">
                     <i class="fas fa-search"></i>
                 </div>
                 <h3>精准搜索</h3>
                 <p>多种筛选条件，快速找到心仪的电影</p>
+                <a href="{{ url_for('film.list_films') }}" class="btn btn-outline" style="margin-top:12px;">开始搜索</a>
             </div>
 
-            <div class="feature-card modern-card">
+            <div class="feature-card modern-card" data-href="{{ url_for('film.list_films') }}">
                 <div class="feature-icon">
                     <i class="fas fa-mobile-alt"></i>
                 </div>
                 <h3>移动优先</h3>
                 <p>完美适配手机端，随时随地发现好电影</p>
+                <a href="{{ url_for('film.list_films') }}" class="btn btn-outline" style="margin-top:12px;">手机端浏览</a>
             </div>
         </div>
     </div>

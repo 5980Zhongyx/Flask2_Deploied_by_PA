@@ -6,7 +6,11 @@
         <div class="film-header">
             <div class="film-poster-large">
                 {% if film.poster_url %}
-                    <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报">
+                    {% if film.poster_url.startswith('http') or film.poster_url.startswith('//') %}
+                        <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/posters/' ~ film.poster_url) }}" alt="{{ film.title }}的海报">
+                    {% endif %}
                 {% else %}
                     <div class="no-poster-large">暂无海报</div>
                 {% endif %}

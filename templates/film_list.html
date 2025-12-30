@@ -50,7 +50,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">筛选</button>
-                <a href="{{ url_for('film.list_films') }}" class="btn btn-secondary">清除筛选</a>
+                <a href="{{ url_for('film.list_films') }}" class="btn btn-secondary clear-filters">清除筛选</a>
             </form>
         </div>
 
@@ -58,10 +58,14 @@
         {% if films %}
         <div class="films-grid">
             {% for film in films %}
-            <div class="film-card">
+            <div class="film-card" data-href="{{ url_for('film.film_detail', film_id=film.id) }}">
                 <div class="film-poster">
                     {% if film.poster_url %}
-                        <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报">
+                        {% if film.poster_url.startswith('http') or film.poster_url.startswith('//') %}
+                            <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/posters/' ~ film.poster_url) }}" alt="{{ film.title }}的海报">
+                        {% endif %}
                     {% else %}
                         <div class="no-poster">暂无海报</div>
                     {% endif %}

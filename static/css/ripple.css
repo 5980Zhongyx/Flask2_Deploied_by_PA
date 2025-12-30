@@ -1,0 +1,25 @@
+/* Ripple 和按压动画效果 */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    background: rgba(255, 255, 255, 0.6);
+    animation: ripple-effect 600ms linear;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+@keyframes ripple-effect {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* 被按下的微缩反馈 */
+.pressed {
+    transform: translateY(-2px) scale(0.995);
+    transition: transform 120ms ease;
+}
+
+

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Film Discovery - 发现好电影{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ripple.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -13,12 +14,20 @@
     <header class="header">
         <nav class="navbar">
             <div class="nav-container">
+                <!-- 全局返回按钮（JS 控制可见性） -->
+                <button id="back-button" class="back-btn" aria-label="返回" title="返回上一页" type="button">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
                 <div class="nav-brand">
                     <a href="{{ url_for('film.index') }}">
                         <i class="fas fa-film"></i>
                         <span>Film Discovery</span>
                     </a>
                 </div>
+                <!-- 返回按钮（所有页面可见） -->
+                <button id="back-button" class="back-button" data-default-url="{{ url_for('film.index') }}" onclick="goBack()" aria-label="返回上一页" title="返回上一页">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
 
                 <div class="nav-menu">
                     <ul class="nav-links">
@@ -97,6 +106,8 @@
         </div>
     </footer>
 
+    <!-- 暴露站点首页 URL 供 JS 使用（回退失败时的回退目标） -->
+    <script>window.SITE_HOME = "{{ url_for('film.index') }}";</script>
     <!-- JavaScript -->
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <script src="{{ url_for('static', filename='js/interactions.js') }}"></script>
