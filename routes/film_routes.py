@@ -3,6 +3,7 @@ import os
 import json
 from flask_login import login_required, current_user
 from app import db
+from sqlalchemy import func
 
 # 延迟导入以避免循环导入
 from models.film import Film
@@ -24,8 +25,8 @@ def list_films():
     # 现在简化为按热度（点赞数）排序并分页；不再提供搜索/筛选功能
     page = int(request.args.get('page', 1))
     per_page = 12
-
-    query = Film.query.order_by(Film.like_count.desc(), Film.average_rating.desc(), Film.title)
+    # 简单救援：先按标题排序（避免在 SQL 中调用 model property 导致 AttributeError）
+    query = Film.query.order_by(Film.title.asc())
     total = query.count()
     films = query.offset((page - 1) * per_page).limit(per_page).all()
 
