@@ -22,6 +22,41 @@ function initializeInteractions() {
     if (deleteButton) {
         deleteButton.addEventListener('click', handleDeleteInteraction);
     }
+    // Initialize comment UX (char counter, disable empty submit)
+    initializeCommentFeatures();
+}
+
+function initializeCommentFeatures() {
+    const form = document.getElementById('interaction-form');
+    if (!form) return;
+
+    const textarea = form.querySelector('#review');
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (!textarea || !submitButton) return;
+
+    // Create or reuse counter element
+    let counter = form.querySelector('.comment-counter');
+    if (!counter) {
+        counter = document.createElement('div');
+        counter.className = 'comment-counter';
+        counter.style.fontSize = '0.85rem';
+        counter.style.color = '#666';
+        counter.style.marginTop = '6px';
+        textarea.parentNode.appendChild(counter);
+    }
+
+    const updateCounter = () => {
+        const len = textarea.value.trim().length;
+        counter.textContent = `${len} / 1000`;
+        // disable submit if empty and no rating/like
+        const rating = form.querySelector('#rating') ? form.querySelector('#rating').value : '';
+        const liked = form.querySelector('#liked') ? form.querySelector('#liked').checked : false;
+        submitButton.disabled = !(len > 0 || rating || liked);
+    };
+
+    textarea.addEventListener('input', updateCounter);
+    // init
+    updateCounter();
 }
 
 async function handleLikeClick(event) {
@@ -37,13 +72,16 @@ async function handleLikeClick(event) {
 
     // Disable button to prevent double clicks
     button.disabled = true;
-        button.textContent = 'Processing...';
+    button.setAttribute('aria-busy', 'true');
+    button.classList.add('processing');
 
     try {
         const response = await fetch(`/api/like/${filmId}`, {
             method: 'POST',
+            credentials: 'same-origin',
             headers: {
                 'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             }
         });
 
@@ -65,8 +103,10 @@ async function handleLikeClick(event) {
         console.error('Like request failed:', error);
         showMessage('Network error, please retry', 'error');
     } finally {
-        // Re-enable button
+        // Re-enable button and clear processing state
         button.disabled = false;
+        button.removeAttribute('aria-busy');
+        button.classList.remove('processing');
     }
 }
 
@@ -105,27 +145,37 @@ async function handleInteractionSubmit(event) {
 
         const result = await response.json();
 
-        if (result.success) {
-            showMessage(result.message, 'success');
+            if (result.success) {
+                showMessage(result.message, 'success');
 
-            // Update page display
-            if (result.data) {
-                updateInteractionDisplay(result.data);
-                updateFilmStats(result.data.film_stats);
-            }
+                // Update page display
+                if (result.data) {
+                    updateInteractionDisplay(result.data);
+                    updateFilmStats(result.data.film_stats);
+                }
 
-            // Partial refresh update comments list and stats (prioritize comments refresh)
-            if (result.data) {
-                updateInteractionDisplay(result.data);
-                updateFilmStats(result.data.film_stats);
+                // Optimistic append: if server returned review content or we have local text, prepend immediately
+                const newReview = result.data && (result.data.review || result.data.interaction) ? (result.data.review || result.data.interaction) : null;
+                if (newReview) {
+                    prependReview(newReview);
+                } else if (data.review && data.review.trim().length > 0) {
+                    // construct a minimal review object using current username if available
+                    const username = document.querySelector('.user-menu-trigger span')?.textContent || 'You';
+                    prependReview({
+                        user: { username: username },
+                        rating: data.rating || null,
+                        created_at: new Date().toISOString(),
+                        review_text: data.review
+                    });
+                }
+
+                // Reload first page of comments to ensure consistency (after short delay)
+                setTimeout(() => {
+                    loadReviews(filmId, 1);
+                }, 800);
+            } else {
+                showMessage(result.message || 'Save failed', 'error');
             }
-            // Reload first page of comments
-            setTimeout(() => {
-                loadReviews(filmId, 1);
-            }, 300);
-        } else {
-            showMessage(result.message || 'Save failed', 'error');
-        }
     } catch (error) {
         console.error('Interaction submit failed:', error);
         showMessage('Network error, please retry', 'error');
@@ -243,14 +293,18 @@ async function handleDeleteInteraction(event) {
 }
 
 function updateLikeButton(button, liked) {
+    // set aria and visual state, keep icon
+    button.setAttribute('aria-pressed', liked ? 'true' : 'false');
     if (liked) {
         button.classList.add('liked');
-        button.textContent = 'Liked';
-        button.setAttribute('aria-pressed', 'true');
+        // add small animation class
+        button.classList.add('liked-anim');
+        button.innerHTML = '<i class="fas fa-heart"></i> <span class="like-label">Liked</span>';
+        // remove animation class after animation (300ms)
+        setTimeout(() => button.classList.remove('liked-anim'), 350);
     } else {
         button.classList.remove('liked');
-        button.textContent = 'Like';
-        button.setAttribute('aria-pressed', 'false');
+        button.innerHTML = '<i class="fas fa-heart"></i> <span class="like-label">Like</span>';
     }
 }
 
@@ -311,11 +365,18 @@ function showMessage(message, type = 'info') {
     const messageDiv = document.createElement('div');
     messageDiv.className = `alert alert-${type}`;
     messageDiv.setAttribute('role', 'alert');
+    messageDiv.setAttribute('aria-live', 'polite');
     messageDiv.textContent = message;
 
     // Add to top of page
     const container = document.querySelector('.container') || document.body;
     container.insertBefore(messageDiv, container.firstChild);
+
+    // Also announce via dedicated live region if present (for dynamic updates)
+    const live = document.getElementById('aria-live');
+    if (live) {
+        live.textContent = message;
+    }
 
     // Auto remove after 3 seconds
     setTimeout(() => {
@@ -341,4 +402,31 @@ function likeFilm(filmId) {
             window.location.reload();
         });
     }
+}
+
+// Prepend a single review element (optimistic UI)
+function prependReview(review) {
+    const container = document.getElementById('reviews-container');
+    if (!container || !review) return;
+
+    const div = document.createElement('div');
+    div.className = 'review-item review-new';
+
+    const username = escapeHtml(review.user && (review.user.username || review.user) || document.querySelector('.user-menu-trigger span')?.textContent || 'You');
+    const rating = review.rating ? `<span class="review-rating">${review.rating}/5 ★</span>` : '';
+    const date = review.created_at ? new Date(review.created_at).toLocaleString() : new Date().toLocaleString();
+    const text = escapeHtml(review.review_text || review.text || '');
+
+    div.innerHTML = `
+        <div class="review-header">
+            <strong>${username}</strong>
+            ${rating}
+            <span class="review-date">${date}</span>
+        </div>
+        <div class="review-content"><p>${text}</p></div>
+    `;
+
+    container.insertBefore(div, container.firstChild);
+    // remove the highlight class after animation finishes
+    setTimeout(() => div.classList.remove('review-new'), 900);
 }

@@ -110,6 +110,8 @@
 
     <!-- expose index URL , provide for JS-->
     <script>window.SITE_HOME = "{{ url_for('film.index') }}";</script>
+    <!-- ARIA live region for accessible messages -->
+    <div id="aria-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
     <!-- JavaScript -->
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <script src="{{ url_for('static', filename='js/interactions.js') }}"></script>
