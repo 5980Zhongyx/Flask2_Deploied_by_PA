@@ -133,10 +133,12 @@
 </main>
 
 {% block scripts %}
+    <div id="daily-data" style="display:none" data-daily='{{ daily_interactions|tojson|e }}'></div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Prepare data for the trending chart
-    const dailyData = {{ daily_interactions|tojson }};
+    const dailyDataEl = document.getElementById('daily-data');
+    const dailyData = dailyDataEl ? JSON.parse(dailyDataEl.dataset.daily || '[]') : [];
     const labels = dailyData.map(item => {
         const date = new Date(item.date);
         return date.toLocaleDateString('{{ "zh-CN" if session.get("language", "en") == "zh" else "en-US" }}', {
@@ -203,7 +205,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         display: true,
                         text: '{{ _("Date") }}'
                     },
-                    ,
                     grid: {
                         display: false
                     },
@@ -220,11 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     beginAtZero: true,
                     grid: {
                         color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    ticks: {
+                        color: tickColor
                     }
-                        ,
-                        ticks: {
-                            color: tickColor
-                        }
                 }
             },
             interaction: {

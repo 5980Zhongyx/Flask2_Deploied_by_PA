@@ -211,9 +211,12 @@ function initializeMobileMenu() {
     const navMenu = document.querySelector('.nav-menu');
 
     if (mobileMenuToggle && navMenu) {
+    mobileMenuToggle.setAttribute('aria-expanded', 'false');
     mobileMenuToggle.addEventListener('click', function() {
         navMenu.classList.toggle('mobile-menu-open');
         mobileMenuToggle.classList.toggle('active');
+        const expanded = navMenu.classList.contains('mobile-menu-open') ? 'true' : 'false';
+        mobileMenuToggle.setAttribute('aria-expanded', expanded);
     });
 
     // Close mobile menu when clicking elsewhere
@@ -419,9 +422,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const userMenuDropdown = document.querySelector('.user-menu-dropdown');
 
     if (userMenuTrigger && userMenuDropdown) {
+        userMenuTrigger.setAttribute('aria-haspopup', 'true');
+        userMenuTrigger.setAttribute('aria-expanded', 'false');
         userMenuTrigger.addEventListener('click', function(e) {
             e.stopPropagation();
-            userMenuDropdown.classList.toggle('show');
+            const showing = userMenuDropdown.classList.toggle('show');
+            userMenuTrigger.setAttribute('aria-expanded', showing ? 'true' : 'false');
         });
 
         // Close dropdown when clicking elsewhere

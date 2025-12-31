@@ -103,31 +103,31 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="review">评论（可选）：</label>
-                        <textarea id="review" name="review" rows="4" placeholder="分享你对这部电影的看法...">{{ user_interaction.review_text if user_interaction and user_interaction.has_review else '' }}</textarea>
+                        <label for="review">Review (optional):</label>
+                        <textarea id="review" name="review" rows="4" placeholder="Share your thoughts about this movie...">{{ user_interaction.review_text if user_interaction and user_interaction.has_review else '' }}</textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">保存评价</button>
+                    <button type="submit" class="btn btn-primary">Save review</button>
                     {% if user_interaction %}
-                        <button type="button" id="delete-interaction" class="btn btn-danger">删除评价</button>
+                        <button type="button" id="delete-interaction" class="btn btn-danger">Delete review</button>
                     {% endif %}
                 </form>
             </div>
         </div>
         {% else %}
         <div class="login-prompt">
-            <p>想要对这部电影进行评价吗？</p>
-            <a href="{{ url_for('auth.login') }}" class="btn btn-primary">登录</a>
-            <a href="{{ url_for('auth.register') }}" class="btn btn-secondary">注册</a>
+            <p>Want to review this movie?</p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Login</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-secondary">Register</a>
         </div>
         {% endif %}
 
-        <!-- 其他用户评论 -->
+        <!-- Other users' comments -->
         {% if reviews %}
         <div class="reviews-section">
-            <h2>用户评论</h2>
+            <h2>Other users' comments</h2>
             <div id="reviews-container" class="reviews-list">
-                <!-- 评论将通过 AJAX 加载，初始显示服务器端渲染的前几条 -->
+                <!-- Reviews will be loaded via AJAX, initially displaying the first few from server-side rendering -->
                 {% for review in reviews[:5] %}
                 <div class="review-item">
                     <div class="review-header">
@@ -144,11 +144,13 @@
                 {% endfor %}
             </div>
             <div id="reviews-pagination" class="reviews-pagination" style="margin-top:12px;"></div>
+            <div id="film-data" style="display:none" data-film='{{ film.id|tojson|e }}'></div>
             <script>
-                // 页面加载完成后载入第一页评论（覆盖初始若有更新）
+                // Load first page of reviews after page load (overwrite initial if updated)
                 document.addEventListener('DOMContentLoaded', function() {
-                    const filmId = {{ film.id }};
-                    if (typeof loadReviews === 'function') {
+                    const filmDataEl = document.getElementById('film-data');
+                    const filmId = filmDataEl ? JSON.parse(filmDataEl.dataset.film || 'null') : null;
+                    if (typeof loadReviews === 'function' && filmId !== null) {
                         loadReviews(filmId, 1, 5);
                     }
                 });

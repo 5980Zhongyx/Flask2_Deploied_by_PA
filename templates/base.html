@@ -51,7 +51,7 @@
     {% if current_user.is_authenticated %}
                         <div class="user-menu">
                             <button class="user-menu-trigger">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ current_user.username }}" alt="Avatar" class="user-avatar">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ current_user.username }}" alt="{{ current_user.username }}'s avatar" class="user-avatar">
         <span>{{ current_user.username }}</span>
                                 <i class="fas fa-chevron-down"></i>
                             </button>
@@ -68,7 +68,7 @@
     {% endif %}
 
                     <!-- Mobile menu button -->
-                    <button class="mobile-menu-toggle" aria-label="Menu">
+                    <button class="mobile-menu-toggle" aria-label="Menu" aria-expanded="false">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
