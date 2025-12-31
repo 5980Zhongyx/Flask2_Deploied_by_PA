@@ -3242,25 +3242,38 @@ h3 { font-size: 1.5rem; }
     background: transparent !important;
 }
 
-/* User-requested final overrides: make key labels black in normal mode, white in high-contrast */
+
 .section-title,
 .section-title .title-main,
 .section-description,
 .footer-links a,
+.footer-links a * ,
+.footer-bottom p,
 .film-meta .meta-item,
+.film-meta span,
 .trending-film-info h4 a,
+.trending-film-info h4 a *,
 .trending-stats .interaction-count,
 .trending-stats .like-count,
 .recommendation-info,
+.recommendation-column h3,
+.film-info h4 a,
+.film-info h4 a *,
+.recommendation-score strong,
 .stat-card h3,
 .profile-page h2,
 .liked,
 .interaction-details .rating,
 .review-preview,
+.review-preview * ,
 .review-display p,
 .review-rating,
-.review-date {
+.review-date,
+.auth-links a,
+.auth-links a * {
     color: #000000 !important;
+    background: transparent !important;
+    opacity: 1 !important;
 }
 
 .high-contrast .section-title,
@@ -3386,4 +3399,36 @@ html {
     .accessibility-panel {
         display: none !important;
     }
+}
+
+/* FINAL: force listed elements to black in normal mode (keep high-contrast overrides) */
+.section-title,
+.section-title .title-main,
+.section-description,
+.page-header h1,
+.recommendation-info,
+.recommendation-column h3,
+.trending-film-info h4,
+.trending-film-info h4 a,
+.trending-stats .interaction-count,
+.trending-stats .like-count,
+.film-meta .meta-item,
+.film-meta span,
+.recommendation-score,
+.stat-card h3,
+.profile-page h2,
+.liked,
+.interaction-details .rating,
+.review-preview,
+.review-display p,
+.review-rating,
+.review-date,
+.footer-links a,
+.footer-bottom p,
+.auth-links a,
+.film-info h4 a,
+.film-info h4 {
+    color: #000000 !important;
+    background: transparent !important;
+    opacity: 1 !important;
 }
