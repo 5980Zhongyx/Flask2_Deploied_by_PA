@@ -111,11 +111,15 @@ def create_app(config_name=None):
         # Content Security Policy for additional protection
         csp = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
-            "style-src 'self' 'unsafe-inline'; "
+            # allow scripts from our CDN provider
+            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
+            # allow styles including inline styles and known CDNs (Google Fonts, Cloudflare)
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; "
+            # images from self, data URIs and https sources (posters may be remote)
             "img-src 'self' data: https:; "
-            "font-src 'self' data:; "
-            "connect-src 'self'"
+            # fonts from self, data and common font CDNs (Google Fonts, Cloudflare)
+            "font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; "
+            "connect-src 'self';"
         )
         response.headers['Content-Security-Policy'] = csp
 
