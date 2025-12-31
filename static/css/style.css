@@ -2617,14 +2617,14 @@ h3 { font-size: 1.5rem; }
         0 0 20px rgba(255,107,53,0.2);
 }
 
-/* 文字发光效果 */
+/* word  */
 .text-glow {
     text-shadow: 0 0 10px rgba(255,107,53,0.5);
 }
 
 /* ===== MODERN UI EFFECTS ===== */
 
-/* 点击波纹效果 */
+/* click ripple effect */
 .btn {
     position: relative;
     overflow: hidden;
@@ -2648,7 +2648,7 @@ h3 { font-size: 1.5rem; }
     height: 300px;
 }
 
-/* 加载动画 */
+/* loading animation */
 @keyframes loading {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -2664,7 +2664,7 @@ h3 { font-size: 1.5rem; }
     animation: loading 1s ease-in-out infinite;
 }
 
-/* 渐入动画 */
+/* fade in animation */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -2680,7 +2680,7 @@ h3 { font-size: 1.5rem; }
     animation: fadeInUp 0.6s ease-out;
 }
 
-/* 滚动触发动画 */
+/* scroll trigger animation */
 .fade-in-section {
     opacity: 0;
     transform: translateY(30px);
@@ -2692,7 +2692,7 @@ h3 { font-size: 1.5rem; }
     transform: translateY(0);
 }
 
-/* 脉冲效果 */
+/* pulse effect */
 @keyframes pulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.05); }
@@ -2703,7 +2703,7 @@ h3 { font-size: 1.5rem; }
     animation: pulse 2s infinite;
 }
 
-/* 闪烁效果 */
+/* blink effect */
 @keyframes blink {
     0%, 50% { opacity: 1; }
     51%, 100% { opacity: 0.5; }
@@ -2713,14 +2713,14 @@ h3 { font-size: 1.5rem; }
     animation: blink 1.5s infinite;
 }
 
-/* 毛玻璃效果 */
+/* glass effect */
 .glass {
     backdrop-filter: blur(10px);
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* 深色模式毛玻璃 */
+                /* dark mode glass */
 [data-theme="dark"] .glass {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -3428,6 +3428,52 @@ html {
 .auth-links a,
 .film-info h4 a,
 .film-info h4 {
+    color: #000000 !important;
+    background: transparent !important;
+    opacity: 1 !important;
+}
+
+/* Extra specificity for profile page elements to override any other rules */
+.profile-page h2,
+.profile-page .liked,
+.profile-page .interaction-details .rating,
+.profile-page .review-preview,
+.profile-page .review-display p,
+.profile-page .review-rating,
+.profile-page .review-date {
+    color: #000000 !important;
+    background: transparent !important;
+    opacity: 1 !important;
+}
+
+/* Even more specific selectors for profile page */
+div.profile-page h2,
+span.liked,
+.interaction-details span.rating {
+    color: #000000 !important;
+    background: transparent !important;
+    opacity: 1 !important;
+}
+
+/* Nuclear option: override any possible inline styles with maximum specificity */
+.profile-page h2[style],
+.liked[style],
+.interaction-details .rating[style],
+.review-preview[style],
+.review-display p[style] {
+    color: #000000 !important;
+    background: transparent !important;
+    opacity: 1 !important;
+}
+
+/* Force black text for profile page content - no matter what */
+body:not(.high-contrast) .profile-page h2,
+body:not(.high-contrast) .profile-page .liked,
+body:not(.high-contrast) .profile-page .interaction-details .rating,
+body:not(.high-contrast) .profile-page .review-preview,
+body:not(.high-contrast) .profile-page .review-display p,
+body:not(.high-contrast) .profile-page .review-rating,
+body:not(.high-contrast) .profile-page .review-date {
     color: #000000 !important;
     background: transparent !important;
     opacity: 1 !important;

@@ -15,6 +15,14 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
         const selectors = 'h1,h2,h3,h4,h5,h6,p,small,a,span';
         document.querySelectorAll(selectors).forEach(el => {
+            // Skip elements that should keep their CSS-set colors (profile page elements)
+            const shouldSkip = el.classList.contains('liked') ||
+                             (el.tagName === 'H2' && el.textContent && el.textContent.includes('我的互动记录')) ||
+                             el.closest && el.closest('.profile-page');
+            if (shouldSkip) {
+                return; // Don't remove styles from these elements
+            }
+
             if (el.hasAttribute('style')) {
                 // remove only color/background-color/opacity to avoid breaking layout
                 try {
@@ -41,6 +49,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (m.type === 'attributes' && m.attributeName === 'style') {
                     const el = m.target;
                     const tag = el.tagName && el.tagName.toLowerCase();
+                    // Skip elements that should keep their CSS-set colors (profile page elements)
+                    const shouldSkip = el.classList.contains('liked') ||
+                                     (el.tagName === 'H2' && el.textContent.includes('我的互动记录')) ||
+                                     el.closest('.profile-page');
+                    if (shouldSkip) {
+                        return; // Don't remove styles from these elements
+                    }
                     // only target text-like elements to avoid interfering with layout elements
                     if (tag && ['h1','h2','h3','h4','h5','h6','p','small','a','span','button'].includes(tag)) {
                         try {
@@ -64,6 +79,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                 els.unshift(node);
                             }
                             els.forEach(el => {
+                                // Skip elements that should keep their CSS-set colors (profile page elements)
+                                const shouldSkip = el.classList && el.classList.contains('liked') ||
+                                                 (el.tagName === 'H2' && el.textContent && el.textContent.includes('我的互动记录')) ||
+                                                 el.closest && el.closest('.profile-page');
+                                if (shouldSkip) {
+                                    return; // Don't remove styles from these elements
+                                }
                                 try {
                                     el.style.removeProperty('color');
                                     el.style.removeProperty('background-color');
