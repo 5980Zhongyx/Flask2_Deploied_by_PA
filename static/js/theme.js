@@ -609,16 +609,25 @@ Keyboard Shortcuts:
             }
         });
 
-        // Skip to main content link
-        const skipLink = document.createElement('a');
-        skipLink.href = '#main-content';
-        skipLink.className = 'skip-link sr-only';
-        skipLink.textContent = 'Skip to main content';
-        document.body.insertBefore(skipLink, document.body.firstChild);
+        // Skip to main content link - only create if not already present in template
+        if (!document.querySelector('.skip-link')) {
+            const skipLink = document.createElement('a');
+            skipLink.href = '#main-content';
+            skipLink.className = 'skip-link sr-only';
+            skipLink.textContent = 'Skip to main content';
+            document.body.insertBefore(skipLink, document.body.firstChild);
 
-        // Show skip link on focus
-        skipLink.addEventListener('focus', () => skipLink.classList.remove('sr-only'));
-        skipLink.addEventListener('blur', () => skipLink.classList.add('sr-only'));
+            // Show skip link on focus
+            skipLink.addEventListener('focus', () => skipLink.classList.remove('sr-only'));
+            skipLink.addEventListener('blur', () => skipLink.classList.add('sr-only'));
+        } else {
+            // If a skip-link exists in the template, ensure keyboard focus shows it
+            const existing = document.querySelector('.skip-link');
+            existing.addEventListener &&
+                existing.addEventListener('focus', () => existing.classList.remove('sr-only'));
+            existing.addEventListener &&
+                existing.addEventListener('blur', () => existing.classList.add('sr-only'));
+        }
     }
 
     announceToScreenReader(message) {

@@ -1316,7 +1316,8 @@ body {
     text-align: center;
     padding-top: var(--spacing-lg);
     border-top: 1px solid var(--border-color);
-    color: var(--text-muted);
+    /* increase footer contrast for accessibility */
+    color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
