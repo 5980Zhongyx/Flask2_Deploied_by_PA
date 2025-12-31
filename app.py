@@ -4,6 +4,7 @@ from flask import Flask, request, g, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_babel import Babel, gettext as _
+from datetime import datetime, timedelta
 from config import get_config
 
 db = SQLAlchemy()
@@ -67,6 +68,27 @@ def create_app(config_name=None):
         # Configure session security settings
         session.permanent = True
 
+        # Clean up expired sessions periodically (every 100 requests)
+        if not hasattr(g, 'session_cleanup_counter'):
+            g.session_cleanup_counter = 0
+        g.session_cleanup_counter += 1
+
+        if g.session_cleanup_counter % 100 == 0:
+            cleanup_expired_sessions(app)
+
+        # Additional security checks
+        user_agent = request.headers.get('User-Agent', '')
+        if not user_agent or len(user_agent) < 10:
+            # Suspicious request - log it
+            app.logger.warning(f"Suspicious request from {request.remote_addr}: missing or short User-Agent")
+
+        # Check for potential XSS attempts in common headers
+        suspicious_headers = ['Referer', 'X-Forwarded-For']
+        for header in suspicious_headers:
+            value = request.headers.get(header, '')
+            if value and ('<' in value or '>' in value or 'javascript:' in value.lower()):
+                app.logger.warning(f"Potential XSS attempt in {header}: {value[:100]}...")
+
     @app.after_request
     def after_request(response):
         if hasattr(g, 'start_time'):
@@ -75,6 +97,23 @@ def create_app(config_name=None):
             if duration > 1.0:  # request that is over 1 second
                 app.logger.warning('.3f'
                                  f'user_agent={request.headers.get("User-Agent", "Unknown")[:100]}')
+
+        # Add security headers
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+
+        # Content Security Policy for additional protection
+        csp = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+            "style-src 'self' 'unsafe-inline'; "
+            "img-src 'self' data: https:; "
+            "font-src 'self' data:; "
+            "connect-src 'self'"
+        )
+        response.headers['Content-Security-Policy'] = csp
 
         return response
 
@@ -90,6 +129,17 @@ def create_app(config_name=None):
         db.create_all()
 
     return app
+
+def cleanup_expired_sessions(app):
+    """Clean up expired sessions from database"""
+    try:
+        # This is a simple cleanup - in production you might want more sophisticated session management
+        # For now, we'll just log that cleanup was attempted
+        app.logger.info("Session cleanup triggered")
+        # Note: Flask-Session with database backend would handle this automatically
+        # For file-based sessions, you might need custom cleanup
+    except Exception as e:
+        app.logger.warning(f"Session cleanup failed: {e}")
 
 def setup_logging(app, config_obj=None):
     """ Equip app system"""

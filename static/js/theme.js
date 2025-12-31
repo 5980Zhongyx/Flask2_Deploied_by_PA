@@ -349,3 +349,342 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// ==========================================
+// ACCESSIBILITY ENHANCEMENTS
+// ==========================================
+
+// Speech synthesis for screen readers and voice assistance
+class AccessibilityManager {
+    constructor() {
+        this.speechSynthesis = window.speechSynthesis;
+        this.isHighContrast = false;
+        this.fontSize = 1.0;
+        this.isScreenReaderMode = false;
+        this.init();
+    }
+
+    init() {
+        this.createAccessibilityPanel();
+        this.setupKeyboardShortcuts();
+        this.setupFocusManagement();
+        this.loadUserPreferences();
+    }
+
+    createAccessibilityPanel() {
+        const panel = document.createElement('div');
+        panel.id = 'accessibility-panel';
+        panel.className = 'accessibility-panel';
+        panel.innerHTML = `
+            <button class="accessibility-toggle" aria-label="Accessibility options" title="Accessibility options">
+                <i class="fas fa-universal-access"></i>
+            </button>
+            <div class="accessibility-menu">
+                <div class="accessibility-header">
+                    <h3>Accessibility Options</h3>
+                    <button class="close-accessibility" aria-label="Close accessibility menu">&times;</button>
+                </div>
+                <div class="accessibility-options">
+                    <button id="speak-page" class="accessibility-btn" aria-label="Read page aloud">
+                        <i class="fas fa-volume-up"></i> Read Page
+                    </button>
+                    <button id="high-contrast" class="accessibility-btn" aria-label="Toggle high contrast mode">
+                        <i class="fas fa-adjust"></i> High Contrast
+                    </button>
+                    <button id="increase-font" class="accessibility-btn" aria-label="Increase font size">
+                        <i class="fas fa-plus"></i> Larger Text
+                    </button>
+                    <button id="decrease-font" class="accessibility-btn" aria-label="Decrease font size">
+                        <i class="fas fa-minus"></i> Smaller Text
+                    </button>
+                    <button id="screen-reader-mode" class="accessibility-btn" aria-label="Toggle screen reader friendly mode">
+                        <i class="fas fa-eye"></i> Screen Reader Mode
+                    </button>
+                    <button id="keyboard-nav" class="accessibility-btn" aria-label="Show keyboard shortcuts">
+                        <i class="fas fa-keyboard"></i> Keyboard Shortcuts
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(panel);
+        this.bindAccessibilityEvents();
+    }
+
+    bindAccessibilityEvents() {
+        // Toggle panel
+        const toggle = document.querySelector('.accessibility-toggle');
+        const menu = document.querySelector('.accessibility-menu');
+        const closeBtn = document.querySelector('.close-accessibility');
+
+        toggle.addEventListener('click', () => {
+            menu.classList.toggle('show');
+            toggle.setAttribute('aria-expanded', menu.classList.contains('show'));
+        });
+
+        closeBtn.addEventListener('click', () => {
+            menu.classList.remove('show');
+            toggle.setAttribute('aria-expanded', 'false');
+        });
+
+        // Accessibility options
+        document.getElementById('speak-page').addEventListener('click', () => this.speakPageContent());
+        document.getElementById('high-contrast').addEventListener('click', () => this.toggleHighContrast());
+        document.getElementById('increase-font').addEventListener('click', () => this.adjustFontSize(0.1));
+        document.getElementById('decrease-font').addEventListener('click', () => this.adjustFontSize(-0.1));
+        document.getElementById('screen-reader-mode').addEventListener('click', () => this.toggleScreenReaderMode());
+        document.getElementById('keyboard-nav').addEventListener('click', () => this.showKeyboardShortcuts());
+    }
+
+    speakPageContent() {
+        if (!this.speechSynthesis) {
+            this.announceToScreenReader('Speech synthesis not supported in this browser');
+            return;
+        }
+
+        // Stop any ongoing speech
+        this.speechSynthesis.cancel();
+
+        // Get main content to read
+        const mainContent = document.querySelector('main') || document.body;
+        const textToRead = this.extractReadableText(mainContent);
+
+        if (textToRead.trim()) {
+            const utterance = new SpeechSynthesisUtterance(textToRead);
+            utterance.lang = document.documentElement.lang || 'en';
+            utterance.rate = 0.8; // Slightly slower for clarity
+            utterance.pitch = 1;
+
+            utterance.onstart = () => this.announceToScreenReader('Reading page content...');
+            utterance.onend = () => this.announceToScreenReader('Finished reading page content');
+
+            this.speechSynthesis.speak(utterance);
+        } else {
+            this.announceToScreenReader('No readable content found on this page');
+        }
+    }
+
+    extractReadableText(element) {
+        // Extract text from headings, paragraphs, and links
+        const selectors = 'h1, h2, h3, h4, h5, h6, p, a, li, td, th, caption, figcaption, label';
+        const elements = element.querySelectorAll(selectors);
+        let text = '';
+
+        elements.forEach(el => {
+            const tagName = el.tagName.toLowerCase();
+            let prefix = '';
+
+            // Add semantic prefixes for better context
+            if (tagName.startsWith('h')) {
+                prefix = `Heading level ${tagName.charAt(1)}: `;
+            } else if (tagName === 'a') {
+                prefix = 'Link: ';
+            } else if (tagName === 'li') {
+                prefix = '• ';
+            }
+
+            const content = el.textContent.trim();
+            if (content && !el.closest('[aria-hidden="true"], .sr-only, [hidden]')) {
+                text += prefix + content + '. ';
+            }
+        });
+
+        return text;
+    }
+
+    toggleHighContrast() {
+        this.isHighContrast = !this.isHighContrast;
+        document.documentElement.classList.toggle('high-contrast', this.isHighContrast);
+
+        const btn = document.getElementById('high-contrast');
+        btn.innerHTML = this.isHighContrast ?
+            '<i class="fas fa-adjust"></i> Normal Contrast' :
+            '<i class="fas fa-adjust"></i> High Contrast';
+
+        this.saveUserPreferences();
+        this.announceToScreenReader(this.isHighContrast ? 'High contrast mode enabled' : 'High contrast mode disabled');
+    }
+
+    adjustFontSize(delta) {
+        this.fontSize = Math.max(0.7, Math.min(2.0, this.fontSize + delta));
+        document.documentElement.style.fontSize = `${this.fontSize * 100}%`;
+        this.saveUserPreferences();
+        this.announceToScreenReader(`Font size adjusted to ${Math.round(this.fontSize * 100)}%`);
+    }
+
+    toggleScreenReaderMode() {
+        this.isScreenReaderMode = !this.isScreenReaderMode;
+        document.documentElement.classList.toggle('screen-reader-mode', this.isScreenReaderMode);
+
+        const btn = document.getElementById('screen-reader-mode');
+        btn.innerHTML = this.isScreenReaderMode ?
+            '<i class="fas fa-eye-slash"></i> Normal Mode' :
+            '<i class="fas fa-eye"></i> Screen Reader Mode';
+
+        this.saveUserPreferences();
+        this.announceToScreenReader(this.isScreenReaderMode ? 'Screen reader friendly mode enabled' : 'Screen reader friendly mode disabled');
+    }
+
+    showKeyboardShortcuts() {
+        const shortcuts = `
+Keyboard Shortcuts:
+• Alt + H: Go to Home
+• Alt + S: Go to Search
+• Alt + R: Go to Recommendations
+• Alt + P: Go to Profile
+• Alt + T: Toggle Theme
+• Alt + L: Switch Language
+• Alt + A: Open Accessibility Menu
+• Escape: Close menus
+• Tab: Navigate through elements
+• Enter/Space: Activate buttons and links
+        `;
+
+        alert(shortcuts);
+        this.announceToScreenReader('Keyboard shortcuts displayed');
+    }
+
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Only trigger if not in form inputs
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.contentEditable === 'true') {
+                return;
+            }
+
+            if (e.altKey) {
+                switch (e.key.toLowerCase()) {
+                    case 'h':
+                        e.preventDefault();
+                        window.location.href = '/';
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        const searchInput = document.querySelector('input[name="search"]');
+                        if (searchInput) searchInput.focus();
+                        break;
+                    case 'r':
+                        e.preventDefault();
+                        window.location.href = '/recommendations';
+                        break;
+                    case 'p':
+                        e.preventDefault();
+                        window.location.href = '/profile';
+                        break;
+                    case 't':
+                        e.preventDefault();
+                        this.toggleTheme();
+                        break;
+                    case 'l':
+                        e.preventDefault();
+                        this.toggleLanguage();
+                        break;
+                    case 'a':
+                        e.preventDefault();
+                        document.querySelector('.accessibility-toggle').click();
+                        break;
+                }
+            }
+
+            // Escape key handling
+            if (e.key === 'Escape') {
+                // Close any open menus
+                document.querySelectorAll('.accessibility-menu.show, .mobile-menu.show').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+    }
+
+    setupFocusManagement() {
+        // Improve focus visibility
+        document.addEventListener('focusin', (e) => {
+            if (e.target.matches('button, a, input, select, textarea')) {
+                e.target.style.outline = '2px solid #007bff';
+                e.target.style.outlineOffset = '2px';
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            if (e.target.matches('button, a, input, select, textarea')) {
+                e.target.style.outline = '';
+                e.target.style.outlineOffset = '';
+            }
+        });
+
+        // Skip to main content link
+        const skipLink = document.createElement('a');
+        skipLink.href = '#main-content';
+        skipLink.className = 'skip-link sr-only';
+        skipLink.textContent = 'Skip to main content';
+        document.body.insertBefore(skipLink, document.body.firstChild);
+
+        // Show skip link on focus
+        skipLink.addEventListener('focus', () => skipLink.classList.remove('sr-only'));
+        skipLink.addEventListener('blur', () => skipLink.classList.add('sr-only'));
+    }
+
+    announceToScreenReader(message) {
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.className = 'sr-only';
+        announcement.textContent = message;
+
+        document.body.appendChild(announcement);
+
+        // Remove after announcement
+        setTimeout(() => {
+            document.body.removeChild(announcement);
+        }, 1000);
+    }
+
+    saveUserPreferences() {
+        const preferences = {
+            highContrast: this.isHighContrast,
+            fontSize: this.fontSize,
+            screenReaderMode: this.isScreenReaderMode
+        };
+        localStorage.setItem('accessibility_preferences', JSON.stringify(preferences));
+    }
+
+    loadUserPreferences() {
+        try {
+            const preferences = JSON.parse(localStorage.getItem('accessibility_preferences') || '{}');
+
+            if (preferences.highContrast) {
+                this.isHighContrast = true;
+                document.documentElement.classList.add('high-contrast');
+            }
+
+            if (preferences.fontSize) {
+                this.fontSize = preferences.fontSize;
+                document.documentElement.style.fontSize = `${this.fontSize * 100}%`;
+            }
+
+            if (preferences.screenReaderMode) {
+                this.isScreenReaderMode = true;
+                document.documentElement.classList.add('screen-reader-mode');
+            }
+        } catch (e) {
+            console.warn('Failed to load accessibility preferences:', e);
+        }
+    }
+
+    toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    }
+
+    toggleLanguage() {
+        // Trigger language toggle if available
+        const langToggle = document.getElementById('lang-toggle');
+        if (langToggle) {
+            langToggle.click();
+        }
+    }
+}
+
+// Initialize accessibility manager
+const accessibilityManager = new AccessibilityManager();
