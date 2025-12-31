@@ -73,21 +73,20 @@ function initializeLanguage() {
         }, 150);
 
         // Call backend to set language in session and reload page
+        // Call backend to set language in session; include credentials so session cookie is sent/received.
         fetch(`/language/${newLang}`, {
             method: 'GET',
+            credentials: 'same-origin',
             headers: {
-                'Content-Type': 'application/json',
-            },
+                'X-Requested-With': 'XMLHttpRequest'
+            }
         })
         .then(response => {
-            if (response.ok) {
-                // Reload page to apply language changes
-                window.location.reload();
-            }
+            // reload regardless; backend sets session cookie
+            window.location.reload();
         })
         .catch(error => {
             console.error('Language switch error:', error);
-            // Fallback: still reload
             window.location.reload();
         });
     });
