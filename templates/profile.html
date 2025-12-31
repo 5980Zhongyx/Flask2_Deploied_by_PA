@@ -17,8 +17,8 @@
                 <p>发表评论</p>
             </div>
             <div class="stat-card">
-                <h3>{{ "%.1f"|format(avg_rating_given) if avg_rating_given > 0 else "暂无" }}</h3>
-                <p>平均评分</p>
+                <h3>{{ "%.1f"|format(avg_rating_given) if (avg_rating_given or 0) > 0 else _('No data') }}</h3>
+                <p>{{ _('Average Rating') }}</p>
             </div>
         </div>
 

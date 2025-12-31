@@ -22,14 +22,34 @@ def create_app(config_name=None):
     # Initialize Babel
     babel.init_app(app)
 
-    @babel.localeselector
-    def get_locale():
-        # Try to get language from session, default to English
+    # Locale selector: support different Flask-Babel versions
+    def _get_locale():
         return session.get('language', 'en')
 
-    @babel.timezoneselector
-    def get_timezone():
+    # Register locale selector based on available API
+    try:
+        # Newer Flask-Babel versions support decorator registration
+        if hasattr(babel, 'localeselector'):
+            babel.localeselector(_get_locale)
+        elif hasattr(babel, 'locale_selector_func'):
+            # alternative API
+            babel.locale_selector_func = _get_locale
+        else:
+            # fallback: set default locale from session on each request
+            app.config.setdefault('BABEL_DEFAULT_LOCALE', 'en')
+    except Exception:
+        app.config.setdefault('BABEL_DEFAULT_LOCALE', 'en')
+
+    # Timezone selector (best-effort)
+    def _get_timezone():
         return 'UTC'
+    try:
+        if hasattr(babel, 'timezoneselector'):
+            babel.timezoneselector(_get_timezone)
+        elif hasattr(babel, 'timezone_selector_func'):
+            babel.timezone_selector_func = _get_timezone
+    except Exception:
+        pass
 
     # Configure logging system
     setup_logging(app, config_obj)

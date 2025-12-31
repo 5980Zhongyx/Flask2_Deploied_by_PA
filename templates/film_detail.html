@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="film-stats">
-                    {% if film.average_rating > 0 %}
+                    {% if (film.average_rating or 0) > 0 %}
                         <div class="rating-large">
                             <span class="stars">★</span>
                             <span class="rating-value">{{ "%.1f"|format(film.average_rating) }}</span>

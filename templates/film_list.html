@@ -35,7 +35,7 @@
                         {% if film.director %}{{ film.director }} · {% endif %}
                         {% if film.genre %}{{ film.genre }}{% endif %}
                     </p>
-                    {% if film.average_rating > 0 %}
+                    {% if (film.average_rating or 0) > 0 %}
                         <div class="rating">
                             <span class="stars">★</span>
                             <span class="rating-value">{{ "%.1f"|format(film.average_rating) }}</span>
