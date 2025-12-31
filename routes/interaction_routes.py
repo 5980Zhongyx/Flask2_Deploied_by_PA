@@ -156,9 +156,12 @@ def get_reviews(film_id):
 
     results = []
     for r in reviews:
+        # UserFilmInteraction uses composite PK (user_id, film_id) and has no single 'id' field.
+        # Provide a stable composite identifier for frontend use.
+        composite_id = f"{r.user_id}-{r.film_id}"
         results.append({
-            "id": r.id,
-            "user": {"id": r.user.id, "username": r.user.username},
+            "id": composite_id,
+            "user": {"id": r.user_id, "username": getattr(r.user, 'username', None)},
             "rating": r.rating,
             "review_text": r.review_text,
             "created_at": r.created_at.isoformat() if r.created_at else None
