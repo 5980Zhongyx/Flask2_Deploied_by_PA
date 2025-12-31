@@ -3,7 +3,11 @@
 修复数据库中的 poster_url 字段
 在 PythonAnywhere 上运行：python3 scripts/fix_poster_urls.py
 """
-import os
+import os, sys
+
+# 添加项目根目录到 Python 路径
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from app import create_app
 
 def get_local_posters():
