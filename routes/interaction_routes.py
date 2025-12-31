@@ -1,16 +1,21 @@
 import logging
-from flask import Blueprint, request, jsonify, flash, redirect, url_for
-from flask_login import login_required, current_user
+
+from flask import Blueprint, flash, jsonify, redirect, request, url_for
+from flask_login import current_user, login_required
+
 from app import db
-from models.interaction import UserFilmInteraction
 from models.film import Film
+from models.interaction import UserFilmInteraction
 
 interaction_bp = Blueprint("interaction", __name__)
 
 # configure logging
-interaction_logger = logging.getLogger('interaction')
+interaction_logger = logging.getLogger("interaction")
 
-@interaction_bp.route("/api/interaction/<int:film_id>", methods=["POST", "PUT", "DELETE"])
+
+@interaction_bp.route(
+    "/api/interaction/<int:film_id>", methods=["POST", "PUT", "DELETE"]
+)
 @login_required
 def handle_interaction(film_id):
     """handle user-film interactions (like, rating, comment)"""
@@ -30,11 +35,16 @@ def handle_interaction(film_id):
                     film.like_count = max(0, (film.like_count or 0) - 1)
                 if interaction.rating:
                     film.rating_count = max(0, (film.rating_count or 0) - 1)
-                    film.rating_sum = max(0, (film.rating_sum or 0) - (interaction.rating or 0))
+                    film.rating_sum = max(
+                        0, (film.rating_sum or 0) - (interaction.rating or 0)
+                    )
                 db.session.delete(interaction)
                 db.session.add(film)
                 db.session.commit()
-                interaction_logger.info(f"Interaction deleted: User {current_user.username} - Film {film.title}")
+                interaction_logger.info(
+                    f"Interaction deleted: User {current_user.username} - "
+                    f"Film {film.title}"
+                )
                 return jsonify({"success": True, "message": "评价已删除"})
             except Exception as e:
                 db.session.rollback()
@@ -45,13 +55,13 @@ def handle_interaction(film_id):
     # POST/PUT: create or update interaction
     data = request.get_json() if request.is_json else request.form
 
-    liked = data.get('liked', False)
-    rating = data.get('rating')
-    review_text = data.get('review', '').strip()
+    liked = data.get("liked", False)
+    rating = data.get("rating")
+    review_text = data.get("review", "").strip()
 
     # convert data type
     if isinstance(liked, str):
-        liked = liked.lower() in ('true', '1', 'yes', 'on')
+        liked = liked.lower() in ("true", "1", "yes", "on")
     if isinstance(rating, str) and rating:
         try:
             rating = int(rating)
@@ -72,7 +82,7 @@ def handle_interaction(film_id):
             film_id=film_id,
             liked=liked,
             rating=rating,
-            review_text=review_text if review_text else None
+            review_text=review_text if review_text else None,
         )
         db.session.add(interaction)
         prev_liked = None
@@ -112,43 +122,59 @@ def handle_interaction(film_id):
 
         db.session.add(film)
         db.session.commit()
-        interaction_logger.info(f"Interaction {action}: User {current_user.username} - Film {film.title} - Liked: {liked}, Rating: {rating}")
+        interaction_logger.info(
+            f"Interaction {action}: User {current_user.username} - "
+            f"Film {film.title} - Liked: {liked}, Rating: {rating}"
+        )
 
         # return updated statistics
         # refresh film object to get latest statistics
         db.session.refresh(film)
-        return jsonify({
-            "success": True,
-            "message": "Rating saved",
-            "data": {
-                "liked": interaction.liked,
-                "rating": interaction.rating,
-                "has_review": interaction.has_review,
-                "review_text": interaction.review_text,
-                "created_at": interaction.created_at.isoformat() if interaction.created_at else None,
-                "film_stats": {
-                    "average_rating": film.average_rating,
-                    "like_count": film.like_count,
-                    "rating_count": film.rating_count
-                }
+        return jsonify(
+            {
+                "success": True,
+                "message": "Rating saved",
+                "data": {
+                    "liked": interaction.liked,
+                    "rating": interaction.rating,
+                    "has_review": interaction.has_review,
+                    "review_text": interaction.review_text,
+                    "created_at": (
+                        interaction.created_at.isoformat()
+                        if interaction.created_at
+                        else None
+                    ),
+                    "film_stats": {
+                        "average_rating": film.average_rating,
+                        "like_count": film.like_count,
+                        "rating_count": film.rating_count,
+                    },
+                },
             }
-        })
+        )
     except Exception as e:
         db.session.rollback()
-        interaction_logger.error(f"Interaction save failed: User {current_user.username} - Film {film.title} - Error: {str(e)}")
-        return jsonify({"success": False, "message": "Save failed, please try again"}), 500
+        interaction_logger.error(
+            f"Interaction save failed: User {current_user.username} - "
+            f"Film {film.title} - Error: {str(e)}"
+        )
+        return (
+            jsonify({"success": False, "message": "Save failed, please try again"}),
+            500,
+        )
 
 
 @interaction_bp.route("/api/reviews/<int:film_id>", methods=["GET"])
 def get_reviews(film_id):
-    """paginate comments for specified film (only with text), used for frontend no refresh loading"""
-    page = int(request.args.get('page', 1))
-    per_page = int(request.args.get('per_page', 5))
+    """Paginate comments for specified film (only with text),
+    used for frontend no refresh loading."""
+    page = int(request.args.get("page", 1))
+    per_page = int(request.args.get("per_page", 5))
 
     reviews_query = UserFilmInteraction.query.filter(
         UserFilmInteraction.film_id == film_id,
         UserFilmInteraction.review_text.isnot(None),
-        UserFilmInteraction.review_text != ''
+        UserFilmInteraction.review_text != "",
     ).order_by(UserFilmInteraction.created_at.desc())
 
     total = reviews_query.count()
@@ -156,24 +182,32 @@ def get_reviews(film_id):
 
     results = []
     for r in reviews:
-        # UserFilmInteraction uses composite PK (user_id, film_id) and has no single 'id' field.
-        # Provide a stable composite identifier for frontend use.
+        # UserFilmInteraction uses composite PK, no single 'id' field.
         composite_id = f"{r.user_id}-{r.film_id}"
-        results.append({
-            "id": composite_id,
-            "user": {"id": r.user_id, "username": getattr(r.user, 'username', None)},
-            "rating": r.rating,
-            "review_text": r.review_text,
-            "created_at": r.created_at.isoformat() if r.created_at else None
-        })
+        composite_id = f"{r.user_id}-{r.film_id}"
+        results.append(
+            {
+                "id": composite_id,
+                "user": {
+                    "id": r.user_id,
+                    "username": getattr(r.user, "username", None),
+                },
+                "rating": r.rating,
+                "review_text": r.review_text,
+                "created_at": r.created_at.isoformat() if r.created_at else None,
+            }
+        )
 
-    return jsonify({
-        "success": True,
-        "data": results,
-        "page": page,
-        "per_page": per_page,
-        "total": total
-    })
+    return jsonify(
+        {
+            "success": True,
+            "data": results,
+            "page": page,
+            "per_page": per_page,
+            "total": total,
+        }
+    )
+
 
 @interaction_bp.route("/api/like/<int:film_id>", methods=["POST"])
 @login_required
@@ -188,15 +222,13 @@ def toggle_like(film_id):
     if not interaction:
         # create new interaction, only set like
         interaction = UserFilmInteraction(
-            user_id=current_user.id,
-            film_id=film_id,
-            liked=True
+            user_id=current_user.id, film_id=film_id, liked=True
         )
         db.session.add(interaction)
         # increment persisted like count
         film.like_count = (film.like_count or 0) + 1
     else:
-            # toggle like status
+        # toggle like status
         prev = interaction.liked
         interaction.liked = not interaction.liked
         # adjust persisted like count
@@ -213,18 +245,31 @@ def toggle_like(film_id):
         db.session.refresh(film)
 
         action = "liked" if interaction.liked else "unliked"
-        interaction_logger.info(f"Film {action}: User {current_user.username} - Film {film.title}")
+        interaction_logger.info(
+            f"Film {action}: User {current_user.username} - Film {film.title}"
+        )
 
-        return jsonify({
-            "success": True,
-            "liked": interaction.liked,
-            "like_count": film.like_count,
-            "message": f"{'Liked' if interaction.liked else 'Unliked'}"
-        })
+        return jsonify(
+            {
+                "success": True,
+                "liked": interaction.liked,
+                "like_count": film.like_count,
+                "message": f"{'Liked' if interaction.liked else 'Unliked'}",
+            }
+        )
     except Exception as e:
         db.session.rollback()
-        interaction_logger.error(f"Like toggle failed: User {current_user.username} - Film {film.title} - Error: {str(e)}")
-        return jsonify({"success": False, "message": "Operation failed, please try again"}), 500
+        interaction_logger.error(
+            f"Like toggle failed: User {current_user.username} - "
+            f"Film {film.title} - Error: {str(e)}"
+        )
+        return (
+            jsonify(
+                {"success": False, "message": "Operation failed, please try again"}
+            ),
+            500,
+        )
+
 
 # keep backward compatibility route
 @interaction_bp.route("/like/<int:film_id>", methods=["POST"])
@@ -239,9 +284,7 @@ def like_film(film_id):
 
     if not interaction:
         interaction = UserFilmInteraction(
-            user_id=current_user.id,
-            film_id=film_id,
-            liked=True
+            user_id=current_user.id, film_id=film_id, liked=True
         )
         db.session.add(interaction)
         film.like_count = (film.like_count or 0) + 1
@@ -259,7 +302,9 @@ def like_film(film_id):
     db.session.refresh(film)
 
     action = "liked" if interaction.liked else "unliked"
-    interaction_logger.info(f"Film {action}: User {current_user.username} - Film {film.title}")
+    interaction_logger.info(
+        f"Film {action}: User {current_user.username} - Film {film.title}"
+    )
 
     flash(f"{'Liked' if interaction.liked else 'Unliked'}", "success")
-    return redirect(url_for('film.film_detail', film_id=film_id))
+    return redirect(url_for("film.film_detail", film_id=film_id))

@@ -4,15 +4,18 @@
 需要在 PythonAnywhere 的 Bash 控制台中运行：
 python3 scripts/fix_prod_db.py
 """
-import os, sys, sqlite3
+import os
+import sqlite3
 
 # 生产环境的数据库路径
-DB = '/home/5980Zhongyx/film_recommendation/instance/app.db'
+DB = "/home/5980Zhongyx/film_recommendation/instance/app.db"
+
 
 def column_exists(conn, table, column):
     cur = conn.execute(f"PRAGMA table_info({table});")
     cols = [row[1] for row in cur.fetchall()]
     return column in cols
+
 
 def main():
     if not os.path.exists(DB):
@@ -21,19 +24,19 @@ def main():
     conn = sqlite3.connect(DB)
     try:
         print("检查并添加缺失的列...")
-        if not column_exists(conn, 'film', 'like_count'):
+        if not column_exists(conn, "film", "like_count"):
             conn.execute("ALTER TABLE film ADD COLUMN like_count INTEGER DEFAULT 0;")
             print("✓ 已添加 like_count 列")
         else:
             print("✓ like_count 列已存在")
 
-        if not column_exists(conn, 'film', 'rating_count'):
+        if not column_exists(conn, "film", "rating_count"):
             conn.execute("ALTER TABLE film ADD COLUMN rating_count INTEGER DEFAULT 0;")
             print("✓ 已添加 rating_count 列")
         else:
             print("✓ rating_count 列已存在")
 
-        if not column_exists(conn, 'film', 'rating_sum'):
+        if not column_exists(conn, "film", "rating_sum"):
             conn.execute("ALTER TABLE film ADD COLUMN rating_sum INTEGER DEFAULT 0;")
             print("✓ 已添加 rating_sum 列")
         else:
@@ -54,5 +57,6 @@ def main():
     finally:
         conn.close()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Test script for trending data functionality"""
 
-from app import create_app, db
-from routes.film_routes import recommendations
-from flask import session
-from flask_login import login_user
-import tempfile
 import os
+import tempfile
+
+
+from app import create_app, db
+
 
 def test_trending_data():
     # Create temporary database for testing
@@ -15,13 +15,13 @@ def test_trending_data():
     try:
         # Configure app with test database
         config = {
-            'TESTING': True,
-            'SQLALCHEMY_DATABASE_URI': f'sqlite:///{db_path}',
-            'SECRET_KEY': 'test-secret-key',
-            'WTF_CSRF_ENABLED': False
+            "TESTING": True,
+            "SQLALCHEMY_DATABASE_URI": f"sqlite:///{db_path}",
+            "SECRET_KEY": "test-secret-key",
+            "WTF_CSRF_ENABLED": False,
         }
 
-        app = create_app('testing')
+        app = create_app("testing")
         app.config.update(config)
 
         with app.app_context():
@@ -32,39 +32,41 @@ def test_trending_data():
 
             # Test the trending data query logic
             try:
-                from models.film import Film
-                from models.interaction import UserFilmInteraction
-                from models.user import User
                 from datetime import datetime, timedelta
 
                 # Create some test data
                 from werkzeug.security import generate_password_hash
+
+                from models.film import Film
+                from models.interaction import UserFilmInteraction
+                from models.user import User
+
                 user = User(
-                    username='testuser',
-                    email='test@example.com',
-                    password_hash=generate_password_hash('password')
+                    username="testuser",
+                    email="test@example.com",
+                    password_hash=generate_password_hash("password"),
                 )
                 db.session.add(user)
 
                 film1 = Film(
-                    title='Test Movie 1',
-                    director='Test Director',
-                    description='Test description',
+                    title="Test Movie 1",
+                    director="Test Director",
+                    description="Test description",
                     year=2023,
-                    genre='Action',
+                    genre="Action",
                     like_count=10,
                     rating_sum=45,
-                    rating_count=10
+                    rating_count=10,
                 )
                 film2 = Film(
-                    title='Test Movie 2',
-                    director='Test Director 2',
-                    description='Test description 2',
+                    title="Test Movie 2",
+                    director="Test Director 2",
+                    description="Test description 2",
                     year=2023,
-                    genre='Drama',
+                    genre="Drama",
                     like_count=5,
                     rating_sum=35,
-                    rating_count=7
+                    rating_count=7,
                 )
 
                 db.session.add(film1)
@@ -77,14 +79,14 @@ def test_trending_data():
                     user_id=user.id,
                     film_id=film1.id,
                     liked=True,
-                    created_at=datetime.utcnow() - timedelta(days=1)
+                    created_at=datetime.utcnow() - timedelta(days=1),
                 )
                 recent_interaction2 = UserFilmInteraction(
                     user_id=user.id,
                     film_id=film2.id,
                     liked=True,
-                    review_text='Great movie!',
-                    created_at=datetime.utcnow() - timedelta(days=2)
+                    review_text="Great movie!",
+                    created_at=datetime.utcnow() - timedelta(days=2),
                 )
 
                 db.session.add(recent_interaction1)
@@ -94,13 +96,25 @@ def test_trending_data():
                 print("[OK] Test data created successfully")
 
                 # Test the trending query logic
-                trending_query = db.session.query(
-                    UserFilmInteraction.film_id,
-                    db.func.count(UserFilmInteraction.film_id).label('interaction_count')
-                ).filter(
-                    UserFilmInteraction.created_at >= seven_days_ago,
-                    db.or_(UserFilmInteraction.liked == True, UserFilmInteraction.review_text.isnot(None))
-                ).group_by(UserFilmInteraction.film_id).order_by(db.func.count(UserFilmInteraction.film_id).desc()).limit(10).all()
+                trending_query = (
+                    db.session.query(
+                        UserFilmInteraction.film_id,
+                        db.func.count(UserFilmInteraction.film_id).label(
+                            "interaction_count"
+                        ),
+                    )
+                    .filter(
+                        UserFilmInteraction.created_at >= seven_days_ago,
+                        db.or_(
+                            UserFilmInteraction.liked.is_(True),
+                            UserFilmInteraction.review_text.isnot(None),
+                        ),
+                    )
+                    .group_by(UserFilmInteraction.film_id)
+                    .order_by(db.func.count(UserFilmInteraction.film_id).desc())
+                    .limit(10)
+                    .all()
+                )
 
                 print(f"[OK] Found {len(trending_query)} trending films")
 
@@ -111,20 +125,30 @@ def test_trending_data():
                     day_start = datetime(day.year, day.month, day.day)
                     day_end = day_start + timedelta(days=1)
 
-                    day_data = db.session.query(
-                        db.func.count(UserFilmInteraction.film_id).label('count')
-                    ).filter(
-                        UserFilmInteraction.created_at >= day_start,
-                        UserFilmInteraction.created_at < day_end,
-                        db.or_(UserFilmInteraction.liked == True, UserFilmInteraction.review_text.isnot(None))
-                    ).scalar() or 0
+                    day_data = (
+                        db.session.query(
+                            db.func.count(UserFilmInteraction.film_id).label("count")
+                        )
+                        .filter(
+                            UserFilmInteraction.created_at >= day_start,
+                            UserFilmInteraction.created_at < day_end,
+                            db.or_(
+                                UserFilmInteraction.liked.is_(True),
+                                UserFilmInteraction.review_text.isnot(None),
+                            ),
+                        )
+                        .scalar()
+                        or 0
+                    )
 
-                    daily_interactions.append({
-                        'date': day.strftime('%Y-%m-%d'),
-                        'count': day_data
-                    })
+                    daily_interactions.append(
+                        {"date": day.strftime("%Y-%m-%d"), "count": day_data}
+                    )
 
-                print(f"[OK] Daily interactions data generated for {len(daily_interactions)} days")
+                print(
+                    f"[OK] Daily interactions data generated for "
+                    f"{len(daily_interactions)} days"
+                )
                 print("[OK] All trending functionality tests passed!")
 
             except Exception as e:
@@ -138,5 +162,6 @@ def test_trending_data():
 
     return True
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     test_trending_data()

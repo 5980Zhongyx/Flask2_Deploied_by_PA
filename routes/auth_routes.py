@@ -1,14 +1,17 @@
 import logging
-from flask import Blueprint, render_template, redirect, url_for, flash, request
-from flask_login import login_user, logout_user, login_required, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
+
+from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from app import db
 from models.user import User
 
 auth_bp = Blueprint("auth", __name__)
 
 # 配置日志
-auth_logger = logging.getLogger('auth')
+auth_logger = logging.getLogger("auth")
+
 
 @auth_bp.route("/register", methods=["GET", "POST"])
 def register():
@@ -50,13 +53,14 @@ def register():
 
         # 记录应用层日志
         from models.log import AppLog
+
         AppLog.log_action(
             action="USER_REGISTER",
             resource_type="user",
             description=f"用户 {username} 注册成功",
             user=new_user,
             ip_address=request.remote_addr,
-            user_agent=request.headers.get('User-Agent')
+            user_agent=request.headers.get("User-Agent"),
         )
 
         auth_logger.info(f"User registered: {username}")
@@ -64,6 +68,7 @@ def register():
         return redirect(url_for("auth.login"))
 
     return render_template("register.html")
+
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
@@ -81,13 +86,14 @@ def login():
 
             # 记录登录成功日志
             from models.log import AppLog
+
             AppLog.log_action(
                 action="USER_LOGIN_SUCCESS",
                 resource_type="user",
                 description=f"用户 {username} 登录成功",
                 user=user,
                 ip_address=request.remote_addr,
-                user_agent=request.headers.get('User-Agent')
+                user_agent=request.headers.get("User-Agent"),
             )
 
             auth_logger.info(f"Login successful: {username}")
@@ -96,19 +102,21 @@ def login():
         else:
             # 记录登录失败日志
             from models.log import AppLog
+
             AppLog.log_action(
                 action="USER_LOGIN_FAILED",
                 resource_type="user",
                 description=f"用户 {username} 登录失败：用户名或密码错误",
                 ip_address=request.remote_addr,
-                user_agent=request.headers.get('User-Agent'),
-                extra_data={"attempted_username": username}
+                user_agent=request.headers.get("User-Agent"),
+                extra_data={"attempted_username": username},
             )
 
             auth_logger.warning(f"Login failed: {username}")
             flash("用户名或密码错误", "error")
 
     return render_template("login.html")
+
 
 @auth_bp.route("/logout")
 @login_required
@@ -117,6 +125,7 @@ def logout():
     logout_user()
     flash("已成功登出", "info")
     return redirect(url_for("film.index"))
+
 
 @auth_bp.route("/profile")
 @login_required
@@ -131,26 +140,32 @@ def profile():
     total_reviews = UserFilmInteraction.query.filter(
         UserFilmInteraction.user_id == current_user.id,
         UserFilmInteraction.review_text.isnot(None),
-        UserFilmInteraction.review_text != ''
+        UserFilmInteraction.review_text != "",
     ).count()
 
     # 计算平均评分
     rating_interactions = UserFilmInteraction.query.filter(
         UserFilmInteraction.user_id == current_user.id,
-        UserFilmInteraction.rating.isnot(None)
+        UserFilmInteraction.rating.isnot(None),
     ).all()
 
     avg_rating_given = None
     if rating_interactions:
-        avg_rating_given = sum(i.rating for i in rating_interactions) / len(rating_interactions)
+        avg_rating_given = sum(i.rating for i in rating_interactions) / len(
+            rating_interactions
+        )
 
     # 获取用户的互动记录
-    interactions = UserFilmInteraction.query.filter_by(
-        user_id=current_user.id
-    ).order_by(UserFilmInteraction.created_at.desc()).all()
+    interactions = (
+        UserFilmInteraction.query.filter_by(user_id=current_user.id)
+        .order_by(UserFilmInteraction.created_at.desc())
+        .all()
+    )
 
-    return render_template("profile.html",
-                         total_likes=total_likes,
-                         total_reviews=total_reviews,
-                         avg_rating_given=avg_rating_given,
-                         interactions=interactions)
+    return render_template(
+        "profile.html",
+        total_likes=total_likes,
+        total_reviews=total_reviews,
+        avg_rating_given=avg_rating_given,
+        interactions=interactions,
+    )

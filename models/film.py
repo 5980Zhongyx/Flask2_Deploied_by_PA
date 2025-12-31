@@ -1,5 +1,7 @@
 from datetime import datetime
+
 from app import db
+
 
 class Film(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -16,10 +18,10 @@ class Film(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationship definitions
-    interactions = db.relationship('UserFilmInteraction', backref='film', lazy=True)
+    interactions = db.relationship("UserFilmInteraction", backref="film", lazy=True)
 
     def __repr__(self):
-        return f'<Film {self.title}>'
+        return f"<Film {self.title}>"
 
     @property
     def average_rating(self):
@@ -27,4 +29,5 @@ class Film(db.Model):
         if self.rating_count and self.rating_count > 0:
             return float(self.rating_sum) / float(self.rating_count)
         return 0.0
-    # note: like_count is persisted as a column for performance; do not override with a property
+
+    # note: like_count is persisted as a column for performance

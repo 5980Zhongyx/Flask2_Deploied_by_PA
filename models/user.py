@@ -1,6 +1,9 @@
 from datetime import datetime
+
 from flask_login import UserMixin
+
 from app import db
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -10,7 +13,7 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # 关系定义
-    interactions = db.relationship('UserFilmInteraction', backref='user', lazy=True)
+    interactions = db.relationship("UserFilmInteraction", backref="user", lazy=True)
 
     def __repr__(self):
-        return f'<User {self.username}>'
+        return f"<User {self.username}>"

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-请求电影详情页并检查返回 HTML 中是否包含 /static/posters/ 的 img 标签，打印匹配行。
-用法: python scripts/check_rendered_img.py 44
+Request film details and check and print the lines that contain /static/posters/ in the HTML response.
+Usage: python scripts/check_rendered_img.py 44
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -16,13 +16,13 @@ def main():
         print('STATUS:', resp.status_code)
         data = resp.get_data(as_text=True)
         lines = data.splitlines()
-        found = [l for l in lines if '/static/posters/' in l]
+        found = [line for line in lines if '/static/posters/' in line]
         if not found:
             print('No /static/posters/ occurrences in response.')
         else:
             print('Found lines:')
-            for l in found:
-                print(l.strip())
+            for line in found:
+                print(line.strip())
 
 if __name__ == '__main__':
     main()

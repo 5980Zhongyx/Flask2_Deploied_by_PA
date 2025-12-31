@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-import sqlite3
 import os
+import sqlite3
 
-DB = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'instance', 'app.db')
-STATIC_POSTERS = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'posters')
+DB = os.path.join(os.path.dirname(os.path.dirname(__file__)), "instance", "app.db")
+STATIC_POSTERS = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "static", "posters"
+)
+
 
 def main():
     conn = sqlite3.connect(DB)
@@ -21,7 +24,7 @@ def main():
         if not poster:
             continue
         poster_path = os.path.join(STATIC_POSTERS, poster)
-        if poster.startswith('http') or poster.startswith('//'):
+        if poster.startswith("http") or poster.startswith("//"):
             # remote poster, skip file existence check
             continue
         if not os.path.exists(poster_path):
@@ -35,7 +38,6 @@ def main():
 
     conn.close()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
-
-

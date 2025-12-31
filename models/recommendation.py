@@ -4,11 +4,13 @@
 """
 
 from collections import defaultdict
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
+
 from app import db
-from .user import User
+
 from .film import Film
 from .interaction import UserFilmInteraction
+from .user import User
 
 
 class RecommendationEngine:
@@ -47,7 +49,9 @@ class RecommendationEngine:
                 self.film_interactions[film_id] = set()
             self.film_interactions[film_id].add(user_id)
 
-    def get_similar_users(self, user_id: int, top_n: int = 10) -> List[Tuple[int, float]]:
+    def get_similar_users(
+        self, user_id: int, top_n: int = 10
+    ) -> List[Tuple[int, float]]:
         """
         找到与指定用户最相似的其他用户
         返回: [(user_id, similarity_score), ...]
@@ -63,7 +67,9 @@ class RecommendationEngine:
                 continue
 
             # 计算余弦相似度
-            similarity = self._calculate_cosine_similarity(target_user_films, other_user_films)
+            similarity = self._calculate_cosine_similarity(
+                target_user_films, other_user_films
+            )
             if similarity > 0:  # 只保留正相关用户
                 similarities.append((other_user_id, similarity))
 
@@ -71,7 +77,9 @@ class RecommendationEngine:
         similarities.sort(key=lambda x: x[1], reverse=True)
         return similarities[:top_n]
 
-    def _calculate_cosine_similarity(self, user1_films: Dict[int, int], user2_films: Dict[int, int]) -> float:
+    def _calculate_cosine_similarity(
+        self, user1_films: Dict[int, int], user2_films: Dict[int, int]
+    ) -> float:
         """计算两个用户的余弦相似度"""
         # 获取共同评价的电影
         common_films = set(user1_films.keys()) & set(user2_films.keys())
@@ -80,18 +88,22 @@ class RecommendationEngine:
             return 0.0
 
         # 计算向量点积
-        dot_product = sum(user1_films[film] * user2_films[film] for film in common_films)
+        dot_product = sum(
+            user1_films[film] * user2_films[film] for film in common_films
+        )
 
         # 计算向量长度
-        user1_norm = sum(score ** 2 for score in user1_films.values()) ** 0.5
-        user2_norm = sum(score ** 2 for score in user2_films.values()) ** 0.5
+        user1_norm = sum(score**2 for score in user1_films.values()) ** 0.5
+        user2_norm = sum(score**2 for score in user2_films.values()) ** 0.5
 
         if user1_norm == 0 or user2_norm == 0:
             return 0.0
 
         return dot_product / (user1_norm * user2_norm)
 
-    def recommend_films(self, user_id: int, top_n: int = 10) -> List[Tuple[Film, float]]:
+    def recommend_films(
+        self, user_id: int, top_n: int = 10
+    ) -> List[Tuple[Film, float]]:
         """
         为用户推荐电影
         返回: [(Film对象, 推荐分数), ...]
@@ -160,18 +172,22 @@ class RecommendationEngine:
         for sim_user_id, similarity in similar_users:
             user = User.query.get(sim_user_id)
             if user:
-                similar_user_objects.append({
-                    'user': user,
-                    'similarity': similarity,
-                    'common_interactions': len(set(self.user_interactions[user_id].keys()) &
-                                             set(self.user_interactions[sim_user_id].keys()))
-                })
+                similar_user_objects.append(
+                    {
+                        "user": user,
+                        "similarity": similarity,
+                        "common_interactions": len(
+                            set(self.user_interactions[user_id].keys())
+                            & set(self.user_interactions[sim_user_id].keys())
+                        ),
+                    }
+                )
 
         return {
-            'recommendations': recommendations,
-            'similar_users': similar_user_objects,
-            'total_users': len(self.user_interactions),
-            'user_interactions_count': len(self.user_interactions.get(user_id, {}))
+            "recommendations": recommendations,
+            "similar_users": similar_user_objects,
+            "total_users": len(self.user_interactions),
+            "user_interactions_count": len(self.user_interactions.get(user_id, {})),
         }
 
 

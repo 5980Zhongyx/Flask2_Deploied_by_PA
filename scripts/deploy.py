@@ -4,25 +4,21 @@ For PythonAnywhere deployment preparation
 """
 
 import os
-import sys
-import subprocess
 import shutil
-from pathlib import Path
+import subprocess
+import sys
+
 
 def run_command(command, cwd=None):
     """Run command and return result"""
     try:
         result = subprocess.run(
-            command,
-            shell=True,
-            cwd=cwd,
-            capture_output=True,
-            text=True,
-            check=True
+            command, shell=True, cwd=cwd, capture_output=True, text=True, check=True
         )
         return True, result.stdout
     except subprocess.CalledProcessError as e:
         return False, e.stderr
+
 
 def setup_deployment():
     """Prepare deployment environment"""
@@ -37,27 +33,29 @@ def setup_deployment():
 
     # 1. Check Python version
     python_version = sys.version_info
-    print(f"Python version: {python_version.major}.{python_version.minor}.{python_version.micro}")
+    print(
+        f"Python version: {python_version.major}.{python_version.minor}.{python_version.micro}"
+    )
 
     # 2. Check required files
     required_files = [
-        'app.py',
-        'config.py',
-        'requirements.txt',
-        'models/__init__.py',
-        'models/user.py',
-        'models/film.py',
-        'models/interaction.py',
-        'models/recommendation.py',
-        'models/log.py',
-        'routes/__init__.py',
-        'routes/auth_routes.py',
-        'routes/film_routes.py',
-        'routes/interaction_routes.py',
-        'templates/base.html',
-        'static/css/style.css',
-        'static/js/interactions.js',
-        'scripts/seed_database.py'
+        "app.py",
+        "config.py",
+        "requirements.txt",
+        "models/__init__.py",
+        "models/user.py",
+        "models/film.py",
+        "models/interaction.py",
+        "models/recommendation.py",
+        "models/log.py",
+        "routes/__init__.py",
+        "routes/auth_routes.py",
+        "routes/film_routes.py",
+        "routes/interaction_routes.py",
+        "templates/base.html",
+        "static/css/style.css",
+        "static/js/interactions.js",
+        "scripts/seed_database.py",
     ]
 
     missing_files = []
@@ -74,21 +72,21 @@ def setup_deployment():
     print("OK: All required files present")
 
     # 3. Create deployment directory structure
-    deploy_dir = 'deploy'
+    deploy_dir = "deploy"
     if os.path.exists(deploy_dir):
         shutil.rmtree(deploy_dir)
     os.makedirs(deploy_dir)
 
     # 4. Copy files to deployment directory
     files_to_copy = [
-        'app.py',
-        'config.py',
-        'requirements.txt',
-        'models/',
-        'routes/',
-        'templates/',
-        'static/',
-        'scripts/'
+        "app.py",
+        "config.py",
+        "requirements.txt",
+        "models/",
+        "routes/",
+        "templates/",
+        "static/",
+        "scripts/",
     ]
 
     for item in files_to_copy:
@@ -106,9 +104,10 @@ def setup_deployment():
     print(f"部署文件已准备在 {deploy_dir} 目录中 OK")
     return True
 
+
 def create_wsgi_file(deploy_dir):
     """创建WSGI文件用于PythonAnywhere"""
-    wsgi_content = '''# PythonAnywhere WSGI配置文件
+    wsgi_content = """# PythonAnywhere WSGI配置文件
 import os
 import sys
 
@@ -124,17 +123,18 @@ from app import app as application
 
 if __name__ == "__main__":
     application.run()
-'''
+"""
 
-    wsgi_path = os.path.join(deploy_dir, 'wsgi.py')
-    with open(wsgi_path, 'w', encoding='utf-8') as f:
+    wsgi_path = os.path.join(deploy_dir, "wsgi.py")
+    with open(wsgi_path, "w", encoding="utf-8") as f:
         f.write(wsgi_content)
 
     print("WSGI文件已创建 OK")
 
+
 def create_deployment_readme(deploy_dir):
     """创建部署说明"""
-    readme_content = '''# 电影推荐应用 - PythonAnywhere部署指南
+    readme_content = """# 电影推荐应用 - PythonAnywhere部署指南
 
 ## 完整部署步骤
 
@@ -342,17 +342,18 @@ pip install -r requirements.txt
 4. 尝试重新加载应用
 
 祝部署顺利！
-'''
+"""
 
-    readme_path = os.path.join(deploy_dir, 'DEPLOYMENT_README.md')
-    with open(readme_path, 'w', encoding='utf-8') as f:
+    readme_path = os.path.join(deploy_dir, "DEPLOYMENT_README.md")
+    with open(readme_path, "w", encoding="utf-8") as f:
         f.write(readme_content)
 
     print("部署说明已创建 OK")
 
+
 def create_backup_script(deploy_dir):
     """创建备份脚本"""
-    backup_content = '''#!/bin/bash
+    backup_content = """#!/bin/bash
 # 数据库备份脚本
 
 BACKUP_DIR="backups"
@@ -373,16 +374,17 @@ echo "备份完成: $BACKUP_FILE.gz"
 # 清理旧备份（保留最近7天的）
 find $BACKUP_DIR -name "backup_*.db.gz" -mtime +7 -delete
 echo "清理完成"
-'''
+"""
 
-    backup_path = os.path.join(deploy_dir, 'backup.sh')
-    with open(backup_path, 'w', encoding='utf-8') as f:
+    backup_path = os.path.join(deploy_dir, "backup.sh")
+    with open(backup_path, "w", encoding="utf-8") as f:
         f.write(backup_content)
 
     # 设置执行权限
     os.chmod(backup_path, 0o755)
 
     print("备份脚本已创建 OK")
+
 
 def main():
     """主函数"""
@@ -402,6 +404,7 @@ def main():
         print("部署准备失败，请检查上述错误信息")
         print("=" * 50)
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

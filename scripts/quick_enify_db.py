@@ -16,9 +16,9 @@ Usage (on PythonAnywhere):
 This is a reversible, short-term fix. It does NOT remove originals (they are backed up).
 For a long-term solution we should add bilingual columns and populate them.
 """
+import json
 import os
 import sys
-import json
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -36,10 +36,11 @@ GENRE_MAP = {
     "历史": "History",
     "音乐": "Music",
     "惊悚": "Thriller",
-    "犯罪": "Crime"
+    "犯罪": "Crime",
 }
 
-def backup_and_enify(app_env='production'):
+
+def backup_and_enify(app_env="production"):
     app = create_app(app_env)
     with app.app_context():
         films = Film.query.all()
@@ -47,17 +48,21 @@ def backup_and_enify(app_env='production'):
 
         backup = []
         for f in films:
-            backup.append({
-                "id": f.id,
-                "title": f.title,
-                "genre": f.genre,
-                "year": f.year,
-                "director": f.director,
-                "description": f.description,
-                "poster_url": f.poster_url
-            })
+            backup.append(
+                {
+                    "id": f.id,
+                    "title": f.title,
+                    "genre": f.genre,
+                    "year": f.year,
+                    "director": f.director,
+                    "description": f.description,
+                    "poster_url": f.poster_url,
+                }
+            )
 
-        backup_path = os.path.join(os.path.dirname(__file__), "film_backup_originals.json")
+        backup_path = os.path.join(
+            os.path.dirname(__file__), "film_backup_originals.json"
+        )
         with open(backup_path, "w", encoding="utf-8") as fh:
             json.dump(backup, fh, indent=2, ensure_ascii=False)
         print(f"Backup written to {backup_path}")
@@ -82,7 +87,9 @@ def backup_and_enify(app_env='production'):
                 desc += "."
 
             # Only overwrite if different
-            if (not f.description) or (f.description and f.description and f.description.strip() and True):
+            if (not f.description) or (
+                f.description and f.description and f.description.strip() and True
+            ):
                 f.description = desc
                 updated += 1
 
@@ -92,7 +99,6 @@ def backup_and_enify(app_env='production'):
         else:
             print("No changes made")
 
+
 if __name__ == "__main__":
     backup_and_enify()
-
-
