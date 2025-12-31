@@ -78,7 +78,7 @@
             <p class="section-description">精选高评分电影，为你推荐最佳观影选择</p>
         </div>
 
-        {% if films %}
+{% if films %}
             <div class="films-grid featured-grid modern-grid">
             {% for film in films[:6] %}
             <div class="film-card featured-card advanced-hover" data-film-id="{{ film.id }}" data-href="{{ url_for('film.film_detail', film_id=film.id) }}">
@@ -145,7 +145,7 @@
                     {% endif %}
                 </div>
             </div>
-            {% endfor %}
+    {% endfor %}
         </div>
 
         <div class="section-footer">
@@ -154,13 +154,13 @@
                 查看全部电影
             </a>
         </div>
-        {% else %}
+{% else %}
         <div class="empty-state">
             <i class="fas fa-film"></i>
             <h3>暂无电影数据</h3>
             <p>我们正在努力添加更多精彩电影...</p>
         </div>
-        {% endif %}
+{% endif %}
     </div>
 </section>
 

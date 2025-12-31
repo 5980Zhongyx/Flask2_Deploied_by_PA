@@ -71,19 +71,19 @@ function initializeMobileMenu() {
     const navMenu = document.querySelector('.nav-menu');
 
     if (mobileMenuToggle && navMenu) {
-        mobileMenuToggle.addEventListener('click', function() {
-            navMenu.classList.toggle('mobile-menu-open');
-            mobileMenuToggle.classList.toggle('active');
-        });
+    mobileMenuToggle.addEventListener('click', function() {
+        navMenu.classList.toggle('mobile-menu-open');
+        mobileMenuToggle.classList.toggle('active');
+    });
 
-        // 点击其他地方关闭移动菜单
-        document.addEventListener('click', function(e) {
-            if (!mobileMenuToggle.contains(e.target) && !navMenu.contains(e.target)) {
-                navMenu.classList.remove('mobile-menu-open');
-                mobileMenuToggle.classList.remove('active');
-            }
-        });
-    }
+    // 点击其他地方关闭移动菜单
+    document.addEventListener('click', function(e) {
+        if (!mobileMenuToggle.contains(e.target) && !navMenu.contains(e.target)) {
+            navMenu.classList.remove('mobile-menu-open');
+            mobileMenuToggle.classList.remove('active');
+        }
+    });
+}
 }
 
 // 滚动触发动画

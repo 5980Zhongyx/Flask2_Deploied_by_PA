@@ -47,7 +47,8 @@ def fix_poster_urls():
                 print(f"⚠️  电影 {film.id} 没有对应的海报文件")
 
         if updated > 0:
-            app.db.session.commit()
+            from app import db
+            db.session.commit()
             print(f"\n✅ 成功更新了 {updated} 部电影的海报URL")
         else:
             print("\nℹ️  所有电影的海报URL都已经正确")
