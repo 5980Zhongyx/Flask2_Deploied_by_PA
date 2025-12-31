@@ -1359,9 +1359,9 @@ body {
 .pagination .page-link.current,
 .pagination .page-link.active,
 .pagination .page-link[aria-current="page"] {
-    background: var(--primary-color);
-    color: #ffffff;
-    border-color: var(--primary-color);
+    background: var(--primary-color) !important;
+    color: #000000 !important;
+    border-color: var(--primary-color) !important;
 }
 
 /* Headings: ensure linked titles remain high contrast */

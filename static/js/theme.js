@@ -621,12 +621,33 @@ Keyboard Shortcuts:
             skipLink.addEventListener('focus', () => skipLink.classList.remove('sr-only'));
             skipLink.addEventListener('blur', () => skipLink.classList.add('sr-only'));
         } else {
-            // If a skip-link exists in the template, ensure keyboard focus shows it
+            // If one or more skip-links exist in the template, dedupe and ensure keyboard focus shows it
+            const existingLinks = Array.from(document.querySelectorAll('.skip-link'));
+            if (existingLinks.length > 1) {
+                // keep the first, remove others
+                for (let i = 1; i < existingLinks.length; i++) {
+                    const el = existingLinks[i];
+                    el.parentNode && el.parentNode.removeChild(el);
+                }
+            }
+
             const existing = document.querySelector('.skip-link');
-            existing.addEventListener &&
-                existing.addEventListener('focus', () => existing.classList.remove('sr-only'));
-            existing.addEventListener &&
-                existing.addEventListener('blur', () => existing.classList.add('sr-only'));
+            if (existing) {
+                // remove any inline color/background/opacity that may interfere and ensure it's hidden by sr-only
+                try {
+                    existing.style.removeProperty('color');
+                    existing.style.removeProperty('background-color');
+                    existing.style.removeProperty('opacity');
+                    existing.classList.add('sr-only');
+                } catch (e) {
+                    // ignore
+                }
+
+                existing.addEventListener &&
+                    existing.addEventListener('focus', () => existing.classList.remove('sr-only'));
+                existing.addEventListener &&
+                    existing.addEventListener('blur', () => existing.classList.add('sr-only'));
+            }
         }
     }
 
