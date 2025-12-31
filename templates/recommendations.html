@@ -51,7 +51,7 @@
                             <div class="film-poster">
                                 {% if film.poster_url and (film.poster_url.startswith('http') or film.poster_url.startswith('//')) %}
                                     <img src="{{ film.poster_url }}" alt="{{ film.title }} poster">
-                                {% elif film.poster_url %}
+                                {% elif film.poster_url and static_file_exists('posters/' ~ film.poster_url) %}
                                     <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }} poster">
                                 {% else %}
                                     <div class="no-poster">No poster</div>

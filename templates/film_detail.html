@@ -8,8 +8,8 @@
                 {% if film.poster_url %}
                     {% if film.poster_url.startswith('http') or film.poster_url.startswith('//') %}
                         <img src="{{ film.poster_url }}" alt="{{ film.title }} poster">
-                        {% else %}
-                            <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }} poster">
+                    {% elif static_file_exists('posters/' ~ film.poster_url) %}
+                        <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }} poster">
                     {% endif %}
                 {% else %}
                     <div class="no-poster-large">{{ _('No poster') }}</div>

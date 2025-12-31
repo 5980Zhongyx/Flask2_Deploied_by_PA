@@ -1,6 +1,7 @@
 import logging
 import os
 from flask import Flask, request, g, session
+import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_babel import Babel, gettext as _
@@ -22,6 +23,9 @@ def create_app(config_name=None):
 
     # Initialize Babel
     babel.init_app(app)
+
+    # Jinja helper to check for static file existence (used to fallback posters)
+    app.jinja_env.globals['static_file_exists'] = lambda path: os.path.exists(os.path.join(app.static_folder, path))
 
     # Locale selector: support different Flask-Babel versions
     def _get_locale():
