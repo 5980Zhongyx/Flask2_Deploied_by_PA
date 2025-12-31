@@ -11,6 +11,81 @@ document.addEventListener('DOMContentLoaded', function() {
         // ignore
     }
 
+    // Remove problematic inline color/background/opacity styles from headings and key text elements
+    try {
+        const selectors = 'h1,h2,h3,h4,h5,h6,p,small,a,span';
+        document.querySelectorAll(selectors).forEach(el => {
+            if (el.hasAttribute('style')) {
+                // remove only color/background-color/opacity to avoid breaking layout
+                try {
+                    el.style.removeProperty('color');
+                    el.style.removeProperty('background-color');
+                    el.style.removeProperty('opacity');
+                    // if style empty after removal, remove attribute
+                    if (!el.getAttribute('style') || el.getAttribute('style').trim() === '') {
+                        el.removeAttribute('style');
+                    }
+                } catch (e) {
+                    // ignore errors
+                }
+            }
+        });
+    } catch (e) {
+        // ignore
+    }
+
+    // Observe DOM for any future inline style insertions that affect contrast and remove them
+    try {
+        const styleObserver = new MutationObserver((mutations) => {
+            mutations.forEach(m => {
+                if (m.type === 'attributes' && m.attributeName === 'style') {
+                    const el = m.target;
+                    const tag = el.tagName && el.tagName.toLowerCase();
+                    // only target text-like elements to avoid interfering with layout elements
+                    if (tag && ['h1','h2','h3','h4','h5','h6','p','small','a','span','button'].includes(tag)) {
+                        try {
+                            el.style.removeProperty('color');
+                            el.style.removeProperty('background-color');
+                            el.style.removeProperty('opacity');
+                            if (!el.getAttribute('style') || el.getAttribute('style').trim() === '') {
+                                el.removeAttribute('style');
+                            }
+                        } catch (err) {
+                            // ignore
+                        }
+                    }
+                } else if (m.type === 'childList' && m.addedNodes && m.addedNodes.length) {
+                    m.addedNodes.forEach(node => {
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            // clean newly added element and its descendants
+                            const els = node.querySelectorAll ? node.querySelectorAll('h1,h2,h3,h4,h5,h6,p,small,a,span,button') : [];
+                            if (node.matches && node.matches('h1,h2,h3,h4,h5,h6,p,small,a,span,button')) {
+                                els = Array.prototype.slice.call(els);
+                                els.unshift(node);
+                            }
+                            els.forEach(el => {
+                                try {
+                                    el.style.removeProperty('color');
+                                    el.style.removeProperty('background-color');
+                                    el.style.removeProperty('opacity');
+                                    if (!el.getAttribute('style') || el.getAttribute('style').trim() === '') {
+                                        el.removeAttribute('style');
+                                    }
+                                } catch (err) {}
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        styleObserver.observe(document.body, { attributes: true, attributeFilter: ['style'], subtree: true, childList: true });
+        // store on window so it can be disconnected if needed
+        window.__styleObserver = styleObserver;
+    } catch (e) {
+        // ignore
+    }
+
     // Theme toggle removed — do not initialize theme switching
     initializeLanguage();
     initializeMobileMenu();

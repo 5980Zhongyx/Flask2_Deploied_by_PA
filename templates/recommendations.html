@@ -15,11 +15,12 @@
 
             <div class="trending-content">
                 <div class="heat-chart-container">
+                    <h3 class="chart-title" style="display:none;">{{ _('Daily Interactions') }}</h3>
                     <canvas id="trendingChart" width="400" height="200"></canvas>
                 </div>
 
                 <div class="top-trending-films">
-                    <h3>{{ _('Top 10 Trending Films (Last 7 Days)') }}</h3>
+                    <h3 class="top-trending-title">{{ _('Top 10 Trending Films (Last 7 Days)') }}</h3>
                     <div class="trending-films-list">
                         {% for item in trending_data %}
                         <div class="trending-film-item">
@@ -147,6 +148,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create the trending chart
     const ctx = document.getElementById('trendingChart').getContext('2d');
+    const isHighContrast = document.documentElement.classList.contains('high-contrast');
+    const chartBorder = isHighContrast ? '#ffffff' : '#ff6b6b';
+    const chartBg = isHighContrast ? 'rgba(255,255,255,0.15)' : 'rgba(255, 107, 107, 0.1)';
+    const tickColor = isHighContrast ? '#ffffff' : '#666666';
+
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -154,13 +160,13 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: '{{ _("Daily Interactions") }}',
                 data: data,
-                borderColor: '#ff6b6b',
-                backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                borderColor: chartBorder,
+                backgroundColor: chartBg,
                 borderWidth: 3,
                 fill: true,
                 tension: 0.4,
-                pointBackgroundColor: '#ff6b6b',
-                pointBorderColor: '#fff',
+                pointBackgroundColor: chartBorder,
+                pointBorderColor: isHighContrast ? '#000' : '#fff',
                 pointBorderWidth: 2,
                 pointRadius: 6,
                 pointHoverRadius: 8
@@ -197,8 +203,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         display: true,
                         text: '{{ _("Date") }}'
                     },
+                    ,
                     grid: {
                         display: false
+                    },
+                    ticks: {
+                        color: tickColor
                     }
                 },
                 y: {
@@ -211,6 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     grid: {
                         color: 'rgba(0, 0, 0, 0.1)'
                     }
+                        ,
+                        ticks: {
+                            color: tickColor
+                        }
                 }
             },
             interaction: {

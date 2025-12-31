@@ -3008,6 +3008,61 @@ h3 { font-size: 1.5rem; }
     --button-text: #000000;
 }
 
+.high-contrast .features-section,
+.high-contrast .features-grid,
+.high-contrast .feature-card,
+.high-contrast .feature-card .feature-icon,
+.high-contrast .feature-card h3,
+.high-contrast .feature-card p {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+.high-contrast .feature-card .feature-icon {
+    background: #000 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
+.high-contrast .footer-links a,
+.high-contrast .footer-links a:link,
+.high-contrast .footer-links a:visited {
+    color: #ffffff !important;
+    background: transparent !important;
+}
+
+.high-contrast .film-info p,
+.high-contrast .film-meta,
+.high-contrast .film-description,
+.high-contrast .film-info h2,
+.high-contrast .film-info h3,
+.high-contrast .film-info h4 {
+    color: #ffffff !important;
+}
+
+.high-contrast .pagination .page-link,
+.high-contrast .pagination .page-link.current {
+    background: #000 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+
+.high-contrast .trending-film-info h4,
+.high-contrast .trending-stats span,
+.high-contrast .recommendation-columns h3,
+.high-contrast .stat-card h3 {
+    color: #ffffff !important;
+}
+
+.high-contrast .stat-card {
+    background: #000 !important;
+    border-color: #fff !important;
+    color: #fff !important;
+}
+
+.high-contrast .auth-links a {
+    color: #ffff00 !important;
+}
+
 .high-contrast body {
     background-color: var(--bg-color) !important;
     color: var(--text-color) !important;
@@ -3067,6 +3122,68 @@ h3 { font-size: 1.5rem; }
 .high-contrast .stat-card p {
     color: #e6e6e6 !important;
     opacity: 1 !important;
+}
+
+/* Additional high-contrast overrides for problematic areas */
+.high-contrast .features-section,
+.high-contrast .feature-card,
+.high-contrast .films-grid,
+.high-contrast .film-card,
+.high-contrast .film-info,
+.high-contrast .recommendation-column,
+.high-contrast .trending-heat-section,
+.high-contrast .recommendation-stats,
+.high-contrast .profile-page,
+.high-contrast .auth-form {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+.high-contrast .features-section .feature-card h3,
+.high-contrast .features-section .feature-card p,
+.high-contrast .recommendation-column h3,
+.high-contrast .trending-heat-section h2,
+.high-contrast .trending-film-info h4,
+.high-contrast .stat-card h3,
+.high-contrast .page-header h1,
+.high-contrast h2,
+.high-contrast h3,
+.high-contrast h4,
+.high-contrast h5 {
+    color: var(--text-color) !important;
+    text-shadow: none !important;
+}
+
+.high-contrast .film-info p,
+.high-contrast .film-meta span,
+.high-contrast .film-description,
+.high-contrast .description,
+.high-contrast .stat-item,
+.high-contrast .recommendation-score,
+.high-contrast .interaction-count,
+.high-contrast .like-count {
+    color: var(--text-color) !important;
+}
+
+.high-contrast .footer-links a,
+.high-contrast .footer-bottom p,
+.high-contrast .footer-social a {
+    color: var(--text-color) !important;
+}
+
+/* Pagination in high-contrast mode: ensure active/inactive are readable */
+.high-contrast .page-link {
+    color: var(--text-color) !important;
+    background: transparent !important;
+    border-color: var(--border-color) !important;
+}
+.high-contrast .page-link.current,
+.high-contrast .page-link.active,
+.high-contrast .page-link[aria-current="page"] {
+    background: var(--text-color) !important;
+    color: var(--bg-color) !important;
+    border-color: var(--text-color) !important;
 }
 
 .high-contrast .films-grid .film-card,
