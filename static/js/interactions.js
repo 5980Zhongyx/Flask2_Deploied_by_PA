@@ -195,7 +195,9 @@ function renderReviewsPagination(current, totalPages) {
 
 function escapeHtml(text) {
     if (!text) return '';
-    return text.replace(/[&<>"']/g, function(m) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'})[m]; });
+    return text.replace(/[&<>"']/g, function(m) {
+        return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[m];
+    });
 }
 
 async function handleDeleteInteraction(event) {
