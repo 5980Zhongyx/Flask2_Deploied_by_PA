@@ -1,35 +1,36 @@
 #!/usr/bin/env python3
 """
-Script to check poster display issues
+Poster diagnostics script.
 Run on PythonAnywhere: python3 scripts/check_posters.py
 """
 import os
 from app import create_app
 
 def check_static_posters():
-    """检查静态文件夹中的海报文件"""
+    """Get list of poster files in static/posters"""
     static_dir = 'static'
     posters_dir = os.path.join(static_dir, 'posters')
 
     if not os.path.exists(posters_dir):
-        print(f"❌ static/posters 目录不存在: {posters_dir}")
+        print(f"ERROR: static/posters directory not found: {posters_dir}")
         return []
 
     posters = [f for f in os.listdir(posters_dir) if f.lower().endswith(('.jpg', '.png', '.jpeg'))]
-    print(f"✓ 找到 {len(posters)} 个海报文件在 static/posters/:")
-    for poster in sorted(posters)[:5]:  # 只显示前5个
+    posters = sorted(posters)
+    print(f"Found {len(posters)} poster file(s) in static/posters/:")
+    for poster in posters[:10]:
         print(f"  - {poster}")
-    if len(posters) > 5:
-        print(f"  ... 还有 {len(posters) - 5} 个文件")
+    if len(posters) > 10:
+        print(f"  ... and {len(posters) - 10} more")
     return posters
 
-def check_database_posters():
-    """检查数据库中的海报URL"""
+def check_database_posters(limit_show=10):
+    """Inspect poster_url values in the database"""
     app = create_app('production')
     with app.app_context():
         from models.film import Film
         films = Film.query.all()
-        print(f"\n✓ 数据库中有 {len(films)} 部电影")
+        print(f"\nDatabase has {len(films)} films")
 
         local_posters = 0
         remote_posters = 0
@@ -43,36 +44,32 @@ def check_database_posters():
             else:
                 local_posters += 1
 
-        print(f"  - {local_posters} 部有本地海报")
-        print(f"  - {remote_posters} 部有远程海报")
-        print(f"  - {no_posters} 部没有海报")
+        print(f"  - {local_posters} films reference local poster files")
+        print(f"  - {remote_posters} films reference remote poster URLs")
+        print(f"  - {no_posters} films have no poster_url")
 
         if local_posters > 0:
-            print("
-前5个本地海报电影:"            for film in films[:5]:
+            print(f"\nFirst {limit_show} films with local poster filenames:")
+            shown = 0
+            for film in films:
                 if film.poster_url and not film.poster_url.startswith(('http://', 'https://', '//')):
-                    print(f"  {film.id}: {film.title[:25]}... -> {film.poster_url}")
+                    print(f"  {film.id}: {film.title[:50]} -> {film.poster_url}")
+                    shown += 1
+                    if shown >= limit_show:
+                        break
 
 def main():
-    print("🔍 检查海报显示问题...\n")
+    print("Poster diagnostics\n")
 
-    # 检查静态文件
     static_posters = check_static_posters()
+    check_database_posters(limit_show=10)
 
-    # 检查数据库
-    check_database_posters()
-
-    print("
-💡 诊断结果:"    if not static_posters:
-        print("❌ 问题：static/posters/ 目录为空或不存在")
-        print("   解决：上传海报文件到 PythonAnywhere 的 static/posters/ 目录")
+    print("\nDiagnosis summary:")
+    if not static_posters:
+        print("  - static/posters is empty or missing. Upload your poster files to that folder.")
     else:
-        print("✅ 海报文件存在于 static/posters/")
-
-    print("\n🔧 如果海报仍然不显示，检查：")
-    print("1. 海报文件是否上传到 PA 的 static/posters/ 目录")
-    print("2. 数据库中 poster_url 字段是否正确指向文件名")
-    print("3. 文件权限是否正确 (755)")
+        print("  - static/posters contains files.")
+        print("  - If poster filenames are different from DB poster_url values, run scripts/map_posters_correctly.py or scripts/fix_poster_urls.py as appropriate.")
 
 if __name__ == '__main__':
     main()
