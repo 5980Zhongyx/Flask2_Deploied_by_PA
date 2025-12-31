@@ -50,7 +50,7 @@
 
                 {% if film.description %}
                     <div class="film-description">
-                        <h3>{{ _('Plot Summary') }}</h3>
+                        <h2>{{ _('Plot Summary') }}</h2>
                         <p>{{ film.description }}</p>
                     </div>
                 {% endif %}
@@ -60,7 +60,7 @@
         <!-- User interaction area -->
         {% if current_user.is_authenticated %}
         <div class="interaction-section">
-            <h3>{{ _('My Review') }}</h3>
+            <h2>{{ _('My Review') }}</h2>
 
             {% if user_interaction %}
                 <div class="current-interaction">
@@ -125,7 +125,7 @@
         <!-- 其他用户评论 -->
         {% if reviews %}
         <div class="reviews-section">
-            <h3>用户评论</h3>
+            <h2>用户评论</h2>
             <div id="reviews-container" class="reviews-list">
                 <!-- 评论将通过 AJAX 加载，初始显示服务器端渲染的前几条 -->
                 {% for review in reviews[:5] %}

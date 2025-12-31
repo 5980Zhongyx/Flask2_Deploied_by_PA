@@ -1377,6 +1377,44 @@ body {
     text-decoration: underline;
 }
 
+/* Interaction / like count styles: force readable colors even if inline styles present */
+.interaction-count,
+.like-count,
+.rating-value,
+.rating-count,
+.trending-stats .interaction-count,
+.trending-stats .like-count {
+    color: var(--text-primary) !important;
+    background: transparent !important;
+    border: none !important;
+    font-weight: 600;
+}
+
+/* Header controls (language, menu, user) - ensure high contrast and visible focus */
+.nav-actions button,
+.nav-actions .lang-toggle,
+.nav-actions .mobile-menu-toggle,
+.nav-actions .user-menu-trigger {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    border: 1px solid transparent !important;
+}
+.nav-actions button:focus,
+.nav-actions .lang-toggle:focus,
+.nav-actions .mobile-menu-toggle:focus,
+.nav-actions .user-menu-trigger:focus {
+    outline: 3px solid rgba(0,123,255,0.6) !important;
+    outline-offset: 2px !important;
+}
+
+/* Recommendations page: trending stats and badges */
+.trending-stats .badge,
+.trending-stats .stat,
+.recommendation-columns .stat-card .value {
+    color: var(--text-primary) !important;
+    background: transparent !important;
+}
+
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
     .nav-container {
