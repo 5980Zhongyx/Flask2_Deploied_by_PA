@@ -129,8 +129,7 @@ body {
 .back-btn {
     position: absolute;
     top: 12px;
-    /* move right to avoid overlapping the brand text */
-    left: calc(var(--spacing-lg) + 64px);
+    left: 12px; /* fixed left to avoid overlap with brand/title */
     width: 44px;
     height: 44px;
     border-radius: 8px;
@@ -2975,7 +2974,7 @@ h3 { font-size: 1.5rem; }
 
 /* Back button layout fix for desktop to avoid overlapping brand text */
 .back-btn {
-    left: calc(var(--spacing-lg) + 120px) !important;
+    left: 12px !important;
 }
 
 @media (max-width: 768px) {

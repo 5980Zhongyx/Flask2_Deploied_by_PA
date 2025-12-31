@@ -1,6 +1,6 @@
 // Theme and Language switching functionality
 document.addEventListener('DOMContentLoaded', function() {
-    initializeTheme();
+    // Theme toggle removed — do not initialize theme switching
     initializeLanguage();
     initializeMobileMenu();
     initializePageLoadAnimations();
@@ -12,40 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeBackButton();
 });
 
+// initializeTheme removed — theme switching UI has been removed per requirement.
 function initializeTheme() {
-    const themeToggle = document.getElementById('theme-toggle');
-    const html = document.documentElement;
-
-    // Get saved theme from localStorage
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    html.setAttribute('data-theme', savedTheme);
-    updateThemeIcon(savedTheme);
-
-    // Bind theme toggle event
-    themeToggle.addEventListener('click', function() {
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateThemeIcon(newTheme);
-
-        // Add toggle animation effect
-        themeToggle.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-            themeToggle.style.transform = '';
-        }, 150);
-    });
+    // no-op
 }
 
-function updateThemeIcon(theme) {
-    const icon = document.querySelector('#theme-toggle i');
-    if (theme === 'dark') {
-        icon.className = 'fas fa-sun';
-    } else {
-        icon.className = 'fas fa-moon';
-    }
-}
+// updateThemeIcon no-op since theme toggle removed
+function updateThemeIcon(theme) { /* no-op */ }
 
 // Language switching functionality
 function initializeLanguage() {
@@ -596,8 +569,8 @@ Keyboard Shortcuts:
                         window.location.href = '/profile';
                         break;
                     case 't':
+                        // Theme toggle removed — no action
                         e.preventDefault();
-                        this.toggleTheme();
                         break;
                     case 'l':
                         e.preventDefault();
@@ -696,10 +669,9 @@ Keyboard Shortcuts:
     }
 
     toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
+        // Theme switch removed; keep function as no-op for backwards compatibility
+        // Previously toggled data-theme; now intentionally disabled.
+        return;
     }
 
     toggleLanguage() {
