@@ -352,9 +352,9 @@ class AccessibilityManager {
             <button class="accessibility-toggle" aria-label="Accessibility options" title="Accessibility options">
                 <i class="fas fa-universal-access"></i>
             </button>
-            <div class="accessibility-menu">
+            <div class="accessibility-menu" role="dialog" aria-modal="false" aria-labelledby="accessibility-title">
                 <div class="accessibility-header">
-                    <h3>Accessibility Options</h3>
+                    <div id="accessibility-title" role="heading" aria-level="2">Accessibility Options</div>
                     <button class="close-accessibility" aria-label="Close accessibility menu">&times;</button>
                 </div>
                 <div class="accessibility-options">

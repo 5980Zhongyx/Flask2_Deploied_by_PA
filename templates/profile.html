@@ -9,15 +9,15 @@
 
         <div class="profile-stats">
             <div class="stat-card">
-                <h3>{{ total_likes }}</h3>
+                <h2>{{ total_likes }}</h2>
                 <p>点赞电影</p>
             </div>
             <div class="stat-card">
-                <h3>{{ total_reviews }}</h3>
+                <h2>{{ total_reviews }}</h2>
                 <p>{{ _('Reviews') }}</p>
             </div>
             <div class="stat-card">
-                <h3>{{ "%.1f"|format(avg_rating_given) if (avg_rating_given or 0) > 0 else _('No data') }}</h3>
+                <h2>{{ "%.1f"|format(avg_rating_given) if (avg_rating_given or 0) > 0 else _('No data') }}</h2>
                 <p>{{ _('Average Rating') }}</p>
             </div>
         </div>
@@ -55,7 +55,7 @@
         </div>
         {% else %}
         <div class="no-interactions">
-            <h3>你还没有对任何电影进行评价</h3>
+            <h2>你还没有对任何电影进行评价</h2>
             <p>开始浏览和评价电影，让系统更好地了解你的喜好！</p>
             <a href="{{ url_for('film.list_films') }}" class="btn btn-primary">浏览电影</a>
         </div>
