@@ -638,6 +638,7 @@ Keyboard Shortcuts:
                     existing.style.removeProperty('color');
                     existing.style.removeProperty('background-color');
                     existing.style.removeProperty('opacity');
+                    existing.removeAttribute('style');
                     existing.classList.add('sr-only');
                 } catch (e) {
                     // ignore

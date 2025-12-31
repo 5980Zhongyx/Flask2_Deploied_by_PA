@@ -131,6 +131,40 @@ body {
     background: #000000 !important;
 }
 
+/* Strong global overrides for skip-link to defeat inline styles */
+.skip-link {
+    color: #ffffff !important;
+    background-color: #000000 !important;
+    opacity: 0 !important;
+    left: -9999px !important;
+    top: auto !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    transition: none !important;
+}
+.skip-link:focus,
+.skip-link:not(.sr-only) {
+    left: 6px !important;
+    top: 6px !important;
+    opacity: 1 !important;
+    color: #ffffff !important;
+    background-color: #000000 !important;
+    z-index: 10001 !important;
+}
+
+/* Ensure auth/register/login inline colored links are readable */
+.auth-links a,
+.auth-links a:link,
+.auth-links a:visited {
+    color: #003366 !important; /* darker blue for contrast */
+    background: transparent !important;
+    text-decoration: underline !important;
+}
+
 /* Improve contrast for primary text and interactive elements */
 :root {
     --text-primary: #111111;
