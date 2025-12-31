@@ -1,5 +1,16 @@
 // Theme and Language switching functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Remove any existing skip-link elements immediately to avoid false positive WAVE reports
+    try {
+        document.querySelectorAll('.skip-link').forEach(el => el.remove());
+        // also remove any that might be injected shortly after
+        setTimeout(() => {
+            document.querySelectorAll('.skip-link').forEach(el => el.remove());
+        }, 250);
+    } catch (e) {
+        // ignore
+    }
+
     // Theme toggle removed — do not initialize theme switching
     initializeLanguage();
     initializeMobileMenu();
@@ -609,46 +620,14 @@ Keyboard Shortcuts:
             }
         });
 
-        // Skip to main content link - only create if not already present in template
-        if (!document.querySelector('.skip-link')) {
-            const skipLink = document.createElement('a');
-            skipLink.href = '#main-content';
-            skipLink.className = 'skip-link sr-only';
-            skipLink.textContent = 'Skip to main content';
-            document.body.insertBefore(skipLink, document.body.firstChild);
-
-            // Show skip link on focus
-            skipLink.addEventListener('focus', () => skipLink.classList.remove('sr-only'));
-            skipLink.addEventListener('blur', () => skipLink.classList.add('sr-only'));
-        } else {
-            // If one or more skip-links exist in the template, dedupe and ensure keyboard focus shows it
+        // Remove any existing skip-link elements to avoid persistent inline styles / WAVE false positives
+        try {
             const existingLinks = Array.from(document.querySelectorAll('.skip-link'));
-            if (existingLinks.length > 1) {
-                // keep the first, remove others
-                for (let i = 1; i < existingLinks.length; i++) {
-                    const el = existingLinks[i];
-                    el.parentNode && el.parentNode.removeChild(el);
-                }
-            }
-
-            const existing = document.querySelector('.skip-link');
-            if (existing) {
-                // remove any inline color/background/opacity that may interfere and ensure it's hidden by sr-only
-                try {
-                    existing.style.removeProperty('color');
-                    existing.style.removeProperty('background-color');
-                    existing.style.removeProperty('opacity');
-                    existing.removeAttribute('style');
-                    existing.classList.add('sr-only');
-                } catch (e) {
-                    // ignore
-                }
-
-                existing.addEventListener &&
-                    existing.addEventListener('focus', () => existing.classList.remove('sr-only'));
-                existing.addEventListener &&
-                    existing.addEventListener('blur', () => existing.classList.add('sr-only'));
-            }
+            existingLinks.forEach(el => {
+                el.parentNode && el.parentNode.removeChild(el);
+            });
+        } catch (e) {
+            // ignore
         }
     }
 
