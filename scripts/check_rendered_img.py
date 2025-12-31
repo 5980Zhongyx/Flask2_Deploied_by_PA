@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Request film details and check and print the lines that contain /static/posters/ in the HTML response.
-Usage: python scripts/check_rendered_img.py 44
+Request film details and print lines containing '/static/posters/' in the HTML.
+Usage: python scripts/check_rendered_img.py <film_id>
 """
-import sys, os
+import sys
+import os
+
+# Ensure project root is importable for test client creation
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from app import create_app
+
+from app import create_app  # noqa: E402
+
 
 def main():
     film_id = int(sys.argv[1]) if len(sys.argv) > 1 else 1
@@ -21,10 +26,9 @@ def main():
             print('No /static/posters/ occurrences in response.')
         else:
             print('Found lines:')
-            for line in found:
-                print(line.strip())
+        for line in found:
+            print(line.strip())
+
 
 if __name__ == '__main__':
     main()
-
-

@@ -1,36 +1,39 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-生成推荐评估 HTML 报告到 static/reports/recommendation_report.html
-内容：
- - 评估指标摘要（scripts/recommendation_eval.json）
- - 对比示例：为Top active users各展示三种算法的Top-5推荐（含电影标题）
+Generate recommendation evaluation HTML report to
+static/reports/recommendation_report.html
+
+Content:
+- Evaluation metrics summary (scripts/recommendation_eval.json)
+- Comparison examples: Show Top-5 recommendations for each
+  top active user (including movie titles)
 """
-import json
 import os
 import sys
+import json
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from app import create_app
-from models.film import Film
-from models.interaction import UserFilmInteraction
+from app import create_app  # noqa: E402
+from models.film import Film  # noqa: E402
+from models.interaction import UserFilmInteraction  # noqa: E402
 
-EVAL_JSON = "scripts/recommendation_eval.json"
-OUT_HTML = os.path.join("static", "reports", "recommendation_report.html")
+EVAL_JSON = 'scripts/recommendation_eval.json'
+OUT_HTML = os.path.join('static', 'reports', 'recommendation_report.html')
 
 
 def load_eval():
     if not os.path.exists(EVAL_JSON):
         return None
     try:
-        with open(EVAL_JSON, "r", encoding="utf-8") as f:
+        with open(EVAL_JSON, 'r', encoding='utf-8') as f:
             return json.load(f)
-    except:
+    except Exception:
         return None
 
 
 def get_sample_users(limit=5):
-    # pick users with most interactions
+    # pick users with most interactions (most active users)
     interactions = UserFilmInteraction.query.all()
     counter = {}
     for it in interactions:
@@ -50,61 +53,64 @@ def film_titles(ids):
 
 
 def main():
-    app = create_app("development")
+    app = create_app('development')
     with app.app_context():
         eval_metrics = load_eval()
         # import recommenders
-        from models.recommendation import recommendation_engine
         from models.recommendation_advanced import item_recommender, mf_recommender
+        from models.recommendation import recommendation_engine
 
         sample_users = get_sample_users(limit=5)
         examples = {}
         for u in sample_users:
+            user_based = [
+                f.title for f, _ in recommendation_engine.recommend_films(u, top_n=5)
+            ]
+            item_based = [
+                f.title for f, _ in item_recommender.recommend(u, top_n=5)
+            ]
+            mf_based = [f.title for f, _ in mf_recommender.recommend(u, top_n=5)]
             examples[u] = {
-                "user_based": [
-                    f.title
-                    for f, _ in recommendation_engine.recommend_films(u, top_n=5)
-                ],
-                "item_based": [
-                    f.title for f, _ in item_recommender.recommend(u, top_n=5)
-                ],
-                "mf": [f.title for f, _ in mf_recommender.recommend(u, top_n=5)],
+                "user_based": user_based,
+                "item_based": item_based,
+                "mf": mf_based,
             }
 
         os.makedirs(os.path.dirname(OUT_HTML), exist_ok=True)
-        with open(OUT_HTML, "w", encoding="utf-8") as f:
+        with open(OUT_HTML, 'w', encoding='utf-8') as f:
+            f.write('<!doctype html><html><head><meta charset="utf-8">')
+            f.write('<title>Recommendation Report</title>')
             f.write(
-                '<!doctype html><html><head><meta charset="utf-8"><title>Recommendation Report</title>'
+                '<style>body{font-family:Arial,Helvetica,sans-serif;padding:20px} '
+                '.col{display:flex;gap:12px}</style></head><body>'
             )
-            f.write(
-                "<style>body{font-family:Arial,Helvetica,sans-serif;padding:20px} .col{display:flex;gap:12px}</style></head><body>"
-            )
-            f.write("<h1>Recommendation Evaluation Report</h1>")
+            f.write('<h1>Recommendation Evaluation Report</h1>')
             if eval_metrics:
                 f.write(
-                    "<h2>Metrics Summary</h2><pre>%s</pre>"
+                    '<h2>Metrics Summary</h2><pre>%s</pre>'
                     % json.dumps(eval_metrics, ensure_ascii=False, indent=2)
                 )
             else:
-                f.write("<p>No evaluation metrics found.</p>")
+                f.write('<p>No evaluation metrics found.</p>')
 
-            f.write("<h2>Example Recommendations (sample active users)</h2>")
+            f.write('<h2>Example Recommendations (sample active users)</h2>')
             for u, recs in examples.items():
                 f.write(f'<h3>User {u}</h3><div class="col">')
-                for alg in ["user_based", "item_based", "mf"]:
+                for alg in ['user_based', 'item_based', 'mf']:
                     f.write(
-                        '<div style="border:1px solid #ddd;padding:8px;border-radius:6px;width:30%">'
+                        '<div style="border:1px solid #ddd;padding:8px;'
+                        'border-radius:6px;width:30%">'
                     )
-                    f.write(f"<strong>{alg}</strong><ol>")
+                    f.write(f'<strong>{alg}</strong><ol>')
                     for title in recs[alg]:
-                        f.write(f"<li>{title}</li>")
-                    f.write("</ol></div>")
-                f.write("</div>")
-            f.write("<p>Generated by scripts/generate_recommendation_report.py</p>")
-            f.write("</body></html>")
+                        f.write(f'<li>{title}</li>')
+                    f.write('</ol></div>')
+                f.write('</div>')
+            f.write('<p>Generated by scripts/generate_recommendation_report.py</p>')
+            f.write('</body></html>')
 
-        print("Report generated at", OUT_HTML)
+        print('Report generated at', OUT_HTML)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

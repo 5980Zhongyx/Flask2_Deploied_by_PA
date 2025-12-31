@@ -78,12 +78,15 @@ def main():
     print("\nDiagnosis summary:")
     if not static_posters:
         print(
-            "  - static/posters is empty or missing. Upload your poster files to that folder."
+            "  - static/posters is empty or missing. "
+            "Upload your poster files to that folder."
         )
     else:
         print("  - static/posters contains files.")
         print(
-            "  - If poster filenames are different from DB poster_url values, run scripts/map_posters_correctly.py or scripts/fix_poster_urls.py as appropriate."
+            "  - If poster filenames differ from DB poster_url values, "
+            "run `scripts/map_posters_correctly.py` or "
+            "`scripts/fix_poster_urls.py`."
         )
 
 

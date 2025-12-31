@@ -34,7 +34,8 @@ def setup_deployment():
     # 1. Check Python version
     python_version = sys.version_info
     print(
-        f"Python version: {python_version.major}.{python_version.minor}.{python_version.micro}"
+        "Python version: "
+        f"{python_version.major}.{python_version.minor}.{python_version.micro}"
     )
 
     # 2. Check required files

@@ -9,7 +9,7 @@ import sys
 # Add project root directory to Python path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app import create_app
+from app import create_app  # noqa: E402
 
 
 def get_local_posters():
@@ -46,7 +46,8 @@ def fix_poster_urls():
                     film.poster_url = expected_filename
                     updated += 1
                     print(
-                        f"Update {film.id}: {film.title[:20]}... -> {expected_filename}"
+                        f"Update {film.id}: {film.title[:20]}... -> "
+                        f"{expected_filename}"
                     )
             else:
                 print(f"⚠️  Film {film.id} has no corresponding poster file")
@@ -64,7 +65,8 @@ def fix_poster_urls():
         for film in films[:5]:
             status = "✓" if film.poster_url else "✗"
             print(
-                f"  {status} {film.id}: {film.title[:20]}... -> {film.poster_url or 'None'}"
+                f"  {status} {film.id}: {film.title[:20]}... -> "
+                f"{film.poster_url or 'None'}"
             )
 
 

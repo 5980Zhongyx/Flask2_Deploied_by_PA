@@ -1,29 +1,28 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-通过评估 JSON 生成图表并生成 HTML 报告（包含图）
-依赖：matplotlib（可选；若未安装则只生成文本报告）
+Evaluate JSON and generate HTML report (including charts)
+Dependencies: matplotlib (optional; if not installed, only generate text report)
 """
-import json
+# split imports and adjust path
 import os
 import sys
+import json
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from app import create_app
-
+from app import create_app  # noqa: E402
 # delay importing models that access DB until inside app.app_context()
 
-EVAL_JSON = "scripts/recommendation_eval.json"
-OUT_HTML = os.path.join("static", "reports", "recommendation_report.html")
-OUT_IMG = os.path.join("static", "reports", "precision_chart.png")
+EVAL_JSON = 'scripts/recommendation_eval.json'
+OUT_HTML = os.path.join('static', 'reports', 'recommendation_report.html')
+OUT_IMG = os.path.join('static', 'reports', 'precision_chart.png')
 
 
 def load_eval():
     if not os.path.exists(EVAL_JSON):
         return None
-    with open(EVAL_JSON, "r", encoding="utf-8") as f:
+    with open(EVAL_JSON, 'r', encoding='utf-8') as f:
         return json.load(f)
-
 
 def try_plot(eval_metrics):
     try:
@@ -31,23 +30,23 @@ def try_plot(eval_metrics):
     except Exception:
         return False
 
-    algs = ["user_based", "item_based", "matrix_factorization"]
-    labels = ["User-CF", "Item-CF", "MF"]
-    precisions = [eval_metrics.get(a, {}).get("precision_at_k", 0.0) for a in algs]
-    hit_rates = [eval_metrics.get(a, {}).get("hit_rate", 0.0) for a in algs]
+    algs = ['user_based', 'item_based', 'matrix_factorization']
+    labels = ['User-CF', 'Item-CF', 'MF']
+    precisions = [eval_metrics.get(a, {}).get('precision_at_k', 0.0) for a in algs]
+    hit_rates = [eval_metrics.get(a, {}).get('hit_rate', 0.0) for a in algs]
 
     plt.figure(figsize=(8, 4))
     x = range(len(labels))
     plt.subplot(1, 2, 1)
-    plt.bar(x, precisions, color=["#ff8c42", "#ff6b35", "#6bcf63"])
+    plt.bar(x, precisions, color=['#ff8c42', '#ff6b35', '#6bcf63'])
     plt.xticks(x, labels)
-    plt.title("Precision@K")
+    plt.title('Precision@K')
     plt.ylim(0, 1)
 
     plt.subplot(1, 2, 2)
-    plt.bar(x, hit_rates, color=["#6699ff", "#9966ff", "#ff66a3"])
+    plt.bar(x, hit_rates, color=['#6699ff', '#9966ff', '#ff66a3'])
     plt.xticks(x, labels)
-    plt.title("Hit Rate")
+    plt.title('Hit Rate')
     plt.ylim(0, 1)
 
     os.makedirs(os.path.dirname(OUT_IMG), exist_ok=True)
@@ -61,12 +60,12 @@ def try_plot(eval_metrics):
 
 
 def main():
-    app = create_app("development")
+    app = create_app('development')
     with app.app_context():
         # import recommenders/models inside app context
-        from models.interaction import UserFilmInteraction
         from models.recommendation import recommendation_engine
         from models.recommendation_advanced import item_recommender, mf_recommender
+        from models.interaction import UserFilmInteraction
 
         eval_metrics = load_eval() or {}
         # try plot
@@ -84,8 +83,7 @@ def main():
         for u in sample_users:
             examples[u] = {
                 "user_based": [
-                    f.title
-                    for f, _ in recommendation_engine.recommend_films(u, top_n=5)
+                    f.title for f, _ in recommendation_engine.recommend_films(u, top_n=5)
                 ],
                 "item_based": [
                     f.title for f, _ in item_recommender.recommend(u, top_n=5)
@@ -94,44 +92,46 @@ def main():
             }
 
         os.makedirs(os.path.dirname(OUT_HTML), exist_ok=True)
-        with open(OUT_HTML, "w", encoding="utf-8") as f:
+        with open(OUT_HTML, 'w', encoding='utf-8') as f:
+            f.write('<!doctype html><html><head><meta charset="utf-8">')
+            f.write('<title>Recommendation Report</title>')
             f.write(
-                '<!doctype html><html><head><meta charset="utf-8"><title>Recommendation Report</title>'
+                '<style>body{font-family:Arial,Helvetica,sans-serif;padding:20px} '
+                '.col{display:flex;gap:12px}</style></head><body>'
             )
-            f.write(
-                "<style>body{font-family:Arial,Helvetica,sans-serif;padding:20px} .col{display:flex;gap:12px}</style></head><body>"
-            )
-            f.write("<h1>Recommendation Evaluation Report</h1>")
+            f.write('<h1>Recommendation Evaluation Report</h1>')
             if eval_metrics:
                 f.write(
-                    "<h2>Metrics Summary</h2><pre>%s</pre>"
+                    '<h2>Metrics Summary</h2><pre>%s</pre>'
                     % json.dumps(eval_metrics, ensure_ascii=False, indent=2)
                 )
             else:
-                f.write("<p>No evaluation metrics found.</p>")
+                f.write('<p>No evaluation metrics found.</p>')
             if plotted and os.path.exists(OUT_IMG):
-                img_src = "/" + OUT_IMG.replace(os.sep, "/")
+                img_src = '/' + OUT_IMG.replace(os.sep, '/')
                 f.write(
-                    '<h2>Metric Charts</h2><img src="%s" alt="charts" style="max-width:800px">'
-                    % img_src
+                    '<h2>Metric Charts</h2>'
+                    '<img src="%s" alt="charts" style="max-width:800px">' % img_src
                 )
 
-            f.write("<h2>Example Recommendations (sample active users)</h2>")
+            f.write('<h2>Example Recommendations (sample active users)</h2>')
             for u, recs in examples.items():
                 f.write(f'<h3>User {u}</h3><div class="col">')
-                for alg in ["user_based", "item_based", "mf"]:
+                for alg in ['user_based', 'item_based', 'mf']:
                     f.write(
-                        '<div style="border:1px solid #ddd;padding:8px;border-radius:6px;width:30%">'
+                        '<div style="border:1px solid #ddd;padding:8px;'
+                        'border-radius:6px;width:30%">'
                     )
-                    f.write(f"<strong>{alg}</strong><ol>")
+                    f.write(f'<strong>{alg}</strong><ol>')
                     for title in recs[alg]:
-                        f.write(f"<li>{title}</li>")
-                    f.write("</ol></div>")
-                f.write("</div>")
-            f.write("<p>Generated by scripts/generate_report_with_plots.py</p>")
-            f.write("</body></html>")
-        print("Report generated at", OUT_HTML, "plotted:", plotted)
+                        f.write(f'<li>{title}</li>')
+                    f.write('</ol></div>')
+                f.write('</div>')
+            f.write('<p>Generated by scripts/generate_report_with_plots.py</p>')
+            f.write('</body></html>')
+        print('Report generated at', OUT_HTML, 'plotted:', plotted)
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
+
+

@@ -5,16 +5,21 @@ contains unit tests and functional tests
 
 import os
 import sys
-import unittest
-import tempfile
-from datetime import datetime
 
 # Add project root directory to Python path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app import create_app, db
-from models import User, Film, UserFilmInteraction, AppLog, recommendation_engine
-from werkzeug.security import generate_password_hash
+import unittest  # noqa: E402
+
+from app import create_app, db  # noqa: E402
+from models import (
+    User,
+    Film,
+    UserFilmInteraction,
+    AppLog,
+    recommendation_engine,
+)  # noqa: E402
+from werkzeug.security import generate_password_hash  # noqa: E402
 
 class TestConfig:
     """Test configuration"""
@@ -23,7 +28,7 @@ class TestConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     TESTING = True
     WTF_CSRF_ENABLED = False
-
+ 
 class FilmRecommendationTestCase(unittest.TestCase):
     """Film recommendation application test case"""
 
@@ -127,9 +132,18 @@ class FilmRecommendationTestCase(unittest.TestCase):
             rating=3
         )
 
-        db.session.add_all([interaction1, interaction2, interaction3, interaction4, interaction5])
+        db.session.add_all(
+            [
+                interaction1,
+                interaction2,
+                interaction3,
+                interaction4,
+                interaction5,
+            ]
+        )
         db.session.commit()
 
+ 
     # Model tests
     def test_user_model(self):
         """Test user model"""
@@ -346,7 +360,8 @@ class PerformanceTestCase(unittest.TestCase):
         end_time = time.time()
 
         self.assertEqual(response.status_code, 200)
-        self.assertLess(end_time - start_time, 1.0)  # Response time should be less than 1 second
+        # Response time should be less than 1 second
+        self.assertLess(end_time - start_time, 1.0)
 
 class SecurityTestCase(unittest.TestCase):
     """Security test"""

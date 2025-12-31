@@ -19,6 +19,7 @@ sys.path.insert(0, ROOT)
 CSV = os.path.join('scripts', 'poster_mapping.csv')
 DB_PATH = os.path.join('instance', 'app.db')
 
+
 def backup_db():
     if not os.path.exists(DB_PATH):
         return None
@@ -26,6 +27,7 @@ def backup_db():
     bak = DB_PATH + f'.bak.{ts}'
     shutil.copy2(DB_PATH, bak)
     return bak
+
 
 def main():
     if not os.path.exists(CSV):
@@ -79,7 +81,6 @@ def main():
         for m in missing_files[:50]:
             print(' ', m)
 
+
 if __name__ == '__main__':
     main()
-
-
