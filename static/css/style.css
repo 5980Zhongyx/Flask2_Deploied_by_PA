@@ -110,6 +110,27 @@ body {
     opacity: 1;
 }
 
+/* Ensure skip link always has high contrast when visible and is fully hidden when sr-only */
+.skip-link.sr-only {
+    position: absolute;
+    left: -9999px !important;
+    top: auto !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    opacity: 0 !important;
+}
+.skip-link:not(.sr-only) {
+    left: 6px !important;
+    top: 6px !important;
+    opacity: 1 !important;
+    color: #ffffff !important;
+    background: #000000 !important;
+}
+
 /* Improve contrast for primary text and interactive elements */
 :root {
     --text-primary: #111111;
@@ -1319,6 +1340,41 @@ body {
     /* increase footer contrast for accessibility */
     color: var(--text-secondary);
     font-size: 0.9rem;
+}
+
+/* Pagination: ensure link contrast is sufficient */
+.pagination .page-link {
+    color: var(--text-primary);
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 6px 10px;
+    border-radius: 4px;
+}
+.pagination .page-link:hover,
+.pagination .page-link:focus {
+    color: #ffffff;
+    background: var(--primary-color);
+    text-decoration: none;
+}
+.pagination .page-link.current,
+.pagination .page-link.active,
+.pagination .page-link[aria-current="page"] {
+    background: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
+}
+
+/* Headings: ensure linked titles remain high contrast */
+.film-info h3 a,
+.film-info h2 a,
+.page-header h1 a {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+.film-info h3 a:hover,
+.film-info h2 a:hover,
+.page-header h1 a:hover {
+    text-decoration: underline;
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
