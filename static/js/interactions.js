@@ -85,7 +85,13 @@ async function handleLikeClick(event) {
             }
         });
 
-        const data = await response.json();
+        let data = null;
+        // try to parse json safely
+        try {
+            data = await response.json();
+        } catch (e) {
+            console.warn('Could not parse like response as JSON', e);
+        }
 
         if (data.success) {
             // Update button status
@@ -95,13 +101,17 @@ async function handleLikeClick(event) {
             updateLikeCount(filmId, data.like_count);
 
             // Show message
-            showMessage(data.message, 'success');
+            showMessage(data.message || 'Like updated', 'success');
         } else {
-            showMessage(data.message || 'Operation failed', 'error');
+            // server returned success=false
+            const msg = data.message || `Operation failed (${response.status})`;
+            showMessage(msg, 'error');
         }
     } catch (error) {
         console.error('Like request failed:', error);
-        showMessage('Network error, please retry', 'error');
+        // Show clearer error for network/fetch problems
+        const errMsg = error && error.message ? error.message : 'Network error, please retry';
+        showMessage(errMsg, 'error');
     } finally {
         // Re-enable button and clear processing state
         button.disabled = false;

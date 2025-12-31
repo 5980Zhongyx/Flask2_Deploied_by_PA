@@ -129,7 +129,7 @@ body {
 .back-btn {
     position: absolute;
     top: 12px;
-    left: 12px;
+    left: 6px;
     width: 44px;
     height: 44px;
     border-radius: 8px;
@@ -156,7 +156,7 @@ body {
 @media (max-width: 768px) {
     .back-btn {
         top: 74px; /* place below the navbar on small screens */
-        left: 10px;
+        left: 6px;
         width: 40px;
         height: 40px;
     }
