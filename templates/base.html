@@ -15,10 +15,6 @@
     <header class="header">
         <nav class="navbar">
             <div class="nav-container">
-                <!-- Global back button (JS controls visibility) -->
-                <button id="back-button" class="back-btn" aria-label="Go back" title="Go back" type="button">
-                    <i class="fas fa-arrow-left"></i>
-                </button>
                 <div class="nav-brand">
                     <a href="{{ url_for('film.index') }}">
                         <i class="fas fa-film"></i>
@@ -26,7 +22,7 @@
                     </a>
                 </div>
                 <!-- Back button (visible on all pages) -->
-                <button id="back-button" class="back-button" data-default-url="{{ url_for('film.index') }}" onclick="goBack()" aria-label="Go back" title="Go back">
+                <button id="back-button" class="back-btn" data-default-url="{{ url_for('film.index') }}" onclick="goBack()" aria-label="{{ _('Go back') }}" title="{{ _('Go back') }}">
                     <i class="fas fa-arrow-left"></i>
                 </button>
 

@@ -155,8 +155,8 @@ body {
 
 @media (max-width: 768px) {
     .back-btn {
-        top: 8px;
-        left: 8px;
+        top: 74px; /* place below the navbar on small screens */
+        left: 10px;
         width: 40px;
         height: 40px;
     }
@@ -628,7 +628,8 @@ body {
 }
 
 @media (max-width: 480px) {
-    .back-button {
+    .back-button,
+    .back-btn {
         top: 66px;
         left: 8px;
         width: 36px;
@@ -640,6 +641,11 @@ body {
 .nav-menu {
     display: flex;
     align-items: center;
+}
+
+/* ensure nav-menu sits above header buttons when opened on mobile */
+.nav-menu {
+    z-index: 1250;
 }
 
 .nav-links {
@@ -825,6 +831,11 @@ body {
     justify-content: center;
     cursor: pointer;
     transition: all var(--transition-normal);
+}
+
+/* ensure mobile toggle is clickable above other elements */
+.mobile-menu-toggle {
+    z-index: 1300;
 }
 
 .mobile-menu-toggle:hover {

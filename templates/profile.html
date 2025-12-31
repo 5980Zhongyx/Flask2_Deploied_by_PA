@@ -4,7 +4,7 @@
 <main class="profile-page">
     <div class="container">
         <div class="page-header">
-            <h1>我的资料</h1>
+            <h1>{{ _('Profile') }}</h1>
         </div>
 
         <div class="profile-stats">
@@ -14,7 +14,7 @@
             </div>
             <div class="stat-card">
                 <h3>{{ total_reviews }}</h3>
-                <p>发表评论</p>
+                <p>{{ _('Reviews') }}</p>
             </div>
             <div class="stat-card">
                 <h3>{{ "%.1f"|format(avg_rating_given) if (avg_rating_given or 0) > 0 else _('No data') }}</h3>
