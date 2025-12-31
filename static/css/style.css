@@ -3433,6 +3433,47 @@ html {
     opacity: 1 !important;
 }
 
+/* === Homepage & trending explicit normal-mode overrides === */
+body:not(.high-contrast) .section-title,
+body:not(.high-contrast) .section-title .title-main,
+body:not(.high-contrast) .section-description,
+body:not(.high-contrast) .recommendation-info,
+body:not(.high-contrast) .recommendation-column h3,
+body:not(.high-contrast) .trending-film-info h4,
+body:not(.high-contrast) .trending-film-info h4 a,
+body:not(.high-contrast) .trending-stats .interaction-count,
+body:not(.high-contrast) .trending-stats .like-count,
+body:not(.high-contrast) .recommendation-score,
+body:not(.high-contrast) .footer-links a,
+body:not(.high-contrast) .footer-bottom p,
+body:not(.high-contrast) .recommendation-info,
+body:not(.high-contrast) .films-grid .film-info h4 a,
+body:not(.high-contrast) .film-info h4 {
+    color: #000000 !important;
+    background: transparent !important;
+    opacity: 1 !important;
+}
+
+/* Ensure film cards and info use light background in normal mode so black text is readable */
+body:not(.high-contrast) .film-card,
+body:not(.high-contrast) .film-info {
+    background: var(--bg-primary) !important;
+    color: #000000 !important;
+}
+
+/* Keep poster image area light in normal mode so adjacent text remains readable */
+body:not(.high-contrast) .film-poster {
+    background-color: #f8f9fa !important;
+    color: #000000 !important;
+}
+
+/* Ensure recommendation score and counts show black text in normal mode */
+body:not(.high-contrast) .recommendation-score strong,
+body:not(.high-contrast) .interaction-count,
+body:not(.high-contrast) .like-count {
+    color: #000000 !important;
+}
+
 /* Extra specificity for profile page elements to override any other rules */
 .profile-page h2,
 .profile-page .liked,
