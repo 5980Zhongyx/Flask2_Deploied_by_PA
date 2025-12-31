@@ -3242,6 +3242,47 @@ h3 { font-size: 1.5rem; }
     background: transparent !important;
 }
 
+/* User-requested final overrides: make key labels black in normal mode, white in high-contrast */
+.section-title,
+.section-title .title-main,
+.section-description,
+.footer-links a,
+.film-meta .meta-item,
+.trending-film-info h4 a,
+.trending-stats .interaction-count,
+.trending-stats .like-count,
+.recommendation-info,
+.stat-card h3,
+.profile-page h2,
+.liked,
+.interaction-details .rating,
+.review-preview,
+.review-display p,
+.review-rating,
+.review-date {
+    color: #000000 !important;
+}
+
+.high-contrast .section-title,
+.high-contrast .section-title .title-main,
+.high-contrast .section-description,
+.high-contrast .footer-links a,
+.high-contrast .film-meta .meta-item,
+.high-contrast .trending-film-info h4 a,
+.high-contrast .trending-stats .interaction-count,
+.high-contrast .trending-stats .like-count,
+.high-contrast .recommendation-info,
+.high-contrast .stat-card h3,
+.high-contrast .profile-page h2,
+.high-contrast .liked,
+.high-contrast .interaction-details .rating,
+.high-contrast .review-preview,
+.high-contrast .review-display p,
+.high-contrast .review-rating,
+.high-contrast .review-date {
+    color: var(--text-color) !important;
+}
+
 .high-contrast .films-grid .film-card,
 .high-contrast .feature-card {
     border: 1px solid rgba(255,255,255,0.12) !important;
