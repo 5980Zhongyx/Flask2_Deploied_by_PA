@@ -17,16 +17,16 @@ def create_app(config_name=None):
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
 
-    # 配置日志系统
+    # Configure logging system
     setup_logging(app, config_obj)
 
-    # 配置用户加载函数
+    # Configure user loader function
     @login_manager.user_loader
     def load_user(user_id):
         from models.user import User
         return User.query.get(int(user_id))
 
-    # 请求前后的钩子，用于日志记录
+    # Request hooks for logging
     @app.before_request
     def before_request():
         g.start_time = __import__('time').time()

@@ -19,12 +19,12 @@ body {
 
 /* ===== CSS CUSTOM PROPERTIES ===== */
 :root {
-    /* 猫眼风格主色调 */
+    /* Maoyan style primary colors */
     --primary-color: #FF6B35;
     --secondary-color: #F7931E;
     --accent-color: #FF8C42;
 
-    /* 中性色 */
+    /* Neutral colors */
     --text-primary: #333;
     --text-secondary: #666;
     --text-muted: #999;
@@ -33,18 +33,18 @@ body {
     --bg-tertiary: #e9ecef;
     --border-color: #dee2e6;
 
-    /* 阴影 */
+    /* Shadows */
     --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
     --shadow-lg: 0 8px 32px rgba(0,0,0,0.2);
 
-    /* 圆角 */
+    /* Border radius */
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 12px;
     --radius-xl: 16px;
 
-    /* 间距 */
+    /* Spacing */
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
@@ -52,13 +52,13 @@ body {
     --spacing-xl: 32px;
     --spacing-xxl: 48px;
 
-    /* 动画 */
+    /* Animations */
     --transition-fast: 0.15s ease;
     --transition-normal: 0.3s ease;
     --transition-slow: 0.5s ease;
 }
 
-/* 深色模式 */
+/* Dark mode */
 [data-theme="dark"] {
     --text-primary: #fff;
     --text-secondary: #ccc;
@@ -68,7 +68,7 @@ body {
     --bg-tertiary: #333;
     --border-color: #444;
 
-    /* 深色模式下的特殊颜色 */
+    /* Special colors for dark mode */
     --primary-color: #FF8C42;
     --secondary-color: #FF6B35;
     --shadow-sm: 0 2px 4px rgba(0,0,0,0.4);
@@ -125,7 +125,7 @@ body {
     padding: 0 var(--spacing-lg);
 }
 
-/* 返回按钮样式 */
+/* Back button styles */
 .back-btn {
     position: absolute;
     top: 12px;
@@ -290,7 +290,7 @@ body {
     overflow: hidden;
 }
 
-/* 胶片背景效果 */
+/* Film strip background effect */
 .film-strip {
     position: absolute;
     top: 0;
@@ -324,7 +324,7 @@ body {
     100% { transform: translateY(0); }
 }
 
-/* 动态粒子背景 */
+/* Dynamic particle background */
 .particles {
     position: absolute;
     top: 0;
@@ -561,7 +561,7 @@ body {
     position: relative;
 }
 
-/* 品牌 */
+/* Brand */
 .nav-brand a {
     color: white;
     text-decoration: none;
@@ -581,7 +581,7 @@ body {
     font-size: 1.8rem;
 }
 
-/* 返回按钮样式 */
+/* Back button styles */
 .back-button {
     position: absolute;
     left: 12px;
@@ -605,7 +605,7 @@ body {
     background: rgba(255,255,255,0.14);
 }
 
-/* 特性卡片可点击链接样式（移除默认链接样式） */
+/* Feature card clickable link styles (remove default link styles) */
 .feature-link {
     color: inherit;
     text-decoration: none;
@@ -613,7 +613,7 @@ body {
     height: 100%;
 }
 
-/* 移动端返回按钮微调 */
+/* Mobile back button fine-tuning */
 @media (max-width: 768px) {
     .back-button {
         left: 10px;
@@ -636,7 +636,7 @@ body {
     }
 }
 
-/* 导航菜单 */
+/* Navigation menu */
 .nav-menu {
     display: flex;
     align-items: center;
@@ -684,14 +684,14 @@ body {
     transform: translateY(-2px);
 }
 
-/* 导航操作 */
+/* Navigation actions */
 .nav-actions {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
 }
 
-/* 主题切换 */
+/* Theme toggle */
 .theme-toggle {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -711,7 +711,29 @@ body {
     transform: scale(1.1);
 }
 
-/* 用户菜单 */
+/* 语言切换 */
+.lang-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 50px;
+    height: 40px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.lang-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+/* User menu */
 .user-menu {
     position: relative;
 }
@@ -783,13 +805,13 @@ body {
     border-radius: 0 0 var(--radius-md) var(--radius-md);
 }
 
-/* 认证按钮 */
+/* Authentication buttons */
 .auth-buttons {
     display: flex;
     gap: var(--spacing-sm);
 }
 
-/* 移动端菜单切换 */
+/* Mobile menu toggle */
 .mobile-menu-toggle {
     display: none;
     background: rgba(255, 255, 255, 0.1);
@@ -888,7 +910,7 @@ body {
     border-color: var(--primary-color);
 }
 
-/* 可点击卡片的样式提示与可聚焦态 */
+/* Clickable card style hints and focusable state */
 .film-card[data-href],
 .feature-card[data-href] {
     cursor: pointer;
@@ -902,7 +924,7 @@ body {
     border-color: var(--primary-color);
 }
 
-/* 精选电影卡片 */
+/* Featured movie cards */
 .featured-card {
     background: var(--bg-primary);
     border-radius: var(--radius-xl);
@@ -937,7 +959,7 @@ body {
     opacity: 1;
 }
 
-/* 电影海报覆盖层 */
+/* Movie poster overlay */
 .film-overlay {
     position: absolute;
     top: 0;
@@ -966,7 +988,7 @@ body {
     transform: translateY(0);
 }
 
-/* 评分徽章 */
+/* Rating badge */
 .rating-badge {
     position: absolute;
     top: 12px;
@@ -2214,7 +2236,7 @@ h3 { font-size: 1.5rem; }
 
 /* ===== MODERN UI EFFECTS ===== */
 
-/* 现代化边框和阴影 */
+/* Modern borders and shadows */
 .modern-card {
     background: var(--bg-primary);
     border-radius: var(--radius-lg);
@@ -2242,7 +2264,7 @@ h3 { font-size: 1.5rem; }
     opacity: 1;
 }
 
-/* 猫眼风格的渐变背景 */
+/* Maoyan style gradient background */
 .maoyan-gradient {
     background: linear-gradient(135deg, #FF6B35 0%, #F7931E 25%, #FF8C42 50%, #FF6B35 75%, #F7931E 100%);
     background-size: 200% 200%;
@@ -2255,7 +2277,7 @@ h3 { font-size: 1.5rem; }
     100% { background-position: 0% 50%; }
 }
 
-/* 高级悬停效果 */
+/* Advanced hover effects */
 .advanced-hover {
     transition: all var(--transition-normal);
     transform-style: preserve-3d;

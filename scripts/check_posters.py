@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-检查海报显示问题的脚本
-在 PythonAnywhere 上运行：python3 scripts/check_posters.py
+Script to check poster display issues
+Run on PythonAnywhere: python3 scripts/check_posters.py
 """
 import os
 from app import create_app

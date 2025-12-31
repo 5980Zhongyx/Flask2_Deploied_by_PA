@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from app import db
 from sqlalchemy import func
 
-# 延迟导入以避免循环导入
+# Delayed import to avoid circular imports
 from models.film import Film
 
 film_bp = Blueprint("film", __name__)
@@ -22,7 +22,7 @@ def index():
 
 @film_bp.route("/films")
 def list_films():
-    # 恢复搜索/筛选/排序功能（为了兼容 model 中的 property，likes/rating 排序在内存中完成）
+    # Restore search/filter/sort functionality (likes/rating sorting done in memory for model property compatibility)
     page = int(request.args.get('page', 1))
     per_page = 12
     search = request.args.get('search', '').strip()
@@ -30,7 +30,7 @@ def list_films():
     year = request.args.get('year', '').strip()
     sort_by = request.args.get('sort', 'title')
 
-    # 构建基础查询（只做过滤，不在这里做基于 property 的排序）
+    # Build base query (only filtering, no property-based sorting here)
     query = Film.query
     if search:
         query = query.filter(
@@ -47,11 +47,11 @@ def list_films():
         except ValueError:
             pass
 
-    # 如果排序依据是 likes/rating/year/title，则在 SQL 层做排序（使用持久化字段）
+    # If sorting by likes/rating/year/title, sort at SQL level (using persistent fields)
     if sort_by == 'likes':
         query = query.order_by(Film.like_count.desc(), Film.title)
     elif sort_by == 'rating':
-        # 计算持久化平均：rating_sum / rating_count（防止除以0）
+        # Calculate persistent average: rating_sum / rating_count (prevent division by zero)
         avg_expr = func.coalesce((Film.rating_sum * 1.0) / func.nullif(Film.rating_count, 0), 0)
         query = query.order_by(avg_expr.desc(), Film.like_count.desc(), Film.title)
     elif sort_by == 'year':

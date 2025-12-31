@@ -1,87 +1,87 @@
 #!/usr/bin/env python3
 """
-根据电影标题正确映射海报文件
-在 PythonAnywhere 上运行：python3 scripts/map_posters_correctly.py
+Map poster files correctly based on movie titles
+Run on PythonAnywhere: python3 scripts/map_posters_correctly.py
 """
 import os, sys
 
-# 添加项目根目录到 Python 路径
+# Add project root directory to Python path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app import create_app, db
 
 def get_title_to_filename_mapping():
-    """电影标题到文件名的映射"""
+    """Mapping of movie titles to poster filenames"""
     return {
-        '肖申克的救赎': 'Xiaoshenkedejiushu.jpg',
-        '霸王别姬': 'Bawangbieji.jpg',
-        '阿甘正传': 'Aganzhengzhuan.jpg',
-        '泰坦尼克号': 'Taitannikehao.jpg',
-        '千与千寻': 'Qianyuqianxun.jpg',
-        '这个杀手不太冷': 'Zhegeshashoubutaileng.jpg',
-        '辛德勒的名单': 'Xindeledemingdan.jpg',
-        '盗梦空间': 'Daomengkongjian.jpg',
-        '星际穿越': 'Xingjichuanyue.jpg',
-        '寄生上流': 'Jishengshangliu.jpg',
-        '放牛班的春天': 'Fangniubandechuntian.jpg',
-        '海上钢琴师': 'Haishanggangqinshi.jpg',
-        '怦然心动': 'Pengranxindong.jpg',
-        '疯狂动物城': 'Fengkuangdongwucheng.jpg',
-        '当幸福来敲门': 'Dangxingfulaiqiaomen.jpg',
-        '龙猫': 'Longmao.jpg',
-        '忠犬八公的故事': 'Zhongquanbagongdegushi.jpg',
-        '大话西游': 'Dahuaxiyou.jpg',
-        '美丽心灵': 'Meilixinling.jpg',
-        '罗马假日': 'Luomajiari.jpg',
-        '天堂电影院': 'Tiantangdianyingyuan.jpg',
-        '小妇人': 'Xiaofuren.jpg',
-        '寻梦环游记': 'Xunmenghuanyouji.jpg',
-        '教父': 'Jiaofu.jpg',
-        '蝙蝠侠：黑暗骑士': 'Bianfuxia.jpg',
-        '指环王：王者归来': 'Zhihuanwangwangzheguilai.jpg',
-        '阿凡达': 'Afanda.jpg',
-        '黑客帝国': 'Heikediguo.jpg',
-        '搏击俱乐部': 'Bojijulebu.jpg',
-        '钢铁侠': 'Gangtiexia.jpg',
-        '复仇者联盟': 'Fuchouzhelianmeng.jpg',
-        '速度与激情': 'Suduyujiqing.jpg',
-        '007：大破天幕杀机': 'Linglingqidapotianmushaji.jpg',
-        '碟中谍': 'Diezhongdie.jpg',
-        '飓风营救': 'Jufengyingjiu.jpg',
-        '变形金刚': 'Bianxingjingang.jpg',
-        '雷神': 'Leishen.jpg',
-        '美国队长': 'Meiguoduizhang.jpg',
-        '绿巨人浩克': 'Lvjurenhaoke.jpg',
-        '神奇四侠': 'Shenqisixia.jpg',
-        'X战警': 'Xzhanjing.jpg',
-        '蜘蛛侠': 'Zhizhuxia.jpg',
-        '超人': 'Chaoren.jpg',
-        '蝙蝠侠': 'Bianfuxiaheianqishi.jpg',
-        '神奇女侠': 'Shenqinvxia.jpg',
-        '正义联盟': 'Zhengyilianmeng.jpg',
-        '蚁人': 'Yiren.jpg',
-        '死侍': 'Sishi.jpg',
-        '守望者': 'Shouwangzhe.jpg',
-        '浪客剑心': 'Langkejianxin.jpg',
-        '幽游白书': 'Youyoubaishu.jpg',
-        '海贼王': 'Haizeiwang.jpg',
-        '火影忍者': 'Huoyingrenzhe.jpg',
-        '死神': 'Sishen.jpg',
-        '犬夜叉': 'Quanyecha.jpg'
+        '肖申克的救赎': 'TheShawshankRedemption.jpg',
+        '霸王别姬': 'FarewellMyConcubine.jpg',
+        '阿甘正传': 'ForrestGump.jpg',
+        '泰坦尼克号': 'Titanic.jpg',
+        '千与千寻': 'SpiritedAway.jpg',
+        '这个杀手不太冷': 'LeonTheProfessional.jpg',
+        '辛德勒的名单': 'SchindlersList.jpg',
+        '盗梦空间': 'Inception.jpg',
+        '星际穿越': 'Interstellar.jpg',
+        '寄生上流': 'Parasite.jpg',
+        '放牛班的春天': 'TheChorus.jpg',
+        '海上钢琴师': 'TheLegendOf1900.jpg',
+        '怦然心动': 'Flipped.jpg',
+        '疯狂动物城': 'Zootopia.jpg',
+        '当幸福来敲门': 'ThePursuitOfHappyness.jpg',
+        '龙猫': 'MyNeighborTotoro.jpg',
+        '忠犬八公的故事': 'Hachi.jpg',
+        '大话西游': 'JourneyToTheWest.jpg',
+        '美丽心灵': 'ABeautifulMind.jpg',
+        '罗马假日': 'RomanHoliday.jpg',
+        '天堂电影院': 'CinemaParadiso.jpg',
+        '小妇人': 'LittleWomen.jpg',
+        '寻梦环游记': 'Coco.jpg',
+        '教父': 'TheGodfather.jpg',
+        '蝙蝠侠：黑暗骑士': 'TheDarkKnight.jpg',
+        '指环王：王者归来': 'TheReturnOfTheKing.jpg',
+        '阿凡达': 'Avatar.jpg',
+        '黑客帝国': 'TheMatrix.jpg',
+        '搏击俱乐部': 'FightClub.jpg',
+        '钢铁侠': 'IronMan.jpg',
+        '复仇者联盟': 'TheAvengers.jpg',
+        '速度与激情': 'FastAndFurious.jpg',
+        '007：大破天幕杀机': 'Skyfall.jpg',
+        '碟中谍': 'MissionImpossible.jpg',
+        '飓风营救': 'Taken.jpg',
+        '变形金刚': 'Transformers.jpg',
+        '雷神': 'Thor.jpg',
+        '美国队长': 'CaptainAmerica.jpg',
+        '绿巨人浩克': 'TheHulk.jpg',
+        '神奇四侠': 'FantasticFour.jpg',
+        'X战警': 'XMen.jpg',
+        '蜘蛛侠': 'SpiderMan.jpg',
+        '超人': 'Superman.jpg',
+        '蝙蝠侠': 'Batman.jpg',
+        '神奇女侠': 'WonderWoman.jpg',
+        '正义联盟': 'JusticeLeague.jpg',
+        '蚁人': 'AntMan.jpg',
+        '死侍': 'Deadpool.jpg',
+        '守望者': 'Watchmen.jpg',
+        '浪客剑心': 'RurouniKenshin.jpg',
+        '幽游白书': 'YuYuHakusho.jpg',
+        '海贼王': 'OnePiece.jpg',
+        '火影忍者': 'Naruto.jpg',
+        '死神': 'Bleach.jpg',
+        '犬夜叉': 'Inuyasha.jpg'
     }
 
 def fix_poster_mapping():
-    """根据电影标题正确设置海报URL"""
+    """Set poster URLs correctly based on movie titles"""
     app = create_app('production')
     with app.app_context():
         from models.film import Film
 
-        # 获取标题到文件名的映射
+        # Get title to filename mapping
         title_to_file = get_title_to_filename_mapping()
 
-        # 获取所有电影
+        # Get all films
         films = Film.query.all()
-        print(f"数据库中有 {len(films)} 部电影")
+        print(f"Database has {len(films)} films")
 
         updated = 0
         not_found = []
@@ -92,32 +92,32 @@ def fix_poster_mapping():
                 if film.poster_url != expected_filename:
                     film.poster_url = expected_filename
                     updated += 1
-                    print(f"✓ 更新 {film.id}: {film.title} -> {expected_filename}")
+                    print(f"✓ Update {film.id}: {film.title} -> {expected_filename}")
                 else:
-                    print(f"✓ 已经正确: {film.title} -> {expected_filename}")
+                    print(f"✓ Already correct: {film.title} -> {expected_filename}")
             else:
                 not_found.append(film.title)
-                print(f"⚠️  未找到映射: {film.title}")
+                print(f"⚠️  Mapping not found: {film.title}")
 
         if not_found:
-            print(f"\n⚠️  以下 {len(not_found)} 部电影没有找到对应的文件名:")
-            for title in not_found[:5]:  # 只显示前5个
+            print(f"\n⚠️  The following {len(not_found)} films have no filename mapping:")
+            for title in not_found[:5]:  # Show first 5 only
                 print(f"   - {title}")
             if len(not_found) > 5:
-                print(f"   ... 还有 {len(not_found) - 5} 部")
+                print(f"   ... and {len(not_found) - 5} more")
 
         if updated > 0:
             db.session.commit()
-            print(f"\n✅ 成功更新了 {updated} 部电影的海报URL")
+            print(f"\n✅ Successfully updated poster URLs for {updated} films")
         else:
-            print("\nℹ️  所有电影的海报URL都已经正确")
+            print("\nℹ️  All film poster URLs are already correct")
 
-        # 验证前5个电影
-        print("\n前5个电影的海报设置:")
+        # Verify first 5 films
+        print("\nFirst 5 films' poster settings:")
         for film in films[:5]:
             status = "✓" if film.poster_url else "✗"
-            print(f"  {status} {film.title} -> {film.poster_url or '无'}")
+            print(f"  {status} {film.title} -> {film.poster_url or 'None'}")
 
 if __name__ == '__main__':
-    print("🔧 根据电影标题正确映射海报文件...\n")
+    print("🔧 Map poster files correctly based on movie titles...\n")
     fix_poster_mapping()

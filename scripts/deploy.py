@@ -1,6 +1,6 @@
 """
-部署脚本
-用于PythonAnywhere部署准备
+Deployment script
+For PythonAnywhere deployment preparation
 """
 
 import os
@@ -10,7 +10,7 @@ import shutil
 from pathlib import Path
 
 def run_command(command, cwd=None):
-    """运行命令并返回结果"""
+    """Run command and return result"""
     try:
         result = subprocess.run(
             command,
@@ -25,21 +25,21 @@ def run_command(command, cwd=None):
         return False, e.stderr
 
 def setup_deployment():
-    """准备部署环境"""
-    print(">>> 开始部署准备...")
+    """Prepare deployment environment"""
+    print(">>> Starting deployment preparation...")
 
-    # 获取脚本所在目录的父目录（项目根目录）
+    # Get the parent directory of script directory (project root)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir)
-    os.chdir(project_root)  # 切换到项目根目录
+    os.chdir(project_root)  # Switch to project root directory
 
-    print(f"工作目录: {project_root}")
+    print(f"Working directory: {project_root}")
 
-    # 1. 检查Python版本
+    # 1. Check Python version
     python_version = sys.version_info
-    print(f"Python版本: {python_version.major}.{python_version.minor}.{python_version.micro}")
+    print(f"Python version: {python_version.major}.{python_version.minor}.{python_version.micro}")
 
-    # 2. 检查必要的文件
+    # 2. Check required files
     required_files = [
         'app.py',
         'config.py',
@@ -66,20 +66,20 @@ def setup_deployment():
             missing_files.append(file_path)
 
     if missing_files:
-        print("ERROR: 缺少以下文件:")
+        print("ERROR: Missing required files:")
         for file_path in missing_files:
             print(f"   - {file_path}")
         return False
 
-    print("OK: 所有必要文件都存在")
+    print("OK: All required files present")
 
-    # 3. 创建部署目录结构
+    # 3. Create deployment directory structure
     deploy_dir = 'deploy'
     if os.path.exists(deploy_dir):
         shutil.rmtree(deploy_dir)
     os.makedirs(deploy_dir)
 
-    # 4. 复制文件到部署目录
+    # 4. Copy files to deployment directory
     files_to_copy = [
         'app.py',
         'config.py',
@@ -97,10 +97,10 @@ def setup_deployment():
         else:
             shutil.copy2(item, os.path.join(deploy_dir, item))
 
-    # 5. 创建PythonAnywhere WSGI文件
+    # 5. Create PythonAnywhere WSGI file
     create_wsgi_file(deploy_dir)
 
-    # 6. 创建部署说明
+    # 6. Create deployment instructions
     create_deployment_readme(deploy_dir)
 
     print(f"部署文件已准备在 {deploy_dir} 目录中 OK")

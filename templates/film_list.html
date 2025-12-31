@@ -4,15 +4,15 @@
 <main class="film-list-page">
     <div class="container">
         <div class="page-header">
-            <h1>电影列表</h1>
+            <h1>Movie List</h1>
             {% if current_user.is_authenticated %}
-                <a href="{{ url_for('film.recommendations') }}" class="btn btn-primary">查看我的推荐</a>
+                <a href="{{ url_for('film.recommendations') }}" class="btn btn-primary">View My Recommendations</a>
             {% endif %}
         </div>
 
-        <!-- 仅按热度排序，已移除筛选/搜索 -->
+        <!-- Sorted by popularity only, filters/search removed -->
 
-        <!-- 电影网格 -->
+        <!-- Movie grid -->
         {% if films %}
         <div class="films-grid">
             {% for film in films %}
@@ -20,12 +20,12 @@
                 <div class="film-poster">
                     {% if film.poster_url %}
                         {% if film.poster_url.startswith('http') or film.poster_url.startswith('//') %}
-                        <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报">
+                        <img src="{{ film.poster_url }}" alt="{{ film.title }} poster">
                         {% else %}
-                            <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }}的海报">
+                            <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }} poster">
                         {% endif %}
                     {% else %}
-                        <div class="no-poster">暂无海报</div>
+                        <div class="no-poster">No poster</div>
                     {% endif %}
                 </div>
                 <div class="film-info">
@@ -41,11 +41,11 @@
                             <span class="rating-value">{{ "%.1f"|format(film.average_rating) }}</span>
                         </div>
                     {% endif %}
-                    <p class="likes">{{ film.like_count }} 人喜欢</p>
+                    <p class="likes">{{ film.like_count }} likes</p>
                     <div class="list-actions" style="margin-top:8px;">
                         {% set liked = (current_user.is_authenticated and film.id in liked_ids) %}
                         <button class="btn btn-outline like-btn {% if liked %}liked{% endif %}" data-film-id="{{ film.id }}" aria-pressed="{{ 'true' if liked else 'false' }}">
-                            <i class="fas fa-heart"></i> {% if liked %}已点赞{% else %}点赞{% endif %}
+                            <i class="fas fa-heart"></i> {% if liked %}Liked{% else %}Like{% endif %}
                         </button>
                         <span data-like-count="{{ film.id }}" style="margin-left:8px;">{{ film.like_count }}</span>
                     </div>
@@ -57,12 +57,12 @@
             {% endfor %}
         </div>
 
-        <!-- 分页 -->
+        <!-- Pagination -->
         {% if total > per_page %}
         <div class="pagination">
             {% set total_pages = (total + per_page - 1) // per_page %}
             {% if page > 1 %}
-                <a href="{{ url_for('film.list_films', page=page-1) }}" class="page-link">上一页</a>
+                <a href="{{ url_for('film.list_films', page=page-1) }}" class="page-link">Previous</a>
             {% endif %}
 
             {% set start_page = page-2 if page-2 > 0 else 1 %}
@@ -76,16 +76,16 @@
             {% endfor %}
 
             {% if page < total_pages %}
-                <a href="{{ url_for('film.list_films', page=page+1) }}" class="page-link">下一页</a>
+                <a href="{{ url_for('film.list_films', page=page+1) }}" class="page-link">Next</a>
             {% endif %}
         </div>
         {% endif %}
 
         {% else %}
         <div class="no-results">
-            <h3>没有找到符合条件的电影</h3>
-            <p>请尝试调整筛选条件</p>
-            <a href="{{ url_for('film.list_films') }}" class="btn btn-primary">清除筛选</a>
+            <h3>No movies found matching your criteria</h3>
+            <p>Please try adjusting your filter conditions</p>
+            <a href="{{ url_for('film.list_films') }}" class="btn btn-primary">Clear Filters</a>
         </div>
         {% endif %}
     </div>

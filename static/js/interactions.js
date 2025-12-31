@@ -1,23 +1,23 @@
-// 电影交互相关功能
+// Movie interaction related functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // 初始化所有交互功能
+    // Initialize all interaction features
     initializeInteractions();
 });
 
 function initializeInteractions() {
-    // 为所有点赞按钮绑定事件
+    // Bind events for all like buttons
     const likeButtons = document.querySelectorAll('.like-btn, .btn-like');
     likeButtons.forEach(button => {
         button.addEventListener('click', handleLikeClick);
     });
 
-    // 为交互表单绑定事件
+    // Bind events for interaction form
     const interactionForm = document.getElementById('interaction-form');
     if (interactionForm) {
         interactionForm.addEventListener('submit', handleInteractionSubmit);
     }
 
-    // 为删除评价按钮绑定事件
+    // Bind events for delete review button
     const deleteButton = document.getElementById('delete-interaction');
     if (deleteButton) {
         deleteButton.addEventListener('click', handleDeleteInteraction);
@@ -35,9 +35,9 @@ async function handleLikeClick(event) {
         return;
     }
 
-    // 禁用按钮防止重复点击
+    // Disable button to prevent double clicks
     button.disabled = true;
-    button.textContent = '处理中...';
+        button.textContent = 'Processing...';
 
     try {
         const response = await fetch(`/api/like/${filmId}`, {
@@ -50,22 +50,22 @@ async function handleLikeClick(event) {
         const data = await response.json();
 
         if (data.success) {
-            // 更新按钮状态
+            // Update button status
             updateLikeButton(button, data.liked);
 
-            // 更新点赞计数
+            // Update like count
             updateLikeCount(filmId, data.like_count);
 
-            // 显示消息
+            // Show message
             showMessage(data.message, 'success');
         } else {
-            showMessage(data.message || '操作失败', 'error');
+            showMessage(data.message || 'Operation failed', 'error');
         }
     } catch (error) {
         console.error('Like request failed:', error);
-        showMessage('网络错误，请重试', 'error');
+        showMessage('Network error, please retry', 'error');
     } finally {
-        // 重新启用按钮
+        // Re-enable button
         button.disabled = false;
     }
 }
@@ -78,11 +78,11 @@ async function handleInteractionSubmit(event) {
     const submitButton = form.querySelector('button[type="submit"]');
 
     if (!filmId) {
-        showMessage('无法获取电影ID', 'error');
+        showMessage('Unable to get film ID', 'error');
         return;
     }
 
-    // 收集表单数据
+    // Collect form data
     const formData = new FormData(form);
     const data = {
         rating: formData.get('rating') || null,
@@ -90,9 +90,9 @@ async function handleInteractionSubmit(event) {
         review: formData.get('review') || ''
     };
 
-    // 禁用提交按钮
+    // Disable submit button
     submitButton.disabled = true;
-    submitButton.textContent = '保存中...';
+    submitButton.textContent = 'Saving...';
 
     try {
         const response = await fetch(`/api/interaction/${filmId}`, {
@@ -108,34 +108,34 @@ async function handleInteractionSubmit(event) {
         if (result.success) {
             showMessage(result.message, 'success');
 
-            // 更新页面显示
+            // Update page display
             if (result.data) {
                 updateInteractionDisplay(result.data);
                 updateFilmStats(result.data.film_stats);
             }
 
-            // 局部无刷新更新评论列表和统计（优先刷新评论）
+            // Partial refresh update comments list and stats (prioritize comments refresh)
             if (result.data) {
                 updateInteractionDisplay(result.data);
                 updateFilmStats(result.data.film_stats);
             }
-            // 重新加载第一页评论
+            // Reload first page of comments
             setTimeout(() => {
                 loadReviews(filmId, 1);
             }, 300);
         } else {
-            showMessage(result.message || '保存失败', 'error');
+            showMessage(result.message || 'Save failed', 'error');
         }
     } catch (error) {
         console.error('Interaction submit failed:', error);
-        showMessage('网络错误，请重试', 'error');
+        showMessage('Network error, please retry', 'error');
     } finally {
         submitButton.disabled = false;
-        submitButton.textContent = '保存评价';
+        submitButton.textContent = 'Save Review';
     }
 }
 
-// 加载指定页的评论并渲染到页面
+// Load specified page of comments and render to page
 async function loadReviews(filmId, page = 1, per_page = 5) {
     try {
         const resp = await fetch(`/api/reviews/${filmId}?page=${page}&per_page=${per_page}`);
@@ -145,7 +145,7 @@ async function loadReviews(filmId, page = 1, per_page = 5) {
         const container = document.getElementById('reviews-container');
         if (!container) return;
 
-        // 渲染评论
+        // Render comments
         container.innerHTML = '';
         json.data.forEach(review => {
             const div = document.createElement('div');
@@ -161,13 +161,13 @@ async function loadReviews(filmId, page = 1, per_page = 5) {
             container.appendChild(div);
         });
 
-        // 分页控件
+        // Pagination controls
         const pageInfo = document.getElementById('reviews-pagination');
         if (pageInfo) {
             const total = json.total;
             const totalPages = Math.max(1, Math.ceil(total / per_page));
             pageInfo.innerHTML = renderReviewsPagination(page, totalPages);
-            // 绑定分页按钮
+            // Bind pagination buttons
             pageInfo.querySelectorAll('.review-page-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const p = parseInt(e.currentTarget.dataset.page);
@@ -184,11 +184,11 @@ function renderReviewsPagination(current, totalPages) {
     let html = '';
     if (totalPages <= 1) return html;
     if (current > 1) {
-        html += `<button class="review-page-btn" data-page="${current-1}">上一页</button>`;
+        html += `<button class="review-page-btn" data-page="${current-1}">Previous</button>`;
     }
-    html += `<span> 第${current} / ${totalPages}页 </span>`;
+    html += `<span> Page ${current} / ${totalPages} </span>`;
     if (current < totalPages) {
-        html += `<button class="review-page-btn" data-page="${current+1}">下一页</button>`;
+        html += `<button class="review-page-btn" data-page="${current+1}">Next</button>`;
     }
     return html;
 }
@@ -203,17 +203,17 @@ async function handleDeleteInteraction(event) {
 
     const filmId = getFilmIdFromUrl();
     if (!filmId) {
-        showMessage('无法获取电影ID', 'error');
+        showMessage('Unable to get film ID', 'error');
         return;
     }
 
-    if (!confirm('确定要删除这条评价吗？此操作不可撤销。')) {
+    if (!confirm('Are you sure you want to delete this review? This action cannot be undone.')) {
         return;
     }
 
     const button = event.target;
     button.disabled = true;
-    button.textContent = '删除中...';
+    button.textContent = 'Deleting...';
 
     try {
         const response = await fetch(`/api/interaction/${filmId}`, {
@@ -224,30 +224,30 @@ async function handleDeleteInteraction(event) {
 
         if (result.success) {
             showMessage(result.message, 'success');
-            // 重新加载页面
+            // Reload page
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
         } else {
-            showMessage(result.message || '删除失败', 'error');
+            showMessage(result.message || 'Delete failed', 'error');
         }
     } catch (error) {
         console.error('Delete interaction failed:', error);
-        showMessage('网络错误，请重试', 'error');
+        showMessage('Network error, please retry', 'error');
     } finally {
         button.disabled = false;
-        button.textContent = '删除评价';
+        button.textContent = 'Delete Review';
     }
 }
 
 function updateLikeButton(button, liked) {
     if (liked) {
         button.classList.add('liked');
-        button.textContent = '已点赞';
+        button.textContent = 'Liked';
         button.setAttribute('aria-pressed', 'true');
     } else {
         button.classList.remove('liked');
-        button.textContent = '点赞';
+        button.textContent = 'Like';
         button.setAttribute('aria-pressed', 'false');
     }
 }
@@ -260,19 +260,19 @@ function updateLikeCount(filmId, count) {
 }
 
 function updateInteractionDisplay(data) {
-    // 更新评分显示
+    // Update rating display
     const ratingDisplay = document.querySelector('.rating-display');
     if (ratingDisplay && data.rating) {
-        ratingDisplay.textContent = `你的评分：${data.rating}/5 ★`;
+        ratingDisplay.textContent = `Your rating: ${data.rating}/5 ★`;
     }
 
-    // 更新点赞状态
+    // Update like status
     const likeStatus = document.querySelector('.like-status');
     if (likeStatus) {
         likeStatus.style.display = data.liked ? 'block' : 'none';
     }
 
-    // 更新评论显示
+    // Update review display
     const reviewDisplay = document.querySelector('.review-display');
     if (reviewDisplay) {
         reviewDisplay.style.display = data.has_review ? 'block' : 'none';
@@ -283,7 +283,7 @@ function updateInteractionDisplay(data) {
 }
 
 function updateFilmStats(stats) {
-    // 更新电影平均评分
+    // Update movie average rating
     const ratingElements = document.querySelectorAll('.rating-value');
     ratingElements.forEach(element => {
         if (stats.average_rating > 0) {
@@ -291,31 +291,31 @@ function updateFilmStats(stats) {
         }
     });
 
-    // 更新点赞数量
+    // Update like count
     const likeCountElements = document.querySelectorAll('.likes');
     likeCountElements.forEach(element => {
-        element.textContent = `${stats.like_count} 人喜欢`;
+        element.textContent = `${stats.like_count} likes`;
     });
 
-    // 更新评分人数
+    // Update rating count
     const ratingCountElements = document.querySelectorAll('.rating-count');
     ratingCountElements.forEach(element => {
-        element.textContent = `(${stats.rating_count}人评分)`;
+        element.textContent = `(${stats.rating_count} ratings)`;
     });
 }
 
 function showMessage(message, type = 'info') {
-    // 创建消息元素
+    // Create message element
     const messageDiv = document.createElement('div');
     messageDiv.className = `alert alert-${type}`;
     messageDiv.setAttribute('role', 'alert');
     messageDiv.textContent = message;
 
-    // 添加到页面顶部
+    // Add to top of page
     const container = document.querySelector('.container') || document.body;
     container.insertBefore(messageDiv, container.firstChild);
 
-    // 3秒后自动移除
+    // Auto remove after 3 seconds
     setTimeout(() => {
         messageDiv.remove();
     }, 3000);
@@ -326,7 +326,7 @@ function getFilmIdFromUrl() {
     return match ? match[1] : null;
 }
 
-// 向后兼容的函数
+// Backward compatibility functions
 function likeFilm(filmId) {
     const button = document.querySelector(`[data-film-id="${filmId}"]`);
     if (button) {

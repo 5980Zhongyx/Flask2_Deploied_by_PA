@@ -15,7 +15,7 @@ class Film(db.Model):
     rating_sum = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # 关系定义
+    # Relationship definitions
     interactions = db.relationship('UserFilmInteraction', backref='film', lazy=True)
 
     def __repr__(self):
@@ -23,7 +23,7 @@ class Film(db.Model):
 
     @property
     def average_rating(self):
-        """返回持久化的平均评分（若无评分返回0）"""
+        """Return persisted average rating (return 0 if no ratings)"""
         if self.rating_count and self.rating_count > 0:
             return float(self.rating_sum) / float(self.rating_count)
         return 0.0

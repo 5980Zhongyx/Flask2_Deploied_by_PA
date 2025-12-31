@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""简单的 UI smoke test：检查主要页面能否加载（返回 200 / 302），以及静态资源存在性。"""
+"""Simple UI smoke test: Check if main pages load (return 200/302) and static resources exist."""
 import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

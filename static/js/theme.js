@@ -1,6 +1,7 @@
-// 主题切换功能
+// Theme and Language switching functionality
 document.addEventListener('DOMContentLoaded', function() {
     initializeTheme();
+    initializeLanguage();
     initializeMobileMenu();
     initializePageLoadAnimations();
     initializeHoverEffects();
@@ -15,12 +16,12 @@ function initializeTheme() {
     const themeToggle = document.getElementById('theme-toggle');
     const html = document.documentElement;
 
-    // 从localStorage获取保存的主题
+    // Get saved theme from localStorage
     const savedTheme = localStorage.getItem('theme') || 'light';
     html.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
 
-    // 绑定主题切换事件
+    // Bind theme toggle event
     themeToggle.addEventListener('click', function() {
         const currentTheme = html.getAttribute('data-theme');
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -29,7 +30,7 @@ function initializeTheme() {
         localStorage.setItem('theme', newTheme);
         updateThemeIcon(newTheme);
 
-        // 添加切换动画效果
+        // Add toggle animation effect
         themeToggle.style.transform = 'scale(0.9)';
         setTimeout(() => {
             themeToggle.style.transform = '';
@@ -46,16 +47,61 @@ function updateThemeIcon(theme) {
     }
 }
 
-// 返回上一页的通用函数，若没有历史则跳转到默认页面
+// Language switching functionality
+function initializeLanguage() {
+    const langToggle = document.getElementById('lang-toggle');
+    const currentLangSpan = document.getElementById('current-lang');
+
+    if (!langToggle || !currentLangSpan) return;
+
+    // Get saved language from localStorage or default to English
+    const savedLang = localStorage.getItem('language') || 'en';
+    setLanguage(savedLang);
+
+    // Bind language toggle event
+    langToggle.addEventListener('click', function() {
+        const currentLang = localStorage.getItem('language') || 'en';
+        const newLang = currentLang === 'en' ? 'zh' : 'en';
+
+        setLanguage(newLang);
+        localStorage.setItem('language', newLang);
+
+        // Add toggle animation
+        langToggle.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            langToggle.style.transform = '';
+        }, 150);
+
+        // Reload page to apply language changes
+        // Note: In a real implementation, you might want to dynamically update text
+        // For now, we'll reload to ensure all text changes are applied
+        window.location.reload();
+    });
+}
+
+function setLanguage(lang) {
+    const currentLangSpan = document.getElementById('current-lang');
+    if (currentLangSpan) {
+        currentLangSpan.textContent = lang.toUpperCase();
+    }
+
+    // Set document language
+    document.documentElement.lang = lang;
+
+    // You could add more dynamic text updates here
+    // For now, we rely on server-side rendering for different languages
+}
+
+// General function to go back, redirect to default page if no history
 function goBack() {
     const backButton = document.getElementById('back-button');
     const defaultUrl = backButton ? backButton.dataset.defaultUrl : '/';
 
-    // 尝试使用 history.back()
+    // Try using history.back()
     if (window.history.length > 1) {
         const prevPath = window.location.pathname;
         window.history.back();
-        // 如果在短时间内没有变化，则跳转到默认页面
+        // If no change in short time, redirect to default page
         setTimeout(() => {
             if (window.location.pathname === prevPath) {
                 window.location.href = defaultUrl;
@@ -76,7 +122,7 @@ function initializeMobileMenu() {
         mobileMenuToggle.classList.toggle('active');
     });
 
-    // 点击其他地方关闭移动菜单
+    // Close mobile menu when clicking elsewhere
     document.addEventListener('click', function(e) {
         if (!mobileMenuToggle.contains(e.target) && !navMenu.contains(e.target)) {
             navMenu.classList.remove('mobile-menu-open');
@@ -86,7 +132,7 @@ function initializeMobileMenu() {
 }
 }
 
-// 滚动触发动画
+// Scroll trigger animations
 function initializeScrollAnimations() {
     const observerOptions = {
         threshold: 0.1,
@@ -101,31 +147,31 @@ function initializeScrollAnimations() {
         });
     }, observerOptions);
 
-    // 观察所有需要动画的元素
+    // Observe all elements that need animation
     const animatedElements = document.querySelectorAll('.fade-in-section');
     animatedElements.forEach(element => {
         observer.observe(element);
     });
 }
 
-// 页面加载动画
+// Page load animations
 function initializePageLoadAnimations() {
-    // 为需要渐入动画的元素添加类
+    // Add class to elements that need fade-in animation
     const sections = document.querySelectorAll('.featured-section, .features-section');
     sections.forEach((section, index) => {
         section.classList.add('fade-in-section');
         section.style.transitionDelay = `${index * 0.2}s`;
     });
 
-    // 延迟触发可见性检查
+    // Delay trigger visibility check
     setTimeout(() => {
         initializeScrollAnimations();
     }, 100);
 }
 
-// 增强的悬停效果
+// Enhanced hover effects
 function initializeHoverEffects() {
-    // 为电影卡片添加更丰富的悬停效果
+    // Add richer hover effects to movie cards
     const filmCards = document.querySelectorAll('.film-card');
     filmCards.forEach(card => {
         card.addEventListener('mouseenter', function() {
@@ -138,7 +184,7 @@ function initializeHoverEffects() {
     });
 }
 
-// 平滑滚动
+// Smooth scrolling
 function initializeSmoothScrolling() {
     const links = document.querySelectorAll('a[href^="#"]');
     links.forEach(link => {
@@ -157,7 +203,7 @@ function initializeSmoothScrolling() {
     });
 }
 
-// 使电影卡和特性卡整体可点击（支持键盘与无障碍）
+// Make movie cards and feature cards clickable overall (keyboard and accessibility support)
 function initializeCardClicks() {
     function makeClickable(selector, attrName = 'data-href') {
         document.querySelectorAll(selector + '[' + attrName + ']').forEach(card => {
@@ -165,17 +211,17 @@ function initializeCardClicks() {
             if (!href) return;
             card.style.cursor = 'pointer';
 
-            // 可聚焦与语义化
+            // Focusable and semantic
             if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
             if (!card.hasAttribute('role')) card.setAttribute('role', 'link');
 
-            // 鼠标点击：若不是点击到内部交互元素则导航
+            // Mouse click: navigate if not clicking on internal interactive elements
             card.addEventListener('click', function(e) {
                 if (e.target.closest('a') || e.target.closest('button') || e.target.closest('input')) return;
                 window.location.href = href;
             });
 
-            // 键盘激活
+            // Keyboard activation
             card.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -189,7 +235,7 @@ function initializeCardClicks() {
     makeClickable('.feature-card', 'data-href');
 }
 
-// 点击波纹效果与按压反馈
+// Click ripple effects and press feedback
 function initializeRippleEffects() {
     function createRipple(e, element) {
         const rect = element.getBoundingClientRect();
@@ -227,12 +273,12 @@ function initializeRippleEffects() {
     attach('.btn');
 }
 
-// 返回按钮初始化与回退逻辑
+// Back button initialization and fallback logic
 function initializeBackButton() {
     const backBtn = document.getElementById('back-button');
     if (!backBtn) return;
 
-    // 判断是否能回退：优先使用 history.length，其次使用 document.referrer 判断是否来自本站
+    // Check if can go back: prefer history.length, then use document.referrer to check if from same site
     const canHistoryBack = window.history && window.history.length > 1;
     const referrer = document.referrer || '';
     const sameSiteReferrer = referrer.includes(window.location.hostname);
@@ -244,10 +290,10 @@ function initializeBackButton() {
     }
 
     backBtn.addEventListener('click', function() {
-        // 尝试后退历史
+        // Try going back in history
         if (window.history && window.history.length > 1) {
             window.history.back();
-            // 如果后退无效，在短延时后跳转到首页作为兜底
+            // If back fails, redirect to home page after short delay as fallback
             setTimeout(() => {
                 if (document.hidden || document.readyState === 'complete') {
                     window.location.href = window.SITE_HOME || '/';
@@ -256,24 +302,24 @@ function initializeBackButton() {
             return;
         }
 
-        // fallback：直接跳转到站点首页
+        // Fallback: directly redirect to site home page
         window.location.href = window.SITE_HOME || '/';
     });
 }
 
-// 清除筛选按钮行为（若存在）
+// Clear filter button behavior (if exists)
 function initializeFilterClear() {
     const clearBtn = document.querySelector('.clear-filters');
     if (!clearBtn) return;
     clearBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        // 重定向到电影列表（无查询参数）
+        // Redirect to movie list (without query parameters)
         window.location.href = window.SITE_HOME ? window.SITE_HOME.replace('/', '/films') : '/films';
     });
 }
 
-// 在 DOMContentLoaded 后也初始化清除筛选（如果页面存在筛选表单）
-// 用户菜单下拉功能
+// Also initialize clear filter after DOMContentLoaded (if page has filter form)
+// User menu dropdown functionality
 document.addEventListener('DOMContentLoaded', function() {
     const userMenuTrigger = document.querySelector('.user-menu-trigger');
     const userMenuDropdown = document.querySelector('.user-menu-dropdown');
@@ -284,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
             userMenuDropdown.classList.toggle('show');
         });
 
-        // 点击其他地方关闭下拉菜单
+        // Close dropdown when clicking elsewhere
         document.addEventListener('click', function() {
             userMenuDropdown.classList.remove('show');
         });

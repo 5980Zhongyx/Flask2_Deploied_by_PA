@@ -7,12 +7,12 @@
             <div class="film-poster-large">
                 {% if film.poster_url %}
                     {% if film.poster_url.startswith('http') or film.poster_url.startswith('//') %}
-                        <img src="{{ film.poster_url }}" alt="{{ film.title }}的海报">
-                    {% else %}
-                        <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }}的海报">
+                        <img src="{{ film.poster_url }}" alt="{{ film.title }} poster">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }} poster">
                     {% endif %}
                 {% else %}
-                    <div class="no-poster-large">暂无海报</div>
+                    <div class="no-poster-large">No poster available</div>
                 {% endif %}
             </div>
 
@@ -20,9 +20,9 @@
                 <h1>{{ film.title }}</h1>
 
                 <div class="film-meta">
-                    {% if film.year %}<span class="meta-item">年份：{{ film.year }}</span>{% endif %}
-                    {% if film.director %}<span class="meta-item">导演：{{ film.director }}</span>{% endif %}
-                    {% if film.genre %}<span class="meta-item">类型：{{ film.genre }}</span>{% endif %}
+                    {% if film.year %}<span class="meta-item">Year: {{ film.year }}</span>{% endif %}
+                    {% if film.director %}<span class="meta-item">Director: {{ film.director }}</span>{% endif %}
+                    {% if film.genre %}<span class="meta-item">Genre: {{ film.genre }}</span>{% endif %}
                 </div>
 
                 <div class="film-stats">
@@ -30,34 +30,34 @@
                         <div class="rating-large">
                             <span class="stars">★</span>
                             <span class="rating-value">{{ "%.1f"|format(film.average_rating) }}</span>
-                            <span class="rating-count">({{ film.interactions|selectattr('rating')|list|length }}人评分)</span>
+                            <span class="rating-count">({{ film.interactions|selectattr('rating')|list|length }} ratings)</span>
                         </div>
                     {% endif %}
                     <div class="likes-large">
                         <span class="heart">♥</span>
-                        <span>{{ film.like_count }}人喜欢</span>
-                        <!-- 点赞按钮 -->
+                        <span>{{ film.like_count }} likes</span>
+                        <!-- Like button -->
                         {% if current_user.is_authenticated %}
                             {% set liked = user_interaction and user_interaction.liked %}
                             <button class="btn btn-primary btn-sm btn-like {% if liked %}liked{% endif %}" data-film-id="{{ film.id }}" style="margin-left:12px;" aria-pressed="{{ 'true' if liked else 'false' }}">
-                                <i class="fas fa-heart"></i> {% if liked %}已点赞{% else %}点赞{% endif %}
+                                <i class="fas fa-heart"></i> {% if liked %}Liked{% else %}Like{% endif %}
                             </button>
                         {% else %}
-                            <a href="{{ url_for('auth.login') }}" class="btn btn-outline btn-sm" style="margin-left:12px;">登录点赞</a>
+                            <a href="{{ url_for('auth.login') }}" class="btn btn-outline btn-sm" style="margin-left:12px;">Login to Like</a>
                         {% endif %}
                     </div>
                 </div>
 
                 {% if film.description %}
                     <div class="film-description">
-                        <h3>剧情简介</h3>
+                        <h3>Plot Summary</h3>
                         <p>{{ film.description }}</p>
                     </div>
                 {% endif %}
             </div>
         </div>
 
-        <!-- 用户交互区域 -->
+        <!-- User interaction area -->
         {% if current_user.is_authenticated %}
         <div class="interaction-section">
             <h3>我的评价</h3>
