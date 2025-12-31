@@ -408,23 +408,48 @@ class AccessibilityManager {
         `;
 
         document.body.appendChild(panel);
+        // keep references for event handlers to avoid global queries
+        this.panel = panel;
+        this.menu = panel.querySelector('.accessibility-menu');
+        this.toggleBtn = panel.querySelector('.accessibility-toggle');
+        this.closeBtn = panel.querySelector('.close-accessibility');
         this.bindAccessibilityEvents();
     }
 
     bindAccessibilityEvents() {
-        // Toggle panel
-        const toggle = document.querySelector('.accessibility-toggle');
-        const menu = document.querySelector('.accessibility-menu');
-        const closeBtn = document.querySelector('.close-accessibility');
+        // Toggle panel (scoped to this panel)
+        const toggle = this.toggleBtn;
+        const menu = this.menu;
+        const closeBtn = this.closeBtn;
 
-        toggle.addEventListener('click', () => {
-            menu.classList.toggle('show');
-            toggle.setAttribute('aria-expanded', menu.classList.contains('show'));
-        });
-
-        closeBtn.addEventListener('click', () => {
-            menu.classList.remove('show');
+        if (toggle) {
             toggle.setAttribute('aria-expanded', 'false');
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const showing = menu.classList.toggle('show');
+                toggle.setAttribute('aria-expanded', showing ? 'true' : 'false');
+                if (showing) toggle.focus();
+            });
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menu.classList.remove('show');
+                if (toggle) toggle.setAttribute('aria-expanded', 'false');
+                if (toggle) toggle.focus();
+            });
+        }
+
+        // Close panel on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (this.menu && this.menu.classList.contains('show')) {
+                    this.menu.classList.remove('show');
+                    if (this.toggleBtn) this.toggleBtn.setAttribute('aria-expanded', 'false');
+                    if (this.toggleBtn) this.toggleBtn.focus();
+                }
+            }
         });
 
         // Accessibility options

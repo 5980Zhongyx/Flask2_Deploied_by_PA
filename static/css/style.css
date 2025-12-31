@@ -2922,6 +2922,69 @@ h3 { font-size: 1.5rem; }
     color: #ffff00 !important;
 }
 
+/* Improve contrast for specific UI elements in high-contrast mode */
+.high-contrast .page-header h1,
+.high-contrast h2,
+.high-contrast h3,
+.high-contrast h4,
+.high-contrast .film-info h4,
+.high-contrast .feature-card h3,
+.high-contrast .recommendation-columns h3 {
+    color: #ffffff !important;
+    text-shadow: none !important;
+    opacity: 1 !important;
+}
+
+.high-contrast .film-info,
+.high-contrast .film-meta,
+.high-contrast .film-details,
+.high-contrast .recommendation-info,
+.high-contrast .feature-card p,
+.high-contrast .stat-card p {
+    color: #e6e6e6 !important;
+    opacity: 1 !important;
+}
+
+.high-contrast .films-grid .film-card,
+.high-contrast .feature-card {
+    border: 1px solid rgba(255,255,255,0.12) !important;
+}
+
+.high-contrast .btn,
+.high-contrast .btn-primary,
+.high-contrast .btn-outline {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #ffffff !important;
+}
+
+.high-contrast .like-label,
+.high-contrast .rating-value,
+.high-contrast .rating-count,
+.high-contrast .likes {
+    color: #ffffff !important;
+}
+
+/* Ensure icons inside feature cards remain visible on dark backgrounds */
+.high-contrast .feature-card .icon,
+.high-contrast .film-card .film-poster img,
+.high-contrast .trending-rank {
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+/* Back button layout fix for desktop to avoid overlapping brand text */
+.back-btn {
+    left: calc(var(--spacing-lg) + 120px) !important;
+}
+
+@media (max-width: 768px) {
+    .back-btn {
+        left: 6px !important;
+        top: 74px;
+    }
+}
+
 /* Screen Reader Mode */
 .screen-reader-mode .sr-only {
     position: static !important;
