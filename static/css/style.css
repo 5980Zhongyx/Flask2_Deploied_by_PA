@@ -3186,6 +3186,62 @@ h3 { font-size: 1.5rem; }
     border-color: var(--text-color) !important;
 }
 
+/* Fine-grained high-contrast fixes requested by QA */
+/* film meta items (year / genre / director) */
+.high-contrast .film-meta .meta-item,
+.high-contrast .film-meta span.meta-item,
+.high-contrast .film-meta .meta-item a {
+    color: var(--text-color) !important;
+    background: transparent !important;
+    opacity: 1 !important;
+}
+
+/* footer links */
+.high-contrast .footer-links a,
+.high-contrast .footer-links a:link,
+.high-contrast .footer-links a:visited {
+    color: var(--text-color) !important;
+    background: transparent !important;
+}
+
+/* accessibility panel title */
+#accessibility-title,
+.high-contrast #accessibility-title {
+    color: var(--text-color) !important;
+}
+
+/* recommendations page: section description and recommendation-info */
+.high-contrast .section-description,
+.high-contrast .recommendation-info,
+.high-contrast .chart-title {
+    color: var(--text-color) !important;
+}
+
+/* trending list: interaction and like counts */
+.high-contrast .trending-stats .interaction-count,
+.high-contrast .trending-stats .like-count,
+.high-contrast .interaction-count,
+.high-contrast .like-count {
+    color: var(--text-color) !important;
+    background: transparent !important;
+}
+
+/* profile page: ratings, liked label, review preview */
+.high-contrast .interaction-details .rating,
+.high-contrast .interaction-details .liked,
+.high-contrast .review-preview,
+.high-contrast .review-display p,
+.high-contrast .review-rating,
+.high-contrast .review-date {
+    color: var(--text-color) !important;
+}
+
+/* ensure auth links in forms remain readable in high-contrast */
+.high-contrast .auth-links a {
+    color: var(--text-color) !important;
+    background: transparent !important;
+}
+
 .high-contrast .films-grid .film-card,
 .high-contrast .feature-card {
     border: 1px solid rgba(255,255,255,0.12) !important;
