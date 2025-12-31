@@ -4,9 +4,9 @@
 <main class="film-list-page">
     <div class="container">
         <div class="page-header">
-            <h1>Movie List</h1>
+            <h1>{{ _('Movie List') }}</h1>
             {% if current_user.is_authenticated %}
-                <a href="{{ url_for('film.recommendations') }}" class="btn btn-primary">View My Recommendations</a>
+                <a href="{{ url_for('film.recommendations') }}" class="btn btn-primary">{{ _('View My Recommendations') }}</a>
             {% endif %}
         </div>
 
@@ -25,7 +25,7 @@
                             <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }} poster">
                         {% endif %}
                     {% else %}
-                        <div class="no-poster">No poster</div>
+                        <div class="no-poster">{{ _('No poster') }}</div>
                     {% endif %}
                 </div>
                 <div class="film-info">
@@ -45,7 +45,7 @@
                     <div class="list-actions" style="margin-top:8px;">
                         {% set liked = (current_user.is_authenticated and film.id in liked_ids) %}
                         <button class="btn btn-outline like-btn {% if liked %}liked{% endif %}" data-film-id="{{ film.id }}" aria-pressed="{{ 'true' if liked else 'false' }}">
-                            <i class="fas fa-heart"></i> {% if liked %}Liked{% else %}Like{% endif %}
+                            <i class="fas fa-heart"></i> {% if liked %}{{ _('Unlike') }}{% else %}{{ _('Like') }}{% endif %}
                         </button>
                         <span data-like-count="{{ film.id }}" style="margin-left:8px;">{{ film.like_count }}</span>
                     </div>

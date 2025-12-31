@@ -72,10 +72,24 @@ function initializeLanguage() {
             langToggle.style.transform = '';
         }, 150);
 
-        // Reload page to apply language changes
-        // Note: In a real implementation, you might want to dynamically update text
-        // For now, we'll reload to ensure all text changes are applied
-        window.location.reload();
+        // Call backend to set language in session and reload page
+        fetch(`/language/${newLang}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                // Reload page to apply language changes
+                window.location.reload();
+            }
+        })
+        .catch(error => {
+            console.error('Language switch error:', error);
+            // Fallback: still reload
+            window.location.reload();
+        });
     });
 }
 

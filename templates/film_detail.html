@@ -12,7 +12,7 @@
                             <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }} poster">
                     {% endif %}
                 {% else %}
-                    <div class="no-poster-large">No poster available</div>
+                    <div class="no-poster-large">{{ _('No poster') }}</div>
                 {% endif %}
             </div>
 
@@ -20,9 +20,9 @@
                 <h1>{{ film.title }}</h1>
 
                 <div class="film-meta">
-                    {% if film.year %}<span class="meta-item">Year: {{ film.year }}</span>{% endif %}
-                    {% if film.director %}<span class="meta-item">Director: {{ film.director }}</span>{% endif %}
-                    {% if film.genre %}<span class="meta-item">Genre: {{ film.genre }}</span>{% endif %}
+                    {% if film.year %}<span class="meta-item">{{ _('Year') }}: {{ film.year }}</span>{% endif %}
+                    {% if film.director %}<span class="meta-item">{{ _('Director') }}: {{ film.director }}</span>{% endif %}
+                    {% if film.genre %}<span class="meta-item">{{ _('Genre') }}: {{ film.genre }}</span>{% endif %}
                 </div>
 
                 <div class="film-stats">
@@ -40,17 +40,17 @@
                         {% if current_user.is_authenticated %}
                             {% set liked = user_interaction and user_interaction.liked %}
                             <button class="btn btn-primary btn-sm btn-like {% if liked %}liked{% endif %}" data-film-id="{{ film.id }}" style="margin-left:12px;" aria-pressed="{{ 'true' if liked else 'false' }}">
-                                <i class="fas fa-heart"></i> {% if liked %}Liked{% else %}Like{% endif %}
+                                <i class="fas fa-heart"></i> {% if liked %}{{ _('Unlike') }}{% else %}{{ _('Like') }}{% endif %}
                             </button>
                         {% else %}
-                            <a href="{{ url_for('auth.login') }}" class="btn btn-outline btn-sm" style="margin-left:12px;">Login to Like</a>
+                            <a href="{{ url_for('auth.login') }}" class="btn btn-outline btn-sm" style="margin-left:12px;">{{ _('Login to Like') }}</a>
                         {% endif %}
                     </div>
                 </div>
 
                 {% if film.description %}
                     <div class="film-description">
-                        <h3>Plot Summary</h3>
+                        <h3>{{ _('Plot Summary') }}</h3>
                         <p>{{ film.description }}</p>
                     </div>
                 {% endif %}
@@ -60,22 +60,22 @@
         <!-- User interaction area -->
         {% if current_user.is_authenticated %}
         <div class="interaction-section">
-            <h3>我的评价</h3>
+            <h3>{{ _('My Review') }}</h3>
 
             {% if user_interaction %}
                 <div class="current-interaction">
-                    <p>你已经对这部电影进行了评价：</p>
+                    <p>{{ _('You have already reviewed this movie:') }}</p>
                     {% if user_interaction.rating %}
-                        <div class="rating-display">你的评分：{{ user_interaction.rating }}/5 ★</div>
+                        <div class="rating-display">{{ _('Your Rating') }}: {{ user_interaction.rating }}/5 ★</div>
                     {% endif %}
                     {% if user_interaction.liked %}
-                        <div class="like-status">已点赞</div>
+                        <div class="like-status">{{ _('Liked') }}</div>
                     {% endif %}
                     {% if user_interaction.has_review %}
                         <div class="review-display">
-                            <h4>你的评论：</h4>
+                            <h4>{{ _('Your Review') }}:</h4>
                             <p>{{ user_interaction.review_text }}</p>
-                            <small>评论时间：{{ user_interaction.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                            <small>{{ _('Review Time') }}: {{ user_interaction.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
                         </div>
                     {% endif %}
                 </div>
@@ -85,9 +85,9 @@
                 <form id="interaction-form" data-film-id="{{ film.id }}" method="POST">
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="rating">评分（1-5分）：</label>
+                            <label for="rating">{{ _('Rating (1-5 stars)') }}:</label>
                             <select id="rating" name="rating">
-                                <option value="">不评分</option>
+                                <option value="">{{ _('No rating') }}</option>
                                 {% for i in range(1, 6) %}
                                     <option value="{{ i }}" {% if user_interaction and user_interaction.rating == i %}selected{% endif %}>{{ i }}</option>
                                 {% endfor %}
@@ -97,7 +97,7 @@
                         <div class="form-group">
                             <label class="checkbox-label">
                                 <input type="checkbox" id="liked" name="liked" {% if user_interaction and user_interaction.liked %}checked{% endif %}>
-                                点赞这部电影
+                                {{ _('Like this movie') }}
                             </label>
                         </div>
                     </div>

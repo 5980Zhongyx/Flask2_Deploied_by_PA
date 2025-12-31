@@ -1,0 +1,519 @@
+# Chinese translations for Film Discovery
+# Copyright (C) 2024
+# This file is distributed under the same license as the Film Discovery package.
+msgid ""
+msgstr ""
+"Language: zh\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Navigation
+msgid "Film Discovery"
+msgstr "电影发现"
+
+msgid "Home"
+msgstr "首页"
+
+msgid "Movies"
+msgstr "电影"
+
+msgid "Recommendations"
+msgstr "推荐"
+
+msgid "Profile"
+msgstr "个人资料"
+
+msgid "Login"
+msgstr "登录"
+
+msgid "Register"
+msgstr "注册"
+
+msgid "Logout"
+msgstr "退出登录"
+
+# Footer
+msgid "About Us"
+msgstr "关于我们"
+
+msgid "Help Center"
+msgstr "帮助中心"
+
+msgid "Contact Us"
+msgstr "联系我们"
+
+msgid "Privacy Policy"
+msgstr "隐私政策"
+
+# Movie related
+msgid "Genre"
+msgstr "类型"
+
+msgid "Year"
+msgstr "年份"
+
+msgid "Director"
+msgstr "导演"
+
+msgid "Description"
+msgstr "简介"
+
+msgid "Rating"
+msgstr "评分"
+
+msgid "Likes"
+msgstr "点赞"
+
+msgid "Reviews"
+msgstr "评论"
+
+msgid "Cast"
+msgstr "演员"
+
+msgid "Runtime"
+msgstr "时长"
+
+msgid "minutes"
+msgstr "分钟"
+
+# Actions
+msgid "Like"
+msgstr "点赞"
+
+msgid "Unlike"
+msgstr "取消点赞"
+
+msgid "Add Review"
+msgstr "添加评论"
+
+msgid "Submit"
+msgstr "提交"
+
+msgid "Cancel"
+msgstr "取消"
+
+# Status messages
+msgid "Loading..."
+msgstr "加载中..."
+
+msgid "No movies found"
+msgstr "未找到电影"
+
+msgid "Search movies..."
+msgstr "搜索电影..."
+
+# Film list page
+msgid "Discover Great Movies"
+msgstr "发现精彩电影"
+
+msgid "Filter by Genre"
+msgstr "按类型筛选"
+
+msgid "Filter by Year"
+msgstr "按年份筛选"
+
+msgid "Sort by"
+msgstr "排序方式"
+
+msgid "Popularity"
+msgstr "热度"
+
+msgid "Title"
+msgstr "标题"
+
+msgid "Newest"
+msgstr "最新"
+
+msgid "Oldest"
+msgstr "最旧"
+
+# Film detail page
+msgid "Movie Details"
+msgstr "电影详情"
+
+msgid "Back to Movies"
+msgstr "返回电影列表"
+
+msgid "Your Rating"
+msgstr "您的评分"
+
+msgid "Write a Review"
+msgstr "写评论"
+
+msgid "Your review"
+msgstr "您的评论"
+
+# Authentication
+msgid "Welcome back"
+msgstr "欢迎回来"
+
+msgid "Sign in to your account"
+msgstr "登录您的账户"
+
+msgid "Username"
+msgstr "用户名"
+
+msgid "Password"
+msgstr "密码"
+
+msgid "Remember me"
+msgstr "记住我"
+
+msgid "Forgot password?"
+msgstr "忘记密码？"
+
+msgid "Don't have an account?"
+msgstr "还没有账户？"
+
+msgid "Create one here"
+msgstr "在这里创建"
+
+msgid "Sign Up"
+msgstr "注册"
+
+msgid "Create your account"
+msgstr "创建您的账户"
+
+msgid "Email"
+msgstr "邮箱"
+
+msgid "Confirm Password"
+msgstr "确认密码"
+
+msgid "Already have an account?"
+msgstr "已经有账户了？"
+
+msgid "Sign in here"
+msgstr "在这里登录"
+
+# Error messages
+msgid "Username is required"
+msgstr "用户名是必需的"
+
+msgid "Password is required"
+msgstr "密码是必需的"
+
+msgid "Invalid username or password"
+msgstr "用户名或密码无效"
+
+msgid "Username already exists"
+msgstr "用户名已存在"
+
+msgid "Email is required"
+msgstr "邮箱是必需的"
+
+msgid "Passwords do not match"
+msgstr "密码不匹配"
+
+# Success messages
+msgid "Login successful"
+msgstr "登录成功"
+
+msgid "Registration successful"
+msgstr "注册成功"
+
+msgid "Logout successful"
+msgstr "退出成功"
+
+msgid "Review submitted successfully"
+msgstr "评论提交成功"
+
+msgid "Rating updated successfully"
+msgstr "评分更新成功"
+
+# Movie specific translations
+msgid "Movie List"
+msgstr "电影列表"
+
+msgid "View My Recommendations"
+msgstr "查看我的推荐"
+
+msgid "No poster"
+msgstr "无海报"
+
+msgid "likes"
+msgstr "点赞"
+
+msgid "ratings"
+msgstr "评分"
+
+msgid "Movie Details"
+msgstr "电影详情"
+
+msgid "Login to Like"
+msgstr "登录后点赞"
+
+msgid "Start Browsing"
+msgstr "开始浏览"
+
+msgid "Sign Up Now"
+msgstr "立即注册"
+
+msgid "Back to Movies"
+msgstr "返回电影列表"
+
+msgid "Your Rating"
+msgstr "您的评分"
+
+msgid "Write a Review"
+msgstr "写评论"
+
+msgid "Your review"
+msgstr "您的评论"
+
+msgid "Add Review"
+msgstr "添加评论"
+
+msgid "Submit"
+msgstr "提交"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Loading..."
+msgstr "加载中..."
+
+msgid "No movies found"
+msgstr "未找到电影"
+
+msgid "Search movies..."
+msgstr "搜索电影..."
+
+msgid "Plot Summary"
+msgstr "剧情简介"
+
+msgid "My Review"
+msgstr "我的评论"
+
+msgid "You have already reviewed this movie:"
+msgstr "您已经评价过这部电影："
+
+msgid "Liked"
+msgstr "已点赞"
+
+msgid "Review Time"
+msgstr "评论时间"
+
+msgid "Rating (1-5 stars)"
+msgstr "评分（1-5星）"
+
+msgid "No rating"
+msgstr "无评分"
+
+msgid "Write your review here..."
+msgstr "在这里写下您的评论..."
+
+msgid "Save Review"
+msgstr "保存评论"
+
+msgid "Update Review"
+msgstr "更新评论"
+
+msgid "Delete Review"
+msgstr "删除评论"
+
+msgid "All Reviews"
+msgstr "全部评论"
+
+msgid "Sort by"
+msgstr "排序方式"
+
+msgid "Newest first"
+msgstr "最新优先"
+
+msgid "Oldest first"
+msgstr "最旧优先"
+
+msgid "Highest rated"
+msgstr "评分最高"
+
+msgid "Most liked"
+msgstr "最受欢迎"
+
+msgid "Show more reviews"
+msgstr "显示更多评论"
+
+msgid "No reviews yet"
+msgstr "暂无评论"
+
+msgid "Be the first to review!"
+msgstr "成为第一个评论的人！"
+
+# Authentication page translations
+msgid "Enter your username"
+msgstr "输入您的用户名"
+
+msgid "Enter your password"
+msgstr "输入您的密码"
+
+msgid "Choose a username"
+msgstr "选择用户名"
+
+msgid "Enter your email address"
+msgstr "输入您的邮箱地址"
+
+msgid "Create a password"
+msgstr "创建密码"
+
+msgid "Confirm your password"
+msgstr "确认您的密码"
+
+msgid "Re-enter your password for confirmation"
+msgstr "重新输入密码进行确认"
+
+msgid "Username must be unique and used for login"
+msgstr "用户名必须唯一，用于登录"
+
+msgid "Used for account recovery, please use a valid email"
+msgstr "用于账户恢复，请使用有效邮箱"
+
+msgid "At least 6 characters"
+msgstr "至少6个字符"
+
+msgid "Forgot password?"
+msgstr "忘记密码？"
+
+# Genres (these should match the actual genre strings in database)
+msgid "Action"
+msgstr "动作"
+
+msgid "Adventure"
+msgstr "冒险"
+
+msgid "Animation"
+msgstr "动画"
+
+msgid "Comedy"
+msgstr "喜剧"
+
+msgid "Crime"
+msgstr "犯罪"
+
+msgid "Documentary"
+msgstr "纪录片"
+
+msgid "Drama"
+msgstr "剧情"
+
+msgid "Family"
+msgstr "家庭"
+
+msgid "Fantasy"
+msgstr "奇幻"
+
+msgid "History"
+msgstr "历史"
+
+msgid "Horror"
+msgstr "恐怖"
+
+msgid "Music"
+msgstr "音乐"
+
+msgid "Mystery"
+msgstr "悬疑"
+
+msgid "Romance"
+msgstr "爱情"
+
+msgid "Science Fiction"
+msgstr "科幻"
+
+msgid "Thriller"
+msgstr "惊悚"
+
+msgid "War"
+msgstr "战争"
+
+msgid "Western"
+msgstr "西部"
+
+# Accessibility
+msgid "Skip to main content"
+msgstr "跳到主要内容"
+
+msgid "Go back"
+msgstr "返回"
+
+msgid "Toggle theme"
+msgstr "切换主题"
+
+msgid "Switch language"
+msgstr "切换语言"
+
+# Footer
+msgid "All rights reserved"
+msgstr "版权所有"
+
+# Index page
+msgid "Start Browsing"
+msgstr "开始浏览"
+
+msgid "Sign Up Now"
+msgstr "立即注册"
+
+msgid "Classics"
+msgstr "经典电影"
+
+msgid "Possibilities"
+msgstr "无限可能"
+
+msgid "Popular Movies"
+msgstr "热门电影"
+
+msgid "Curated high-rated movies for your best viewing experience"
+msgstr "精选高分电影，为您提供最佳观影体验"
+
+msgid "View Details"
+msgstr "查看详情"
+
+msgid "No poster"
+msgstr "暂无海报"
+
+msgid "View All Movies"
+msgstr "查看全部电影"
+
+msgid "No movie data available"
+msgstr "暂无电影数据"
+
+msgid "We are working hard to add more amazing movies..."
+msgstr "我们正在努力添加更多精彩电影..."
+
+msgid "Why Choose Us"
+msgstr "为什么选择我们"
+
+msgid "Smart Recommendations"
+msgstr "智能推荐"
+
+msgid "Intelligent recommendations based on your viewing preferences"
+msgstr "基于您的观影偏好提供智能推荐"
+
+msgid "View My Recommendations"
+msgstr "查看我的推荐"
+
+msgid "Community Interaction"
+msgstr "社区互动"
+
+msgid "Share movie experiences and exchange opinions with fellow film enthusiasts"
+msgstr "与影迷分享观影体验，交流观影心得"
+
+msgid "Browse Movies"
+msgstr "浏览电影"
+
+msgid "Precise Search"
+msgstr "精准搜索"
+
+msgid "Multiple filter conditions to quickly find your favorite movies"
+msgstr "多种筛选条件，快速找到您喜爱的电影"
+
+msgid "Start Searching"
+msgstr "开始搜索"
+
+msgid "Mobile First"
+msgstr "移动优先"
+
+msgid "Perfectly adapted for mobile devices, discover great movies anytime, anywhere"
+msgstr "完美适配移动设备，随时随地发现精彩电影"
+
+msgid "Browse on Mobile"
+msgstr "移动端浏览"

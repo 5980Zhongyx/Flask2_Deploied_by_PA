@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Film Discovery - Discover Great Movies{% endblock %}
+{% block title %}{{ _('Film Discovery') }} - {{ _('Discover Great Movies') }}{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -28,23 +28,23 @@
     <div class="hero-content">
         <div class="hero-text">
             <h1 class="hero-title">
-                <span class="title-main">Discover Great Movies</span>
-                <span class="title-sub">Film Discovery</span>
+                <span class="title-main">{{ _('Discover Great Movies') }}</span>
+                <span class="title-sub">{{ _('Film Discovery') }}</span>
             </h1>
             <p class="hero-description">
-                Explore the wonderful world of cinema and discover your movie treasures. Find films that perfectly match your taste through intelligent recommendations.
+                {{ _('Explore the wonderful world of cinema and discover your movie treasures. Find films that perfectly match your taste through intelligent recommendations.') }}
             </p>
         </div>
 
         <div class="hero-actions">
             <a href="{{ url_for('film.list_films') }}" class="btn btn-primary btn-large">
                 <i class="fas fa-play"></i>
-                Start Browsing
+                {{ _('Start Browsing') }}
             </a>
             {% if not current_user.is_authenticated %}
             <a href="{{ url_for('auth.register') }}" class="btn btn-outline btn-large">
                 <i class="fas fa-user-plus"></i>
-                Sign Up Now
+                {{ _('Sign Up Now') }}
             </a>
             {% endif %}
         </div>
@@ -53,15 +53,15 @@
         <div class="hero-stats">
             <div class="stat-item">
                 <span class="stat-number">{{ films|length }}</span>
-                <span class="stat-label">Movies</span>
+                <span class="stat-label">{{ _('Movies') }}</span>
             </div>
             <div class="stat-item">
                 <span class="stat-number">55</span>
-                <span class="stat-label">Classics</span>
+                <span class="stat-label">{{ _('Classics') }}</span>
             </div>
             <div class="stat-item">
                 <span class="stat-number">∞</span>
-                <span class="stat-label">Possibilities</span>
+                <span class="stat-label">{{ _('Possibilities') }}</span>
             </div>
         </div>
     </div>
@@ -73,9 +73,9 @@
         <div class="section-header">
             <h2 class="section-title">
                 <i class="fas fa-star"></i>
-                Popular Movies
+                {{ _('Popular Movies') }}
             </h2>
-            <p class="section-description">Curated high-rated movies for your best viewing experience</p>
+            <p class="section-description">{{ _('Curated high-rated movies for your best viewing experience') }}</p>
         </div>
 
 {% if films %}
@@ -93,14 +93,14 @@
                             <div class="overlay-content">
                                 <a href="{{ url_for('film.film_detail', film_id=film.id) }}" class="btn btn-primary btn-sm">
                                     <i class="fas fa-eye"></i>
-                                    View Details
+                                    {{ _('View Details') }}
                                 </a>
                             </div>
                         </div>
                     {% else %}
                         <div class="no-poster">
                             <i class="fas fa-film"></i>
-                            <span>No poster</span>
+                            <span>{{ _('No poster') }}</span>
                         </div>
                     {% endif %}
                     <!-- Rating badge -->
@@ -114,7 +114,7 @@
                     <div class="card-actions" style="position:absolute; left:12px; bottom:12px; z-index:5;">
                         {% set liked = (current_user.is_authenticated and film.id in liked_ids) %}
                         <button class="btn btn-outline btn-like {% if liked %}liked{% endif %}" data-film-id="{{ film.id }}" aria-pressed="{{ 'true' if liked else 'false' }}">
-                            <i class="fas fa-heart"></i> <span class="sr-only">Like</span>
+                            <i class="fas fa-heart"></i> <span class="sr-only">{{ _('Like') }}</span>
                         </button>
                         <span data-like-count="{{ film.id }}" class="like-count" style="margin-left:8px;color:white;font-weight:600">{{ film.like_count }}</span>
                     </div>
@@ -151,14 +151,14 @@
         <div class="section-footer">
             <a href="{{ url_for('film.list_films') }}" class="btn btn-outline">
                 <i class="fas fa-arrow-right"></i>
-                    View All Movies
+                    {{ _('View All Movies') }}
             </a>
         </div>
 {% else %}
         <div class="empty-state">
             <i class="fas fa-film"></i>
-            <h3>No movie data available</h3>
-            <p>We are working hard to add more amazing movies...</p>
+            <h3>{{ _('No movie data available') }}</h3>
+            <p>{{ _('We are working hard to add more amazing movies...') }}</p>
         </div>
 {% endif %}
     </div>
@@ -170,7 +170,7 @@
         <div class="section-header">
             <h2 class="section-title">
                 <i class="fas fa-magic"></i>
-                Why Choose Us
+                {{ _('Why Choose Us') }}
             </h2>
         </div>
 
@@ -179,36 +179,36 @@
                 <div class="feature-icon">
                     <i class="fas fa-brain"></i>
                 </div>
-                <h3>Smart Recommendations</h3>
-                <p>Intelligent recommendations based on your viewing preferences</p>
-                <a href="{{ url_for('film.recommendations') }}" class="btn btn-outline" style="margin-top:12px;">View My Recommendations</a>
+                <h3>{{ _('Smart Recommendations') }}</h3>
+                <p>{{ _('Intelligent recommendations based on your viewing preferences') }}</p>
+                <a href="{{ url_for('film.recommendations') }}" class="btn btn-outline" style="margin-top:12px;">{{ _('View My Recommendations') }}</a>
             </div>
 
             <div class="feature-card modern-card" data-href="{{ url_for('film.list_films') }}">
                 <div class="feature-icon">
                     <i class="fas fa-users"></i>
                 </div>
-                <h3>Community Interaction</h3>
-                <p>Share movie experiences and exchange opinions with fellow film enthusiasts</p>
-                <a href="{{ url_for('film.list_films') }}" class="btn btn-outline" style="margin-top:12px;">Browse Movies</a>
+                <h3>{{ _('Community Interaction') }}</h3>
+                <p>{{ _('Share movie experiences and exchange opinions with fellow film enthusiasts') }}</p>
+                <a href="{{ url_for('film.list_films') }}" class="btn btn-outline" style="margin-top:12px;">{{ _('Browse Movies') }}</a>
             </div>
 
             <div class="feature-card modern-card" data-href="{{ url_for('film.list_films') }}">
                 <div class="feature-icon">
                     <i class="fas fa-search"></i>
                 </div>
-                <h3>Precise Search</h3>
-                <p>Multiple filter conditions to quickly find your favorite movies</p>
-                <a href="{{ url_for('film.list_films') }}" class="btn btn-outline" style="margin-top:12px;">Start Searching</a>
+                <h3>{{ _('Precise Search') }}</h3>
+                <p>{{ _('Multiple filter conditions to quickly find your favorite movies') }}</p>
+                <a href="{{ url_for('film.list_films') }}" class="btn btn-outline" style="margin-top:12px;">{{ _('Start Searching') }}</a>
             </div>
 
             <div class="feature-card modern-card" data-href="{{ url_for('film.list_films') }}">
                 <div class="feature-icon">
                     <i class="fas fa-mobile-alt"></i>
                 </div>
-                <h3>Mobile First</h3>
-                <p>Perfectly adapted for mobile devices, discover great movies anytime, anywhere</p>
-                <a href="{{ url_for('film.list_films') }}" class="btn btn-outline" style="margin-top:12px;">Browse on Mobile</a>
+                <h3>{{ _('Mobile First') }}</h3>
+                <p>{{ _('Perfectly adapted for mobile devices, discover great movies anytime, anywhere') }}</p>
+                <a href="{{ url_for('film.list_films') }}" class="btn btn-outline" style="margin-top:12px;">{{ _('Browse on Mobile') }}</a>
             </div>
         </div>
     </div>

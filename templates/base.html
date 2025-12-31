@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="{{ 'zh' if session.get('language') == 'zh' else 'en' }}" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Film Discovery - Discover Great Movies{% endblock %}</title>
+    <title>{% block title %}Film Discovery - {{ _('Discover Great Movies') }}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/ripple.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <a class="skip-link" href="#main-content">{{ _('Skip to main content') }}</a>
     <!-- Top Navigation -->
     <header class="header">
         <nav class="navbar">
@@ -22,7 +22,7 @@
                 <div class="nav-brand">
                     <a href="{{ url_for('film.index') }}">
                         <i class="fas fa-film"></i>
-                        <span>Film Discovery</span>
+                        <span>{{ _('Film Discovery') }}</span>
                     </a>
                 </div>
                 <!-- Back button (visible on all pages) -->
@@ -32,11 +32,11 @@
 
                 <div class="nav-menu">
                     <ul class="nav-links">
-                        <li><a href="{{ url_for('film.index') }}"><i class="fas fa-home"></i> Home</a></li>
-                        <li><a href="{{ url_for('film.list_films') }}"><i class="fas fa-list"></i> Movies</a></li>
+                        <li><a href="{{ url_for('film.index') }}"><i class="fas fa-home"></i> {{ _('Home') }}</a></li>
+                        <li><a href="{{ url_for('film.list_films') }}"><i class="fas fa-list"></i> {{ _('Movies') }}</a></li>
                         {% if current_user.is_authenticated %}
-                        <li><a href="{{ url_for('film.recommendations') }}"><i class="fas fa-star"></i> Recommendations</a></li>
-                        <li><a href="{{ url_for('auth.profile') }}"><i class="fas fa-user"></i> Profile</a></li>
+                        <li><a href="{{ url_for('film.recommendations') }}"><i class="fas fa-star"></i> {{ _('Recommendations') }}</a></li>
+                        <li><a href="{{ url_for('auth.profile') }}"><i class="fas fa-user"></i> {{ _('Profile') }}</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -48,7 +48,7 @@
                     </button>
 
                     <!-- Theme toggle -->
-                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                    <button id="theme-toggle" class="theme-toggle" aria-label="{{ _('Toggle theme') }}">
                         <i class="fas fa-moon"></i>
                     </button>
 
@@ -61,14 +61,14 @@
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                             <div class="user-menu-dropdown">
-                                <a href="{{ url_for('auth.profile') }}"><i class="fas fa-user"></i> Profile</a>
-                                <a href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                                <a href="{{ url_for('auth.profile') }}"><i class="fas fa-user"></i> {{ _('Profile') }}</a>
+                                <a href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> {{ _('Logout') }}</a>
                             </div>
                         </div>
     {% else %}
                         <div class="auth-buttons">
-                            <a href="{{ url_for('auth.login') }}" class="btn btn-outline">Login</a>
-                            <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Register</a>
+                            <a href="{{ url_for('auth.login') }}" class="btn btn-outline">{{ _('Login') }}</a>
+                            <a href="{{ url_for('auth.register') }}" class="btn btn-primary">{{ _('Register') }}</a>
                         </div>
     {% endif %}
 
@@ -92,13 +92,13 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <i class="fas fa-film"></i>
-                    <span>Film Discovery</span>
+                    <span>{{ _('Film Discovery') }}</span>
                 </div>
                 <div class="footer-links">
-                    <a href="#">About Us</a>
-                    <a href="#">Help Center</a>
-                    <a href="#">Contact Us</a>
-                    <a href="#">Privacy Policy</a>
+                    <a href="#">{{ _('About Us') }}</a>
+                    <a href="#">{{ _('Help Center') }}</a>
+                    <a href="#">{{ _('Contact Us') }}</a>
+                    <a href="#">{{ _('Privacy Policy') }}</a>
                 </div>
                 <div class="footer-social">
                     <a href="#" aria-label="WeChat"><i class="fab fa-weixin"></i></a>
@@ -107,12 +107,12 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Film Discovery. All rights reserved.</p>
+                <p>&copy; 2024 {{ _('Film Discovery') }}. {{ _('All rights reserved') }}.</p>
             </div>
         </div>
     </footer>
 
-    <!-- 暴露站点首页 URL 供 JS 使用（回退失败时的回退目标） -->
+    <!-- expose index URL , provide for JS-->
     <script>window.SITE_HOME = "{{ url_for('film.index') }}";</script>
     <!-- JavaScript -->
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>

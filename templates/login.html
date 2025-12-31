@@ -3,7 +3,8 @@
 {% block content %}
 <main class="auth-container">
     <div class="auth-form">
-        <h1>登录账户</h1>
+        <h1>{{ _('Welcome back') }}</h1>
+        <p class="auth-subtitle">{{ _('Sign in to your account') }}</p>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -17,21 +18,30 @@
 
         <form method="POST" class="form">
             <div class="form-group">
-                <label for="username">用户名</label>
+                <label for="username">{{ _('Username') }}</label>
                 <input type="text" id="username" name="username" required
-                       value="{{ request.form.username if request.form.username else '' }}">
+                       value="{{ request.form.username if request.form.username else '' }}"
+                       placeholder="{{ _('Enter your username') }}">
             </div>
 
             <div class="form-group">
-                <label for="password">密码</label>
-                <input type="password" id="password" name="password" required>
+                <label for="password">{{ _('Password') }}</label>
+                <input type="password" id="password" name="password" required
+                       placeholder="{{ _('Enter your password') }}">
             </div>
 
-            <button type="submit" class="btn btn-primary">登录</button>
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="remember" name="remember">
+                    {{ _('Remember me') }}
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">{{ _('Login') }}</button>
         </form>
 
         <p class="auth-links">
-            还没有账户？<a href="{{ url_for('auth.register') }}">立即注册</a>
+            {{ _('Don\'t have an account?') }} <a href="{{ url_for('auth.register') }}">{{ _('Create one here') }}</a>
         </p>
     </div>
 </main>

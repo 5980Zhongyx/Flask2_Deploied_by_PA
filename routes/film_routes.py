@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, session, redirect, url_for
 import os
 import json
 from flask_login import login_required, current_user
@@ -62,7 +62,7 @@ def list_films():
     total = query.count()
     films = query.offset((page - 1) * per_page).limit(per_page).all()
 
-    # 获取筛选选项
+    # get filter options
     genres_q = db.session.query(Film.genre).distinct().all()
     genres = [g[0] for g in genres_q if g[0]]
     years_q = db.session.query(Film.year).distinct().filter(Film.year.isnot(None)).all()
@@ -87,14 +87,14 @@ def film_detail(film_id):
 
     film = Film.query.get_or_404(film_id)
 
-    # 获取用户交互信息
+    # get user interaction information
     user_interaction = None
     if current_user.is_authenticated:
         user_interaction = UserFilmInteraction.query.filter_by(
             user_id=current_user.id, film_id=film_id
         ).first()
 
-    # 获取其他用户的评论（有评论文本的）
+    # get other users' comments (with text)
     reviews = UserFilmInteraction.query.filter(
         UserFilmInteraction.film_id == film_id,
         UserFilmInteraction.review_text.isnot(None),
@@ -110,10 +110,10 @@ def film_detail(film_id):
 @login_required
 def recommendations():
     from models.recommendation import recommendation_engine
-    # 获取用户的个性化推荐（现有用户基于用户的协同过滤）
+    # get user's personalized recommendations (existing user-based collaborative filtering)
     recommendation_data = recommendation_engine.get_user_recommendations(current_user.id, top_n=10)
 
-    # 获取高级推荐（item-based 与 matrix factorization）
+    # get advanced recommendations (item-based and matrix factorization)
     try:
         from models.recommendation_advanced import item_recommender, mf_recommender
         item_recs = item_recommender.recommend(current_user.id, top_n=10)
@@ -122,7 +122,7 @@ def recommendations():
         item_recs = []
         mf_recs = []
 
-    # 读取评估结果（若存在）
+    # read evaluation results (if exists)
     eval_metrics = None
     eval_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scripts', 'recommendation_eval.json')
     if os.path.exists(eval_path):
@@ -136,3 +136,10 @@ def recommendations():
                            item_recs=item_recs,
                            mf_recs=mf_recs,
                            eval_metrics=eval_metrics)
+
+@film_bp.route('/language/<lang>')
+def set_language(lang):
+    """Set the language for the session"""
+    if lang in ['en', 'zh']:
+        session['language'] = lang
+    return redirect(request.referrer or url_for('film.index'))
