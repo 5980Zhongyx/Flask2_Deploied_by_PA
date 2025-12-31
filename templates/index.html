@@ -86,7 +86,7 @@
                     {% if film.poster_url %}
                         {% if film.poster_url.startswith('http') or film.poster_url.startswith('//') %}
                             <img src="{{ film.poster_url }}" alt="{{ film.title }} poster" loading="lazy">
-                        {% else %}
+                        {% elif static_file_exists('posters/' ~ film.poster_url) %}
                             <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }} poster" loading="lazy">
                         {% endif %}
                         <div class="film-overlay">

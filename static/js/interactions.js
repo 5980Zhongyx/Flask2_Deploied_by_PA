@@ -84,16 +84,29 @@ async function handleLikeClick(event) {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         });
+        // Inspect content type before parsing JSON to detect HTML redirects (e.g., login page)
+        const ct = response.headers.get('content-type') || '';
+        if (!ct.includes('application/json')) {
+            // likely a redirect to login or an HTML error page
+            if (response.url && response.url.includes('/login')) {
+                // redirect user to login
+                window.location.href = response.url;
+                return;
+            }
+            showMessage(`Operation failed (${response.status})`, 'error');
+            return;
+        }
 
         let data = null;
-        // try to parse json safely
         try {
             data = await response.json();
         } catch (e) {
             console.warn('Could not parse like response as JSON', e);
+            showMessage('Unexpected server response, please retry', 'error');
+            return;
         }
 
-        if (data.success) {
+        if (data && data.success) {
             // Update button status
             updateLikeButton(button, data.liked);
 
