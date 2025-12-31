@@ -7,22 +7,22 @@ from models.film import Film
 
 interaction_bp = Blueprint("interaction", __name__)
 
-# 配置日志
+# configure logging
 interaction_logger = logging.getLogger('interaction')
 
 @interaction_bp.route("/api/interaction/<int:film_id>", methods=["POST", "PUT", "DELETE"])
 @login_required
 def handle_interaction(film_id):
-    """处理用户与电影的交互（点赞、评分、评论）"""
+    """handle user-film interactions (like, rating, comment)"""
     film = Film.query.get_or_404(film_id)
 
-    # 获取或创建交互记录
+    # get or create interaction record
     interaction = UserFilmInteraction.query.filter_by(
         user_id=current_user.id, film_id=film_id
     ).first()
 
     if request.method == "DELETE":
-        # 删除交互
+        # delete interaction
         if interaction:
             # adjust persisted film stats
             try:
@@ -42,14 +42,14 @@ def handle_interaction(film_id):
                 return jsonify({"success": False, "message": "删除失败"}), 500
         return jsonify({"success": False, "message": "未找到评价记录"}), 404
 
-    # POST/PUT: 创建或更新交互
+    # POST/PUT: create or update interaction
     data = request.get_json() if request.is_json else request.form
 
     liked = data.get('liked', False)
     rating = data.get('rating')
     review_text = data.get('review', '').strip()
 
-    # 转换数据类型
+    # convert data type
     if isinstance(liked, str):
         liked = liked.lower() in ('true', '1', 'yes', 'on')
     if isinstance(rating, str) and rating:
@@ -66,7 +66,7 @@ def handle_interaction(film_id):
     prev_liked = None
     prev_rating = None
     if not interaction:
-        # 创建新交互
+        # create new interaction
         interaction = UserFilmInteraction(
             user_id=current_user.id,
             film_id=film_id,
@@ -81,7 +81,7 @@ def handle_interaction(film_id):
     else:
         prev_liked = interaction.liked
         prev_rating = interaction.rating
-        # 更新现有交互
+        # update existing interaction
         interaction.liked = liked
         interaction.rating = rating
         interaction.review_text = review_text if review_text else None
@@ -114,11 +114,12 @@ def handle_interaction(film_id):
         db.session.commit()
         interaction_logger.info(f"Interaction {action}: User {current_user.username} - Film {film.title} - Liked: {liked}, Rating: {rating}")
 
-        # 返回更新后的统计数据
-        film.refresh()  # 刷新电影对象以获取最新统计
+        # return updated statistics
+        # refresh film object to get latest statistics
+        db.session.refresh(film)
         return jsonify({
             "success": True,
-            "message": "评价已保存",
+            "message": "Rating saved",
             "data": {
                 "liked": interaction.liked,
                 "rating": interaction.rating,
@@ -135,12 +136,12 @@ def handle_interaction(film_id):
     except Exception as e:
         db.session.rollback()
         interaction_logger.error(f"Interaction save failed: User {current_user.username} - Film {film.title} - Error: {str(e)}")
-        return jsonify({"success": False, "message": "保存失败，请重试"}), 500
+        return jsonify({"success": False, "message": "Save failed, please try again"}), 500
 
 
 @interaction_bp.route("/api/reviews/<int:film_id>", methods=["GET"])
 def get_reviews(film_id):
-    """分页返回指定电影的评论（仅包含有文本的评论），用于前端无刷新加载"""
+    """paginate comments for specified film (only with text), used for frontend no refresh loading"""
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 5))
 
@@ -174,7 +175,7 @@ def get_reviews(film_id):
 @interaction_bp.route("/api/like/<int:film_id>", methods=["POST"])
 @login_required
 def toggle_like(film_id):
-    """AJAX点赞/取消点赞"""
+    """AJAX like/unlike"""
     film = Film.query.get_or_404(film_id)
 
     interaction = UserFilmInteraction.query.filter_by(
@@ -182,7 +183,7 @@ def toggle_like(film_id):
     ).first()
 
     if not interaction:
-        # 创建新交互，只设置点赞
+        # create new interaction, only set like
         interaction = UserFilmInteraction(
             user_id=current_user.id,
             film_id=film_id,
@@ -192,7 +193,7 @@ def toggle_like(film_id):
         # increment persisted like count
         film.like_count = (film.like_count or 0) + 1
     else:
-        # 切换点赞状态
+            # toggle like status
         prev = interaction.liked
         interaction.liked = not interaction.liked
         # adjust persisted like count
@@ -205,7 +206,8 @@ def toggle_like(film_id):
     try:
         db.session.add(film)
         db.session.commit()
-        film.refresh()  # 刷新统计数据
+        # refresh statistics
+        db.session.refresh(film)
 
         action = "liked" if interaction.liked else "unliked"
         interaction_logger.info(f"Film {action}: User {current_user.username} - Film {film.title}")
@@ -214,18 +216,18 @@ def toggle_like(film_id):
             "success": True,
             "liked": interaction.liked,
             "like_count": film.like_count,
-            "message": f"已{'点赞' if interaction.liked else '取消点赞'}"
+            "message": f"{'Liked' if interaction.liked else 'Unliked'}"
         })
     except Exception as e:
         db.session.rollback()
         interaction_logger.error(f"Like toggle failed: User {current_user.username} - Film {film.title} - Error: {str(e)}")
-        return jsonify({"success": False, "message": "操作失败，请重试"}), 500
+        return jsonify({"success": False, "message": "Operation failed, please try again"}), 500
 
-# 保持向后兼容的路由
+# keep backward compatibility route
 @interaction_bp.route("/like/<int:film_id>", methods=["POST"])
 @login_required
 def like_film(film_id):
-    """传统点赞路由，重定向到详情页"""
+    """traditional like route, redirect to detail page"""
     film = Film.query.get_or_404(film_id)
 
     interaction = UserFilmInteraction.query.filter_by(
@@ -251,10 +253,10 @@ def like_film(film_id):
 
     db.session.add(film)
     db.session.commit()
-    film.refresh()
+    db.session.refresh(film)
 
     action = "liked" if interaction.liked else "unliked"
     interaction_logger.info(f"Film {action}: User {current_user.username} - Film {film.title}")
 
-    flash(f"已{'点赞' if interaction.liked else '取消点赞'}", "success")
+    flash(f"{'Liked' if interaction.liked else 'Unliked'}", "success")
     return redirect(url_for('film.film_detail', film_id=film_id))

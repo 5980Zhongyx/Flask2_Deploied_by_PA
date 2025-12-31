@@ -84,6 +84,13 @@ async function handleLikeClick(event) {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         });
+        // If server returned unauthorized for AJAX, redirect to login
+        if (response.status === 401) {
+            // try to preserve current path for redirect after login
+            const next = encodeURIComponent(window.location.pathname + window.location.search);
+            window.location.href = `/login?next=${next}`;
+            return;
+        }
         // Inspect content type before parsing JSON to detect HTML redirects (e.g., login page)
         const ct = response.headers.get('content-type') || '';
         if (!ct.includes('application/json')) {
@@ -165,6 +172,12 @@ async function handleInteractionSubmit(event) {
             },
             body: JSON.stringify(data)
         });
+        // handle auth redirect for AJAX
+        if (response.status === 401) {
+            const next = encodeURIComponent(window.location.pathname + window.location.search);
+            window.location.href = `/login?next=${next}`;
+            return;
+        }
 
         const result = await response.json();
 
@@ -294,6 +307,11 @@ async function handleDeleteInteraction(event) {
         const response = await fetch(`/api/interaction/${filmId}`, {
             method: 'DELETE'
         });
+        if (response.status === 401) {
+            const next = encodeURIComponent(window.location.pathname + window.location.search);
+            window.location.href = `/login?next=${next}`;
+            return;
+        }
 
         const result = await response.json();
 
