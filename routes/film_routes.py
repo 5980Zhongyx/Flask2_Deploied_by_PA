@@ -142,4 +142,6 @@ def set_language(lang):
     """Set the language for the session"""
     if lang in ['en', 'zh']:
         session['language'] = lang
-    return redirect(request.referrer or url_for('film.index'))
+    # Return a JSON response so AJAX callers receive the Set-Cookie header reliably.
+    from flask import jsonify
+    return jsonify({"status": "ok", "language": lang})
