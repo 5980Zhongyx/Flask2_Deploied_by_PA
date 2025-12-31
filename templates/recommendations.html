@@ -4,43 +4,62 @@
 <main class="recommendations-page">
     <div class="container">
         <div class="page-header">
-            <h1>我的电影推荐</h1>
-            <p>基于你的喜好为你推荐的电影</p>
+            <h1>{{ _('Popular & Trending Movies') }}</h1>
+            <p>{{ _('Discover the most popular and trending movies in our collection') }}</p>
         </div>
 
-        {% if recommendation_data.recommendations %}
-        <div class="recommendations-section">
-            <h2>为你推荐的电影（算法对比）</h2>
-            <p class="recommendation-info">
-                我们同时展示三种推荐算法的结果：基于用户的协同过滤、基于物品（Item-based）和矩阵分解（Matrix Factorization）。
-            </p>
+        <!-- Trending Heat Map Section -->
+        <div class="trending-heat-section">
+            <h2>{{ _('Trending Heat Map') }}</h2>
+            <p class="section-description">{{ _('Recent activity trends over the last 7 days') }}</p>
 
-            <div class="recommendation-columns" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem;">
-                {% if eval_metrics %}
-                <div style="grid-column: 1 / -1; margin-bottom: 12px; background: var(--bg-primary); padding:12px; border-radius:8px; box-shadow:var(--shadow-sm);">
-                    <strong>评估摘要（sample users: {{ eval_metrics.n_users if eval_metrics.n_users is defined else eval_metrics['n_users'] if eval_metrics else 0 }}，k={{ eval_metrics.k if eval_metrics.k is defined else eval_metrics['k'] if eval_metrics else 5 }}）</strong>
-                    <div style="display:flex; gap:16px; margin-top:8px;">
-                        <div>User-based: hit_rate={{ (eval_metrics.user_based.hit_rate if eval_metrics.user_based is defined else eval_metrics['user_based']['hit_rate'])|default(0)|round(3) }}, precision@k={{ (eval_metrics.user_based.precision_at_k if eval_metrics.user_based is defined else eval_metrics['user_based']['precision_at_k'])|default(0)|round(3) }}</div>
-                        <div>Item-based: hit_rate={{ (eval_metrics.item_based.hit_rate if eval_metrics.item_based is defined else eval_metrics['item_based']['hit_rate'])|default(0)|round(3) }}, precision@k={{ (eval_metrics.item_based.precision_at_k if eval_metrics.item_based is defined else eval_metrics['item_based']['precision_at_k'])|default(0)|round(3) }}</div>
-                        <div>MF: hit_rate={{ (eval_metrics.matrix_factorization.hit_rate if eval_metrics.matrix_factorization is defined else eval_metrics['matrix_factorization']['hit_rate'])|default(0)|round(3) }}, precision@k={{ (eval_metrics.matrix_factorization.precision_at_k if eval_metrics.matrix_factorization is defined else eval_metrics['matrix_factorization']['precision_at_k'])|default(0)|round(3) }}</div>
+            <div class="trending-content">
+                <div class="heat-chart-container">
+                    <canvas id="trendingChart" width="400" height="200"></canvas>
+                </div>
+
+                <div class="top-trending-films">
+                    <h3>{{ _('Top 10 Trending Films (Last 7 Days)') }}</h3>
+                    <div class="trending-films-list">
+                        {% for item in trending_data %}
+                        <div class="trending-film-item">
+                            <div class="trending-rank">#{{ loop.index }}</div>
+                            <div class="trending-film-info">
+                                <h4><a href="{{ url_for('film.film_detail', film_id=item.film.id) }}">{{ item.film.title }}</a></h4>
+                                <div class="trending-stats">
+                                    <span class="interaction-count">{{ item.interaction_count }} {{ _('interactions') }}</span>
+                                    <span class="like-count">{{ item.film.like_count }} {{ _('total likes') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
-                {% endif %}
+            </div>
+        </div>
+
+        <div class="recommendations-section">
+            <h2>{{ _('Popular Movies & Trends') }}</h2>
+            <p class="recommendation-info">{{ _('Below are popularity-based lists: most liked, highest rated, and recently added films.') }}</p>
+
+            <div class="recommendation-columns" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem;">
                 <div class="recommendation-column">
-                    <h3 style="text-align:center;">User-based CF</h3>
+                    <h3 style="text-align:center;">{{ _('Most Liked') }}</h3>
                     <div class="films-grid">
-                        {% for film, score in recommendation_data.recommendations %}
+                        {% for film in most_liked %}
                         <div class="film-card recommended">
                             <div class="film-poster">
-                                {% if film.poster_url %}
+                                {% if film.poster_url and (film.poster_url.startswith('http') or film.poster_url.startswith('//')) %}
                                     <img src="{{ film.poster_url }}" alt="{{ film.title }} poster">
+                                {% elif film.poster_url %}
+                                    <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }} poster">
                                 {% else %}
                                     <div class="no-poster">No poster</div>
                                 {% endif %}
                             </div>
                             <div class="film-info">
                                 <h4><a href="{{ url_for('film.film_detail', film_id=film.id) }}">{{ film.title }}</a></h4>
-                                <div class="recommendation-score"><strong>{{ '%.3f'|format(score) }}</strong></div>
+                                <div class="recommendation-score"><strong>{{ film.like_count }}</strong> {{ _('likes') }}</div>
                             </div>
                         </div>
                         {% endfor %}
@@ -48,85 +67,52 @@
                 </div>
 
                 <div class="recommendation-column">
-                    <h3 style="text-align:center;">Item-based CF</h3>
+                    <h3 style="text-align:center;">{{ _('Highest Rated') }}</h3>
                     <div class="films-grid">
-                        {% if item_recs %}
-                            {% for film, score in item_recs %}
-                            <div class="film-card recommended">
-                                <div class="film-poster">
-                                    {% if film.poster_url %}
-                                        <img src="{{ film.poster_url }}" alt="{{ film.title }} poster">
-                                    {% else %}
-                                        <div class="no-poster">No poster</div>
-                                    {% endif %}
-                                </div>
-                                <div class="film-info">
-                                    <h4><a href="{{ url_for('film.film_detail', film_id=film.id) }}">{{ film.title }}</a></h4>
-                                    <div class="recommendation-score"><strong>{{ '%.3f'|format(score) }}</strong></div>
-                                </div>
+                        {% for film in highest_rated %}
+                        <div class="film-card recommended">
+                            <div class="film-poster">
+                                {% if film.poster_url and (film.poster_url.startswith('http') or film.poster_url.startswith('//')) %}
+                                    <img src="{{ film.poster_url }}" alt="{{ film.title }} poster">
+                                {% elif film.poster_url %}
+                                    <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }} poster">
+                                {% else %}
+                                    <div class="no-poster">No poster</div>
+                                {% endif %}
                             </div>
-                            {% endfor %}
-                        {% else %}
-                            <p style="padding:1rem;">暂无 Item-based 推荐（数据不足或计算中）</p>
-                        {% endif %}
+                            <div class="film-info">
+                                <h4><a href="{{ url_for('film.film_detail', film_id=film.id) }}">{{ film.title }}</a></h4>
+                                <div class="recommendation-score"><strong>{{ ('%.1f'|format( (film.rating_sum or 0) / (film.rating_count or 1) )) }}</strong> {{ _('avg rating') }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
 
                 <div class="recommendation-column">
-                    <h3 style="text-align:center;">Matrix Factorization</h3>
+                    <h3 style="text-align:center;">{{ _('Recently Added') }}</h3>
                     <div class="films-grid">
-                        {% if mf_recs %}
-                            {% for film, score in mf_recs %}
-                            <div class="film-card recommended">
-                                <div class="film-poster">
-                                    {% if film.poster_url %}
-                                        <img src="{{ film.poster_url }}" alt="{{ film.title }} poster">
-                                    {% else %}
-                                        <div class="no-poster">No poster</div>
-                                    {% endif %}
-                                </div>
-                                <div class="film-info">
-                                    <h4><a href="{{ url_for('film.film_detail', film_id=film.id) }}">{{ film.title }}</a></h4>
-                                    <div class="recommendation-score"><strong>{{ '%.3f'|format(score) }}</strong></div>
-                                </div>
+                        {% for film in recent %}
+                        <div class="film-card recommended">
+                            <div class="film-poster">
+                                {% if film.poster_url and (film.poster_url.startswith('http') or film.poster_url.startswith('//')) %}
+                                    <img src="{{ film.poster_url }}" alt="{{ film.title }} poster">
+                                {% elif film.poster_url %}
+                                    <img src="{{ url_for('static', filename='posters/' ~ film.poster_url) }}" alt="{{ film.title }} poster">
+                                {% else %}
+                                    <div class="no-poster">No poster</div>
+                                {% endif %}
                             </div>
-                            {% endfor %}
-                        {% else %}
-                            <p style="padding:1rem;">暂无 Matrix Factorization 推荐（可能缺少 numpy 或训练中）</p>
-                        {% endif %}
+                            <div class="film-info">
+                                <h4><a href="{{ url_for('film.film_detail', film_id=film.id) }}">{{ film.title }}</a></h4>
+                                <div class="recommendation-score"><small>{{ film.created_at.strftime('%Y-%m-%d') if film.created_at }}</small></div>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
-
-        {% if recommendation_data.similar_users %}
-        <div class="similar-users-section">
-            <h2>相似用户分析</h2>
-            <p>你的推荐基于以下与你偏好相似的用户：</p>
-            <div class="similar-users-list">
-                {% for user_data in recommendation_data.similar_users %}
-                <div class="similar-user-card">
-                    <div class="user-info">
-                        <h4>{{ user_data.user.username }}</h4>
-                        <p>相似度：{{ "%.1%"|format(user_data.similarity) }}</p>
-                        <p>共同评价电影：{{ user_data.common_interactions }} 部</p>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-
-        {% else %}
-        <div class="no-recommendations">
-            <h3>暂无个性化推荐</h3>
-            <p>你需要先对一些电影进行评价（点赞、评分或评论），系统才能为你生成个性化推荐。</p>
-            <div class="action-buttons">
-                <a href="{{ url_for('film.list_films') }}" class="btn btn-primary">浏览并评价电影</a>
-                <a href="{{ url_for('auth.profile') }}" class="btn btn-secondary">查看我的评价</a>
-            </div>
-        </div>
-        {% endif %}
 
         <div class="recommendation-stats">
             <div class="stat-card">
@@ -144,4 +130,96 @@
         </div>
     </div>
 </main>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Prepare data for the trending chart
+    const dailyData = {{ daily_interactions|tojson }};
+    const labels = dailyData.map(item => {
+        const date = new Date(item.date);
+        return date.toLocaleDateString('{{ "zh-CN" if session.get("language", "en") == "zh" else "en-US" }}', {
+            month: 'short',
+            day: 'numeric'
+        });
+    });
+    const data = dailyData.map(item => item.count);
+
+    // Create the trending chart
+    const ctx = document.getElementById('trendingChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '{{ _("Daily Interactions") }}',
+                data: data,
+                borderColor: '#ff6b6b',
+                backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#ff6b6b',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 6,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    callbacks: {
+                        title: function(context) {
+                            return '{{ _("Date") }}: ' + context[0].label;
+                        },
+                        label: function(context) {
+                            return '{{ _("Interactions") }}: ' + context.parsed.y;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: '{{ _("Date") }}'
+                    },
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: '{{ _("Number of Interactions") }}'
+                    },
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
 {% endblock %}

@@ -64,6 +64,8 @@ def create_app(config_name=None):
     @app.before_request
     def before_request():
         g.start_time = __import__('time').time()
+        # Configure session security settings
+        session.permanent = True
 
     @app.after_request
     def after_request(response):

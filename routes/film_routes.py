@@ -109,33 +109,83 @@ def film_detail(film_id):
 @film_bp.route("/recommendations")
 @login_required
 def recommendations():
-    from models.recommendation import recommendation_engine
-    # get user's personalized recommendations (existing user-based collaborative filtering)
-    recommendation_data = recommendation_engine.get_user_recommendations(current_user.id, top_n=10)
+    from models.interaction import UserFilmInteraction
+    from datetime import datetime, timedelta
 
-    # get advanced recommendations (item-based and matrix factorization)
-    try:
-        from models.recommendation_advanced import item_recommender, mf_recommender
-        item_recs = item_recommender.recommend(current_user.id, top_n=10)
-        mf_recs = mf_recommender.recommend(current_user.id, top_n=10)
-    except Exception:
-        item_recs = []
-        mf_recs = []
+    # For now replace complex recommenders with popularity-based lists:
+    # - most_liked: films ordered by like_count desc
+    # - highest_rated: films ordered by persisted rating_sum/rating_count desc (safe SQL expression)
+    # - recent: recently added films
+    most_liked = Film.query.order_by(Film.like_count.desc(), Film.title).limit(12).all()
+    avg_expr = func.coalesce((Film.rating_sum * 1.0) / func.nullif(Film.rating_count, 0), 0)
+    highest_rated = Film.query.order_by(avg_expr.desc(), Film.title).limit(12).all()
+    recent = Film.query.order_by(Film.created_at.desc()).limit(12).all()
 
-    # read evaluation results (if exists)
-    eval_metrics = None
-    eval_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scripts', 'recommendation_eval.json')
-    if os.path.exists(eval_path):
-        try:
-            with open(eval_path, 'r', encoding='utf-8') as f:
-                eval_metrics = json.load(f)
-        except Exception:
-            eval_metrics = None
+    # Calculate trending/hot films based on recent interactions (last 7 days)
+    seven_days_ago = datetime.utcnow() - timedelta(days=7)
+
+    # Get top 10 films by recent interactions (likes + reviews) in the last 7 days
+    trending_query = db.session.query(
+        UserFilmInteraction.film_id,
+        func.count(UserFilmInteraction.film_id).label('interaction_count')
+    ).filter(
+        UserFilmInteraction.created_at >= seven_days_ago,
+        db.or_(UserFilmInteraction.liked == True, UserFilmInteraction.review_text.isnot(None))
+    ).group_by(UserFilmInteraction.film_id).order_by(func.count(UserFilmInteraction.film_id).desc()).limit(10).all()
+
+    # Get film details for trending films
+    trending_film_ids = [t.film_id for t in trending_query]
+    trending_films = Film.query.filter(Film.id.in_(trending_film_ids)).all()
+
+    # Create trending data with film info
+    trending_data = []
+    for film in trending_films:
+        interaction_count = next((t.interaction_count for t in trending_query if t.film_id == film.id), 0)
+        trending_data.append({
+            'film': film,
+            'interaction_count': interaction_count
+        })
+
+    # Sort by interaction count
+    trending_data.sort(key=lambda x: x['interaction_count'], reverse=True)
+
+    # Get daily interaction data for the last 7 days for trending chart
+    daily_interactions = []
+    for i in range(7):
+        day = datetime.utcnow() - timedelta(days=i)
+        day_start = datetime(day.year, day.month, day.day)
+        day_end = day_start + timedelta(days=1)
+
+        day_data = db.session.query(
+            func.count(UserFilmInteraction.film_id).label('count')
+        ).filter(
+            UserFilmInteraction.created_at >= day_start,
+            UserFilmInteraction.created_at < day_end,
+            db.or_(UserFilmInteraction.liked == True, UserFilmInteraction.review_text.isnot(None))
+        ).scalar() or 0
+
+        daily_interactions.append({
+            'date': day.strftime('%Y-%m-%d'),
+            'count': day_data
+        })
+
+    # Reverse to show oldest to newest
+    daily_interactions.reverse()
+
+    # Minimal stats for the page
+    recommendation_data = {
+        'user_interactions_count': 0,
+        'total_users': db.session.query(func.count()).select_from(db.text('user')).scalar() if False else 0,
+        'recommendations': []
+    }
+
     return render_template("recommendations.html",
-                           recommendation_data=recommendation_data,
-                           item_recs=item_recs,
-                           mf_recs=mf_recs,
-                           eval_metrics=eval_metrics)
+                           most_liked=most_liked,
+                           highest_rated=highest_rated,
+                           recent=recent,
+                           trending_data=trending_data,
+                           daily_interactions=daily_interactions,
+                           recommendation_data=recommendation_data)
 
 @film_bp.route('/language/<lang>')
 def set_language(lang):
