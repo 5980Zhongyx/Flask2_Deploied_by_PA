@@ -10,11 +10,10 @@ import datetime
 import os
 import shutil
 import sys
-
-from app import create_app, db
-
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
+
+from app import create_app, db  # noqa: E402
 
 CSV = os.path.join('scripts', 'poster_mapping.csv')
 DB_PATH = os.path.join('instance', 'app.db')
