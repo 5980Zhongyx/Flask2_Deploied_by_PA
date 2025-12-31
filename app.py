@@ -21,6 +21,16 @@ def create_app(config_name=None):
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
 
+    # Return JSON 401 for AJAX/Fetch requests when unauthorized instead of HTML redirect
+    @login_manager.unauthorized_handler
+    def unauthorized_callback():
+        from flask import jsonify, request, redirect, url_for
+        # Treat fetch/XHR requests as API calls and return 401 JSON
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.accept_mimetypes.accept_json:
+            return jsonify({"success": False, "message": "Authentication required"}), 401
+        # otherwise redirect to login page (preserve next)
+        return redirect(url_for('auth.login', next=request.url))
+
     # Initialize Babel
     babel.init_app(app)
 
